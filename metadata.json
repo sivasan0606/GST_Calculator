@@ -1,0 +1,6 @@
+{
+  "name": "GST Calculator",
+  "description": "An SEO-friendly, comprehensive GST Calculator with instant CGST/SGST/IGST breakdown, built-in Adsense zones, accounting affiliate integration, and sponsored consultation bookings.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
