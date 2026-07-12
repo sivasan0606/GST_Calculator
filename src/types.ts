@@ -64,4 +64,5 @@ export interface SiteSettings {
   tallyLink: string;
   customConsultationLink: string;
   consultantSponsorFee: string;
+  adminPasscode?: string;
 }

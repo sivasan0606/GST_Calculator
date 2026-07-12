@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Calculator, Settings, ShieldCheck, Star, Sparkles, DollarSign, ExternalLink, RefreshCw, Layers, CheckCircle2 } from 'lucide-react';
+import { Calculator, Settings, ShieldCheck, Star, Sparkles, DollarSign, ExternalLink, RefreshCw, Layers, CheckCircle2, Lock, Unlock, ShieldAlert, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 // Components
@@ -23,7 +23,13 @@ export default function App() {
   const [settings, setSettings] = useState<SiteSettings>(() => {
     const saved = localStorage.getItem('gst_site_settings');
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) { /* ignore */ }
+      try {
+        const parsed = JSON.parse(saved);
+        if (!parsed.adminPasscode) {
+          parsed.adminPasscode = 'admin123';
+        }
+        return parsed;
+      } catch (e) { /* ignore */ }
     }
     return {
       adsenseClientId: '',
@@ -32,7 +38,8 @@ export default function App() {
       xeroLink: '',
       tallyLink: '',
       customConsultationLink: '',
-      consultantSponsorFee: '250'
+      consultantSponsorFee: '250',
+      adminPasscode: 'admin123'
     };
   });
 
@@ -92,6 +99,68 @@ export default function App() {
 
   // Admin Console View State
   const [showAdmin, setShowAdmin] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState<boolean>(() => {
+    return localStorage.getItem('gst_owner_authorized') === 'true';
+  });
+  const [passcodeModalOpen, setPasscodeModalOpen] = useState(false);
+  const [passcodeInput, setPasscodeInput] = useState('');
+  const [passcodeError, setPasscodeError] = useState('');
+
+  // Hidden owner mode toggle (completely hides any reference to the panel for regular users)
+  const [isOwnerModeEnabled, setIsOwnerModeEnabled] = useState<boolean>(() => {
+    return localStorage.getItem('gst_owner_mode_enabled') === 'true' || localStorage.getItem('gst_owner_authorized') === 'true';
+  });
+
+  // Check URL query parameters for special activation keys
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('owner') === 'true' || params.get('admin') === 'true') {
+      setIsOwnerModeEnabled(true);
+      localStorage.setItem('gst_owner_mode_enabled', 'true');
+      
+      // Polish: automatically clean up the secret query parameter from the browser address bar
+      const url = new URL(window.location.href);
+      url.searchParams.delete('owner');
+      url.searchParams.delete('admin');
+      window.history.replaceState({}, '', url.pathname + url.search);
+    }
+  }, []);
+
+  const handleOpenAdminConsole = () => {
+    if (showAdmin) {
+      setShowAdmin(false);
+    } else {
+      if (isAuthorized) {
+        setShowAdmin(true);
+      } else {
+        setPasscodeModalOpen(true);
+        setPasscodeInput('');
+        setPasscodeError('');
+      }
+    }
+  };
+
+  const handleVerifyPasscode = (e: React.FormEvent) => {
+    e.preventDefault();
+    const correctPasscode = settings.adminPasscode || 'admin123';
+    if (passcodeInput === correctPasscode) {
+      setIsAuthorized(true);
+      localStorage.setItem('gst_owner_authorized', 'true');
+      setPasscodeModalOpen(false);
+      setShowAdmin(true);
+      setPasscodeError('');
+    } else {
+      setPasscodeError('Incorrect passcode. Please try again.');
+    }
+  };
+
+  const handleLogoutAdmin = () => {
+    setIsAuthorized(false);
+    setIsOwnerModeEnabled(false);
+    localStorage.setItem('gst_owner_authorized', 'false');
+    localStorage.removeItem('gst_owner_mode_enabled');
+    setShowAdmin(false);
+  };
 
   // Sync state to local storage
   useEffect(() => {
@@ -219,19 +288,31 @@ export default function App() {
           </div>
 
           {/* Settings Admin Toggle */}
-          <div>
-            <button
-              onClick={() => setShowAdmin(!showAdmin)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold font-display transition-all ${
-                showAdmin 
-                  ? 'bg-rose-500 text-white shadow-sm hover:bg-rose-600' 
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200/60'
-              }`}
-            >
-              <Settings size={14} className={showAdmin ? 'animate-spin' : ''} />
-              <span>{showAdmin ? 'Exit Owner Console' : 'Owner Control Panel'}</span>
-            </button>
-          </div>
+          {isOwnerModeEnabled && (
+            <div className="flex items-center gap-2">
+              {isAuthorized && (
+                <button
+                  onClick={handleLogoutAdmin}
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 border border-slate-200/60 text-slate-500 hover:text-rose-600 transition-colors"
+                  title="Log out of Admin session and hide console"
+                >
+                  <Lock size={12} />
+                  <span className="hidden sm:inline">Lock Panel</span>
+                </button>
+              )}
+              <button
+                onClick={handleOpenAdminConsole}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold font-display transition-all ${
+                  showAdmin 
+                    ? 'bg-rose-500 text-white shadow-sm hover:bg-rose-600' 
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200/60'
+                }`}
+              >
+                <Settings size={14} className={showAdmin ? 'animate-spin' : ''} />
+                <span>{showAdmin ? 'Exit Owner Console' : 'Owner Control Panel'}</span>
+              </button>
+            </div>
+          )}
         </div>
       </header>
 
@@ -371,6 +452,89 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Passcode Entry Modal for Admin Protection */}
+      <AnimatePresence>
+        {passcodeModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+              onClick={() => setPasscodeModalOpen(false)}
+            />
+
+            {/* Modal Card */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ duration: 0.2 }}
+              className="relative bg-white w-full max-w-md rounded-2xl shadow-xl border border-slate-200 p-6 z-10 overflow-hidden"
+            >
+              <button
+                onClick={() => setPasscodeModalOpen(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors"
+              >
+                <X size={18} />
+              </button>
+
+              <div className="flex flex-col items-center text-center mt-2">
+                <div className="w-12 h-12 bg-indigo-50 rounded-full flex items-center justify-center text-indigo-600 mb-4 border border-indigo-100">
+                  <Lock size={22} className="animate-pulse" />
+                </div>
+                
+                <h3 className="font-display font-bold text-slate-900 text-lg">
+                  Owner Passcode Required
+                </h3>
+                <p className="text-slate-500 text-xs mt-1.5 max-w-xs leading-relaxed">
+                  The Owner Control Panel contains private customer leads, conversion stats, and ad settings. Please verify ownership.
+                </p>
+
+                <form onSubmit={handleVerifyPasscode} className="w-full mt-6 space-y-4">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-500 text-left uppercase tracking-wider mb-1.5">
+                      Enter Admin Passcode
+                    </label>
+                    <input
+                      type="password"
+                      value={passcodeInput}
+                      onChange={(e) => setPasscodeInput(e.target.value)}
+                      placeholder="••••••••"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-center font-mono tracking-widest text-slate-800 text-sm"
+                      autoFocus
+                    />
+                    {passcodeError && (
+                      <span className="block text-rose-500 text-[11px] font-medium mt-1.5 text-left">
+                        {passcodeError}
+                      </span>
+                    )}
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl text-xs font-semibold shadow-sm transition-colors"
+                  >
+                    <Unlock size={14} />
+                    Unlock Console
+                  </button>
+                </form>
+
+                <div className="bg-slate-50 border border-slate-100 rounded-xl p-3 mt-5 w-full text-left">
+                  <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    Demo Passcode Hint
+                  </span>
+                  <p className="text-slate-600 text-xs mt-0.5 font-medium">
+                    The default passcode is <code className="bg-indigo-50 text-indigo-700 px-1.5 py-0.5 rounded border border-indigo-100/50 font-mono font-bold text-[11px]">admin123</code>. You can customize this passcode anytime inside the "Settings" tab of the panel once unlocked.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
     </div>
   );

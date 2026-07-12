@@ -383,6 +383,19 @@ export default function AdminPanel({
                 className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-600 focus:outline-hidden focus:ring-1 focus:ring-indigo-500"
               />
             </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
+                Customize Owner Panel Passcode
+              </label>
+              <input
+                type="text"
+                value={formData.adminPasscode || ''}
+                onChange={(e) => setFormData({ ...formData, adminPasscode: e.target.value })}
+                placeholder="admin123"
+                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-600 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 font-mono"
+              />
+            </div>
           </div>
 
           <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
