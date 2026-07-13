@@ -66,4 +66,7 @@ export interface SiteSettings {
   customConsultationLink: string;
   consultantSponsorFee: string;
   adminPasscode?: string;
+  showSponsorSection?: boolean;
+  showAffiliateSection?: boolean;
+  showAdSense?: boolean;
 }

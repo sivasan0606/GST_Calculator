@@ -40,6 +40,15 @@ export default function App() {
         if (!parsed.giddhLink) {
           parsed.giddhLink = '';
         }
+        if (parsed.showSponsorSection === undefined) {
+          parsed.showSponsorSection = false;
+        }
+        if (parsed.showAffiliateSection === undefined) {
+          parsed.showAffiliateSection = true;
+        }
+        if (parsed.showAdSense === undefined) {
+          parsed.showAdSense = true;
+        }
         return parsed;
       } catch (e) { /* ignore */ }
     }
@@ -51,7 +60,10 @@ export default function App() {
       tallyLink: '',
       customConsultationLink: '',
       consultantSponsorFee: '250',
-      adminPasscode: 'admin123'
+      adminPasscode: 'admin123',
+      showSponsorSection: false,
+      showAffiliateSection: true,
+      showAdSense: true
     };
   });
 
@@ -258,15 +270,17 @@ export default function App() {
     <div className="min-h-screen bg-slate-50 flex flex-col justify-between font-sans selection:bg-indigo-100 selection:text-indigo-900">
       
       {/* Top Banner Leaderboard Advertisement Slot */}
-      <div className="w-full bg-slate-100 border-b border-slate-200 py-1 px-4 text-center">
-        <div className="max-w-7xl mx-auto">
-          <AdSenseUnit 
-            slotId="top-leaderboard" 
-            format="leaderboard" 
-            adsenseClientId={settings.adsenseClientId} 
-          />
+      {settings.showAdSense !== false && (
+        <div className="w-full bg-slate-100 border-b border-slate-200 py-1 px-4 text-center">
+          <div className="max-w-7xl mx-auto">
+            <AdSenseUnit 
+              slotId="top-leaderboard" 
+              format="leaderboard" 
+              adsenseClientId={settings.adsenseClientId} 
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Main Premium Navbar */}
       <header className="sticky top-0 bg-white/90 backdrop-blur-md border-b border-slate-200 z-40">
@@ -375,36 +389,44 @@ export default function App() {
         />
 
         {/* In-Content Native Banner Ad slot */}
-        <AdSenseUnit 
-          slotId="in-content-native" 
-          format="banner" 
-          adsenseClientId={settings.adsenseClientId} 
-        />
-
-        {/* Affiliate comparison section */}
-        <AffiliateSection
-          zohoLink={settings.zohoLink}
-          vyaparLink={settings.vyaparLink}
-          giddhLink={settings.giddhLink}
-          tallyLink={settings.tallyLink}
-          onTrackClick={handleTrackAffiliateClick}
-        />
-
-        {/* Consultation list and lead capture form */}
-        <ConsultationSection
-          customConsultationLink={settings.customConsultationLink}
-          onLeadSubmit={handleLeadSubmit}
-          onTrackBooking={handleTrackSponsorBooking}
-        />
-
-        {/* Sidebar-style Square Ad Banner in a neat grid (Placed dynamically here for monetization density) */}
-        <div className="max-w-2xl mx-auto">
+        {settings.showAdSense !== false && (
           <AdSenseUnit 
-            slotId="sidebar-square" 
-            format="square" 
+            slotId="in-content-native" 
+            format="banner" 
             adsenseClientId={settings.adsenseClientId} 
           />
-        </div>
+        )}
+
+        {/* Affiliate comparison section */}
+        {settings.showAffiliateSection !== false && (
+          <AffiliateSection
+            zohoLink={settings.zohoLink}
+            vyaparLink={settings.vyaparLink}
+            giddhLink={settings.giddhLink}
+            tallyLink={settings.tallyLink}
+            onTrackClick={handleTrackAffiliateClick}
+          />
+        )}
+
+        {/* Consultation list and lead capture form */}
+        {settings.showSponsorSection === true && (
+          <ConsultationSection
+            customConsultationLink={settings.customConsultationLink}
+            onLeadSubmit={handleLeadSubmit}
+            onTrackBooking={handleTrackSponsorBooking}
+          />
+        )}
+
+        {/* Sidebar-style Square Ad Banner in a neat grid (Placed dynamically here for monetization density) */}
+        {settings.showAdSense !== false && (
+          <div className="max-w-2xl mx-auto">
+            <AdSenseUnit 
+              slotId="sidebar-square" 
+              format="square" 
+              adsenseClientId={settings.adsenseClientId} 
+            />
+          </div>
+        )}
 
         {/* Extensive SEO FAQ & Compliance Guides */}
         <SnoopingSEO />

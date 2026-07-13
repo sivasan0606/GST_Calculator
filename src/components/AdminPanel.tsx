@@ -396,6 +396,64 @@ export default function AdminPanel({
                 className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-600 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 font-mono"
               />
             </div>
+
+            <div className="col-span-1 md:col-span-2 border-t border-slate-800 pt-4 mt-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+                Feature Toggles & Section Visibility
+              </h4>
+              <div className="space-y-3 bg-slate-950/40 p-4 rounded-xl border border-slate-800">
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={formData.showSponsorSection ?? false}
+                    onChange={(e) => setFormData({ ...formData, showSponsorSection: e.target.checked })}
+                    className="w-4 h-4 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500 mt-0.5"
+                  />
+                  <div>
+                    <span className="block font-semibold text-white text-xs group-hover:text-indigo-400 transition-colors">
+                      Enable Sponsored Service Section (Chartered Accountants consultation)
+                    </span>
+                    <span className="block text-[11px] text-slate-500">
+                      Shows or hides the speaks-to-CA lead form and vetted expert listing. (Currently offline for now as requested).
+                    </span>
+                  </div>
+                </label>
+
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={formData.showAffiliateSection ?? true}
+                    onChange={(e) => setFormData({ ...formData, showAffiliateSection: e.target.checked })}
+                    className="w-4 h-4 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500 mt-0.5"
+                  />
+                  <div>
+                    <span className="block font-semibold text-white text-xs group-hover:text-indigo-400 transition-colors">
+                      Enable Affiliate Comparison Software Section
+                    </span>
+                    <span className="block text-[11px] text-slate-500">
+                      Shows or hides the comparison card grid of Zoho, Vyapar, Giddh, and Tally Prime.
+                    </span>
+                  </div>
+                </label>
+
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={formData.showAdSense ?? true}
+                    onChange={(e) => setFormData({ ...formData, showAdSense: e.target.checked })}
+                    className="w-4 h-4 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500 mt-0.5"
+                  />
+                  <div>
+                    <span className="block font-semibold text-white text-xs group-hover:text-indigo-400 transition-colors">
+                      Enable AdSense Banners
+                    </span>
+                    <span className="block text-[11px] text-slate-500">
+                      Shows or hides top, sidebar, and inline Google AdSense units.
+                    </span>
+                  </div>
+                </label>
+              </div>
+            </div>
           </div>
 
           <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
