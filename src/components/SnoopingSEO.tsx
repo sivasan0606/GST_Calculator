@@ -38,6 +38,21 @@ const faqData: FaqItem[] = [
     question: "How do I claim a GST Input Tax Credit (ITC)?",
     answer: "To claim ITC, you must possess a valid tax invoice or debit note, have received the goods/services, filed your GSTR-3B return, and the tax charged must have been paid to the government by your supplier. The invoice details must match GSTR-2B automatically in your portal.",
     keywords: ["input tax credit", "how to claim itc", "gstr-2b compliance"]
+  },
+  {
+    question: "Which GST billing software is best for Indian small businesses (MSMEs)?",
+    answer: "For offline-first mobile and desktop billing, Vyapar App is highly popular (you can use referral partner code 6VDQKQM during sign-up). For fully featured cloud-based ledger management, Zoho Books and Giddh are excellent solutions for modern teams, while Tally Prime remains the gold standard for chartered accountants who prefer offline keyboard shortcuts and robust audit trails.",
+    keywords: ["best gst billing software", "vyapar app vs tally", "zoho books vs giddh", "msme accounting india"]
+  },
+  {
+    question: "Does Vyapar App have a referral promo code for new accounts?",
+    answer: "Yes, you can register with the official partner referral promo code 6VDQKQM. This connects your account to special MSME packages and guarantees a premium trial. It allows you to unlock GST billing, offline inventory control, automated WhatsApp estimates, and purchase vouchers.",
+    keywords: ["vyapar referral code", "vyapar coupon code 6VDQKQM", "vyapar discount code", "vyapar desktop key free"]
+  },
+  {
+    question: "What is Giddh accounting software and its top features?",
+    answer: "Giddh is an Indian cloud accounting tool focusing on double-entry bookkeeping, automated GST calculations, and developer-friendly REST APIs. It is highly suited for startups who want direct database sync, beautiful financial dashboards, and multi-currency reporting.",
+    keywords: ["giddh accounting software", "giddh coupon code", "indian double-entry cloud accounting"]
   }
 ];
 

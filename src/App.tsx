@@ -28,14 +28,26 @@ export default function App() {
         if (!parsed.adminPasscode) {
           parsed.adminPasscode = 'admin123';
         }
+        if (parsed.quickbooksLink && !parsed.vyaparLink) {
+          parsed.vyaparLink = parsed.quickbooksLink;
+        }
+        if (!parsed.vyaparLink) {
+          parsed.vyaparLink = '';
+        }
+        if (parsed.xeroLink && !parsed.giddhLink) {
+          parsed.giddhLink = parsed.xeroLink;
+        }
+        if (!parsed.giddhLink) {
+          parsed.giddhLink = '';
+        }
         return parsed;
       } catch (e) { /* ignore */ }
     }
     return {
       adsenseClientId: '',
       zohoLink: '',
-      quickbooksLink: '',
-      xeroLink: '',
+      vyaparLink: '',
+      giddhLink: '',
       tallyLink: '',
       customConsultationLink: '',
       consultantSponsorFee: '250',
@@ -89,7 +101,7 @@ export default function App() {
     if (saved) {
       try { return JSON.parse(saved); } catch (e) { /* ignore */ }
     }
-    return { zoho: 4, quickbooks: 2, xero: 1, tally: 3 };
+    return { zoho: 4, vyapar: 2, giddh: 1, tally: 3 };
   });
 
   const [simulatedViews, setSimulatedViews] = useState(() => {
@@ -372,8 +384,8 @@ export default function App() {
         {/* Affiliate comparison section */}
         <AffiliateSection
           zohoLink={settings.zohoLink}
-          quickbooksLink={settings.quickbooksLink}
-          xeroLink={settings.xeroLink}
+          vyaparLink={settings.vyaparLink}
+          giddhLink={settings.giddhLink}
           tallyLink={settings.tallyLink}
           onTrackClick={handleTrackAffiliateClick}
         />

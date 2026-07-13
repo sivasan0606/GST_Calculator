@@ -28,6 +28,7 @@ export interface AffiliateSoftware {
   pricing: string;
   affiliateUrl: string;
   defaultUrl: string;
+  promoCode?: string;
 }
 
 export interface TaxConsultant {
@@ -59,8 +60,8 @@ export interface ConsultLead {
 export interface SiteSettings {
   adsenseClientId: string;
   zohoLink: string;
-  quickbooksLink: string;
-  xeroLink: string;
+  vyaparLink: string;
+  giddhLink: string;
   tallyLink: string;
   customConsultationLink: string;
   consultantSponsorFee: string;

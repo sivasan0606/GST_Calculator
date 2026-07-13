@@ -334,26 +334,26 @@ export default function AdminPanel({
 
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1">
-                QuickBooks Affiliate Link
+                Vyapar App Affiliate Link
               </label>
               <input
                 type="text"
-                value={formData.quickbooksLink}
-                onChange={(e) => setFormData({ ...formData, quickbooksLink: e.target.value })}
-                placeholder="https://quickbooks.intuit.com?ref=..."
+                value={formData.vyaparLink}
+                onChange={(e) => setFormData({ ...formData, vyaparLink: e.target.value })}
+                placeholder="https://www.vyaparapp.in?ref=..."
                 className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-600 focus:outline-hidden focus:ring-1 focus:ring-indigo-500"
               />
             </div>
 
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1">
-                Xero Accounting Referral Link
+                Giddh Accounting Referral Link
               </label>
               <input
                 type="text"
-                value={formData.xeroLink}
-                onChange={(e) => setFormData({ ...formData, xeroLink: e.target.value })}
-                placeholder="https://xero.com?partner=..."
+                value={formData.giddhLink}
+                onChange={(e) => setFormData({ ...formData, giddhLink: e.target.value })}
+                placeholder="https://giddh.com?ref=..."
                 className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-600 focus:outline-hidden focus:ring-1 focus:ring-indigo-500"
               />
             </div>

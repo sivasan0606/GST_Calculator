@@ -4,26 +4,27 @@
  */
 
 import React, { useState } from 'react';
-import { Star, ShieldCheck, ArrowRight, DollarSign, CheckCircle2 } from 'lucide-react';
+import { Star, ShieldCheck, ArrowRight, DollarSign, CheckCircle2, Copy } from 'lucide-react';
 import { motion } from 'motion/react';
 import { AffiliateSoftware } from '../types';
 
 interface AffiliateSectionProps {
   zohoLink: string;
-  quickbooksLink: string;
-  xeroLink: string;
+  vyaparLink: string;
+  giddhLink: string;
   tallyLink: string;
   onTrackClick: (softwareId: string, estPayout: number) => void;
 }
 
 export default function AffiliateSection({
   zohoLink,
-  quickbooksLink,
-  xeroLink,
+  vyaparLink,
+  giddhLink,
   tallyLink,
   onTrackClick
 }: AffiliateSectionProps) {
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   const softs: AffiliateSoftware[] = [
     {
@@ -38,26 +39,27 @@ export default function AffiliateSection({
       defaultUrl: 'https://www.zoho.com/books/'
     },
     {
-      id: 'quickbooks',
-      name: 'QuickBooks Online',
-      logo: 'https://images.unsplash.com/photo-1542744094-3a31f103e35f?w=80&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+      id: 'vyapar',
+      name: 'Vyapar App',
+      logo: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=80&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
       rating: 4.7,
-      description: 'Ideal global standard software for multi-currency tracking, complex cash flows, and advanced tax ledger reconciliations. Highly scalable with clean dashboard visual reports.',
-      pros: ['Excellent multi-currency capabilities', 'Flawless accountant ledger sharing', 'Powerful bank auto-reconciliation feeds'],
-      pricing: 'Free trial, then $30/month',
-      affiliateUrl: quickbooksLink,
-      defaultUrl: 'https://quickbooks.intuit.com/'
+      description: 'Still making paper bills? Switch to Vyapar App, trusted by over 1 Crore+ happy customers. 91% of businesses who use Vyapar report 5X more profits and streamlined accounting.',
+      pros: ['GST-Ready Billing & Secure SSL Protection', 'Trusted by ICAI Professional Accountants', 'Inventory tracking with WhatsApp payment reminders'],
+      pricing: '7-Day Free Trial, then starts from ₹1,999/year',
+      affiliateUrl: vyaparLink,
+      defaultUrl: 'https://www.vyaparapp.in/?referrer_code=6VDQKQM',
+      promoCode: '6VDQKQM'
     },
     {
-      id: 'xero',
-      name: 'Xero Accounting',
+      id: 'giddh',
+      name: 'Giddh Accounting',
       logo: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=80&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
       rating: 4.6,
-      description: 'A beautiful cloud accounting software designed specifically for creative firms, consultants, and ecommerce sellers. Highly customizable with over 1000+ app integrations.',
-      pros: ['Modern and highly clean dashboard design', 'Seamless Shopify & Stripe sync integrations', 'Bulk bank transaction reconciliations'],
-      pricing: 'From $15/month',
-      affiliateUrl: xeroLink,
-      defaultUrl: 'https://www.xero.com/'
+      description: 'An elegant, modern, cloud-first double-entry accounting software designed specifically for Indian businesses. Offers secure automated invoicing, bank reconciliation, and real-time GST reports.',
+      pros: ['Automated GST filing & ledger reconciliations', 'Multi-currency cloud dashboard tracking', 'Direct API integrations & developer-friendly hooks'],
+      pricing: 'Free Trial available, then ₹800/year onwards',
+      affiliateUrl: giddhLink,
+      defaultUrl: 'https://giddh.com/'
     },
     {
       id: 'tally',
@@ -74,9 +76,11 @@ export default function AffiliateSection({
 
   const handleCtaClick = (id: string, name: string) => {
     // Simulated affiliate tracking payouts
-    let estPayout = 15.00; // QuickBooks / Xero standard
+    let estPayout = 15.00; // Giddh / generic standard
+    if (id === 'vyapar') estPayout = 12.00;
     if (id === 'zoho') estPayout = 20.00;
     if (id === 'tally') estPayout = 35.00;
+    if (id === 'giddh') estPayout = 16.00;
 
     onTrackClick(id, estPayout);
     
@@ -147,6 +151,33 @@ export default function AffiliateSection({
                     </div>
                   ))}
                 </div>
+
+                {/* Promo/Referral Code Banner */}
+                {soft.promoCode && (
+                  <div className="bg-indigo-50/60 border border-indigo-100/80 rounded-xl p-3 mb-5 flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <span className="block text-[10px] font-bold text-indigo-500 uppercase tracking-wider">
+                        Partner Referral Code
+                      </span>
+                      <p className="text-slate-600 text-xs mt-0.5 font-medium">
+                        Use <strong className="text-indigo-700 font-bold">{soft.promoCode}</strong> during register to link your account.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(soft.promoCode || '');
+                        setCopiedCode(soft.id);
+                        setTimeout(() => setCopiedCode(null), 2500);
+                      }}
+                      className="bg-white hover:bg-indigo-50 text-indigo-600 border border-indigo-200/50 px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 active:scale-95 transition-all shrink-0 shadow-xs"
+                      title="Copy code to clipboard"
+                    >
+                      <Copy size={12} />
+                      <span>{copiedCode === soft.id ? 'Copied!' : soft.promoCode}</span>
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Bottom Actions */}
