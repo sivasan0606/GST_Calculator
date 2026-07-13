@@ -63,10 +63,10 @@ export default function SnoopingSEO() {
     <article className="my-16 bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 lg:p-10 shadow-xs">
       {/* Dynamic SEO Badge */}
       <div className="flex items-center gap-2 mb-4">
-        <span className="inline-flex items-center gap-1 bg-sky-50 text-sky-700 text-[10px] sm:text-xs px-2.5 py-1 rounded-full border border-sky-200/50 font-semibold font-display uppercase tracking-wider">
+        <span className="inline-flex items-center gap-1 bg-sky-50 text-sky-800 text-[10px] sm:text-xs px-2.5 py-1 rounded-full border border-sky-200/50 font-semibold font-display uppercase tracking-wider">
           <BookOpen size={12} /> Rich SEO Content Hub
         </span>
-        <span className="text-slate-400 text-xs font-mono">• 8,500+ Monthly Organic Search Potential</span>
+        <span className="text-slate-600 text-xs font-mono font-medium">• 8,500+ Monthly Organic Search Potential</span>
       </div>
 
       <h2 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 tracking-tight leading-tight">
@@ -87,7 +87,7 @@ export default function SnoopingSEO() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-sans">
               <thead>
-                <tr className="border-b border-slate-200 text-slate-400 font-medium">
+                <tr className="border-b border-slate-200 text-slate-600 font-semibold">
                   <th className="pb-2">Rate Slab</th>
                   <th className="pb-2">Type of Category</th>
                   <th className="pb-2">Example Goods / Services</th>
@@ -172,7 +172,7 @@ export default function SnoopingSEO() {
               Intra-State (Within Same State)
             </span>
             <h4 className="text-white text-xs font-semibold mb-1">Levy: CGST + SGST (50/50 Split)</h4>
-            <p className="text-[11px] text-slate-400 leading-relaxed">
+            <p className="text-[11px] text-slate-200 leading-relaxed">
               If your retail store is in Delhi and the buyer is in Delhi, a 18% GST item charges <strong>9% CGST</strong> (goes to Delhi central government account) and <strong>9% SGST</strong> (goes to Delhi state chest).
             </p>
           </div>
@@ -182,7 +182,7 @@ export default function SnoopingSEO() {
               Inter-State (To Different State)
             </span>
             <h4 className="text-white text-xs font-semibold mb-1">Levy: IGST (100% Integrated)</h4>
-            <p className="text-[11px] text-slate-400 leading-relaxed">
+            <p className="text-[11px] text-slate-200 leading-relaxed">
               If your ecommerce hub is in Maharashtra and you ship to Karnataka, you charge <strong>18% IGST</strong>. The tax is processed centrally first before distribution, saving administrative hurdles.
             </p>
           </div>

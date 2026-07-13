@@ -55,7 +55,7 @@ export default function App() {
     return {
       adsenseClientId: '',
       zohoLink: '',
-      vyaparLink: '',
+      vyaparLink: 'https://www.vyaparapp.in/?referrer_code=6VDQKQM',
       giddhLink: '',
       tallyLink: '',
       customConsultationLink: '',

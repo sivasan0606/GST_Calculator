@@ -30,7 +30,7 @@ export default function AffiliateSection({
     {
       id: 'zoho',
       name: 'Zoho Books',
-      logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=80&auto=format&fit=crop&q=60&ixlib=rb-4.0.3', // abstract colorful placeholder
+      logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=96&auto=format&fit=crop&q=40&fm=webp&ixlib=rb-4.0.3', // abstract colorful placeholder
       rating: 4.8,
       description: 'The absolute best GST-compliant accounting system for Indian enterprises. Fully automated e-invoicing, digital e-way bills, direct return filing to GST Portal, and elegant mobile apps.',
       pros: ['100% GST compliant out-of-the-box', 'Direct GST API filing connection', 'Generous free tier for startups & micro-biz'],
@@ -41,7 +41,7 @@ export default function AffiliateSection({
     {
       id: 'vyapar',
       name: 'Vyapar App',
-      logo: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=80&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+      logo: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=96&auto=format&fit=crop&q=40&fm=webp&ixlib=rb-4.0.3',
       rating: 4.7,
       description: 'Still making paper bills? Switch to Vyapar App, trusted by over 1 Crore+ happy customers. 91% of businesses who use Vyapar report 5X more profits and streamlined accounting.',
       pros: ['GST-Ready Billing & Secure SSL Protection', 'Trusted by ICAI Professional Accountants', 'Inventory tracking with WhatsApp payment reminders'],
@@ -53,7 +53,7 @@ export default function AffiliateSection({
     {
       id: 'giddh',
       name: 'Giddh Accounting',
-      logo: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=80&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+      logo: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=96&auto=format&fit=crop&q=40&fm=webp&ixlib=rb-4.0.3',
       rating: 4.6,
       description: 'An elegant, modern, cloud-first double-entry accounting software designed specifically for Indian businesses. Offers secure automated invoicing, bank reconciliation, and real-time GST reports.',
       pros: ['Automated GST filing & ledger reconciliations', 'Multi-currency cloud dashboard tracking', 'Direct API integrations & developer-friendly hooks'],
@@ -64,7 +64,7 @@ export default function AffiliateSection({
     {
       id: 'tally',
       name: 'TallyPrime 5.0',
-      logo: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=80&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+      logo: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=96&auto=format&fit=crop&q=40&fm=webp&ixlib=rb-4.0.3',
       rating: 4.5,
       description: 'The offline heavyweight standard in South Asia, now with Cloud Prime access. Unmatched inventory management speeds, complete voucher controls, and strong regional CA preference.',
       pros: ['Ultra-fast keyboard shortcut navigation', 'Strong local accountant system integration', 'Comprehensive inventory voucher features'],
@@ -91,13 +91,13 @@ export default function AffiliateSection({
   return (
     <section id="accounting-software" className="my-12">
       <div className="text-center mb-8">
-        <span className="text-indigo-600 bg-indigo-50 font-display text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+        <span className="text-indigo-800 bg-indigo-50 font-display text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
           Partner Offers
         </span>
         <h2 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 mt-2">
           Top GST & Accounting Software for 2026
         </h2>
-        <p className="text-slate-600 text-sm max-w-xl mx-auto mt-2">
+        <p className="text-slate-700 text-sm max-w-xl mx-auto mt-2">
           Automate your business filing, stay compliant, and avoid heavy GST penalties. Compare the highest-rated tools below.
         </p>
       </div>
@@ -126,19 +126,19 @@ export default function AffiliateSection({
                       <h3 className="font-display font-bold text-lg text-slate-900 truncate">
                         {soft.name}
                       </h3>
-                      <div className="flex items-center gap-1 bg-amber-50 text-amber-800 text-xs px-2 py-0.5 rounded-md font-semibold shrink-0">
+                      <div className="flex items-center gap-1 bg-amber-50 text-amber-900 text-xs px-2 py-0.5 rounded-md font-semibold shrink-0">
                         <Star size={12} className="fill-amber-500 text-amber-500" />
                         <span>{soft.rating}</span>
                       </div>
                     </div>
-                    <p className="text-xs font-medium text-indigo-600 mt-0.5 flex items-center gap-1">
+                    <p className="text-xs font-semibold text-indigo-700 mt-0.5 flex items-center gap-1">
                       <ShieldCheck size={12} /> GST Certified System
                     </p>
                   </div>
                 </div>
 
                 {/* Description */}
-                <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                <p className="text-xs text-slate-700 leading-relaxed mb-4">
                   {soft.description}
                 </p>
 
@@ -146,7 +146,7 @@ export default function AffiliateSection({
                 <div className="space-y-2 mb-5">
                   {soft.pros.map((pro, index) => (
                     <div key={index} className="flex items-start gap-2 text-xs text-slate-700">
-                      <CheckCircle2 size={14} className="text-emerald-500 mt-0.5 shrink-0" />
+                      <CheckCircle2 size={14} className="text-emerald-600 mt-0.5 shrink-0" />
                       <span>{pro}</span>
                     </div>
                   ))}
@@ -156,11 +156,11 @@ export default function AffiliateSection({
                 {soft.promoCode && (
                   <div className="bg-indigo-50/60 border border-indigo-100/80 rounded-xl p-3 mb-5 flex items-center justify-between gap-3">
                     <div className="min-w-0">
-                      <span className="block text-[10px] font-bold text-indigo-500 uppercase tracking-wider">
+                      <span className="block text-[10px] font-bold text-indigo-700 uppercase tracking-wider">
                         Partner Referral Code
                       </span>
-                      <p className="text-slate-600 text-xs mt-0.5 font-medium">
-                        Use <strong className="text-indigo-700 font-bold">{soft.promoCode}</strong> during register to link your account.
+                      <p className="text-slate-700 text-xs mt-0.5 font-medium">
+                        Use <strong className="text-indigo-800 font-bold">{soft.promoCode}</strong> during register to link your account.
                       </p>
                     </div>
                     <button
@@ -170,7 +170,7 @@ export default function AffiliateSection({
                         setCopiedCode(soft.id);
                         setTimeout(() => setCopiedCode(null), 2500);
                       }}
-                      className="bg-white hover:bg-indigo-50 text-indigo-600 border border-indigo-200/50 px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 active:scale-95 transition-all shrink-0 shadow-xs"
+                      className="bg-white hover:bg-indigo-50 text-indigo-700 border border-indigo-200/50 px-3 py-2 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 active:scale-95 transition-all shrink-0 shadow-xs min-h-[40px] justify-center"
                       title="Copy code to clipboard"
                     >
                       <Copy size={12} />
@@ -182,9 +182,9 @@ export default function AffiliateSection({
 
               {/* Bottom Actions */}
               <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-4 mt-auto">
-                <div className="font-mono text-xs text-slate-500">
-                  <span className="block text-[10px] text-slate-400 font-sans uppercase">Starting Price</span>
-                  <strong className="text-slate-800 font-semibold">{soft.pricing}</strong>
+                <div className="font-mono text-xs text-slate-600">
+                  <span className="block text-[10px] text-slate-500 font-sans uppercase">Starting Price</span>
+                  <strong className="text-slate-900 font-semibold">{soft.pricing}</strong>
                 </div>
                 <div>
                   <a
@@ -192,7 +192,7 @@ export default function AffiliateSection({
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => handleCtaClick(soft.id, soft.name)}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-display text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5 shadow-xs hover:shadow-md transition-all active:scale-95 group/btn"
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-display text-xs font-semibold px-4 py-2.5 rounded-lg flex items-center gap-1.5 shadow-xs hover:shadow-md transition-all active:scale-95 group/btn min-h-[40px]"
                   >
                     <span>Claim Offer</span>
                     <ArrowRight size={14} className="group-hover/btn:translate-x-0.5 transition-transform" />

@@ -1,0 +1,17 @@
+# SimplyTools - GST Calculator & Accounting Software Comparison
+
+> SimplyTools is a professional, lightning-fast suite of business utility tools designed for Indian shopkeepers, SMEs, freelancers, and accountants.
+
+## Core Features
+
+- **GST Calculator**: Calculate CGST, SGST, and IGST breakdowns instantly with custom rate inputs, simple toggles to Add/Remove GST, and visual percentage splits.
+- **Partner Software Comparison**: Side-by-side assessment of India's top accounting software, including Vyapar App (Referral code `6VDQKQM`), Zoho Books, Giddh Accounting, and TallyPrime 5.0.
+- **Comprehensive GST Knowledge Base**: Built-in guides, mathematical formulas, and active slab references for absolute tax compliance.
+
+## Links
+
+- [GST Calculator](https://simplytools.in/) - Main application and tool
+- [Vyapar App Offer](https://www.vyaparapp.in/?referrer_code=6VDQKQM) - Dedicated billing app with exclusive referrer advantages
+- [Zoho Books](https://www.zoho.com/books/) - Cloud GST certified system
+- [Giddh Accounting](https://giddh.com/) - Double-entry cloud portal
+- [Tally Prime](https://tallysolutions.com/) - Regional standard accounting software
