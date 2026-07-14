@@ -209,6 +209,36 @@ export default function App() {
     localStorage.setItem('gst_simulated_views', simulatedViews.toString());
   }, [simulatedViews]);
 
+  // Dynamically load Google AdSense script only after hydration and when allowed
+  useEffect(() => {
+    if (settings.showAdSense === false || showAdmin || passcodeModalOpen || legalModalOpen) {
+      // If ads are disabled, in admin mode, or any modal is open, remove any existing adsbygoogle script
+      const existingScript = document.querySelector('script[src*="adsbygoogle.js"]');
+      if (existingScript) {
+        existingScript.remove();
+      }
+      return;
+    }
+
+    const clientId = settings.adsenseClientId || 'ca-pub-9724813909212689';
+    const scriptSrc = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${clientId}`;
+    
+    // Check if the script with this client ID is already in the document
+    const existingScript = document.querySelector(`script[src="${scriptSrc}"]`);
+    if (!existingScript) {
+      // Remove any other adsbygoogle scripts with different client IDs to avoid conflicts
+      const otherScripts = document.querySelectorAll('script[src*="adsbygoogle.js"]');
+      otherScripts.forEach(s => s.remove());
+
+      // Create and append the new script tag
+      const script = document.createElement('script');
+      script.src = scriptSrc;
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      document.head.appendChild(script);
+    }
+  }, [settings.showAdSense, settings.adsenseClientId, showAdmin, passcodeModalOpen, legalModalOpen]);
+
   // Simulate passive SEO organic search views over time
   useEffect(() => {
     const interval = setInterval(() => {
@@ -272,7 +302,7 @@ export default function App() {
     <div className="min-h-screen bg-slate-50 flex flex-col justify-between font-sans selection:bg-indigo-100 selection:text-indigo-900">
       
       {/* Top Banner Leaderboard Advertisement Slot */}
-      {settings.showAdSense !== false && (
+      {settings.showAdSense !== false && !showAdmin && !passcodeModalOpen && !legalModalOpen && (
         <div className="w-full bg-slate-100 border-b border-slate-200 py-1 px-4 text-center">
           <div className="max-w-7xl mx-auto">
             <AdSenseUnit 
@@ -391,7 +421,7 @@ export default function App() {
         />
 
         {/* In-Content Native Banner Ad slot */}
-        {settings.showAdSense !== false && (
+        {settings.showAdSense !== false && !showAdmin && !passcodeModalOpen && !legalModalOpen && (
           <AdSenseUnit 
             slotId="in-content-native" 
             format="banner" 
@@ -420,7 +450,7 @@ export default function App() {
         )}
 
         {/* Sidebar-style Square Ad Banner in a neat grid (Placed dynamically here for monetization density) */}
-        {settings.showAdSense !== false && (
+        {settings.showAdSense !== false && !showAdmin && !passcodeModalOpen && !legalModalOpen && (
           <div className="max-w-2xl mx-auto">
             <AdSenseUnit 
               slotId="sidebar-square" 
