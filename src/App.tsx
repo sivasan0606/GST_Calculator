@@ -14,6 +14,7 @@ import AffiliateSection from './components/AffiliateSection';
 import ConsultationSection from './components/ConsultationSection';
 import SnoopingSEO from './components/SnoopingSEO';
 import AdminPanel from './components/AdminPanel';
+import LegalModal from './components/LegalModal';
 
 // Types
 import { GSTCalculation, ConsultLead, SiteSettings } from './types';
@@ -44,7 +45,7 @@ export default function App() {
           parsed.showSponsorSection = false;
         }
         if (parsed.showAffiliateSection === undefined) {
-          parsed.showAffiliateSection = true;
+          parsed.showAffiliateSection = false;
         }
         if (parsed.showAdSense === undefined) {
           parsed.showAdSense = true;
@@ -62,7 +63,7 @@ export default function App() {
       consultantSponsorFee: '250',
       adminPasscode: 'admin123',
       showSponsorSection: false,
-      showAffiliateSection: true,
+      showAffiliateSection: false,
       showAdSense: true
     };
   });
@@ -127,6 +128,7 @@ export default function App() {
     return localStorage.getItem('gst_owner_authorized') === 'true';
   });
   const [passcodeModalOpen, setPasscodeModalOpen] = useState(false);
+  const [legalModalOpen, setLegalModalOpen] = useState(false);
   const [passcodeInput, setPasscodeInput] = useState('');
   const [passcodeError, setPasscodeError] = useState('');
 
@@ -460,7 +462,14 @@ export default function App() {
                 <li><a href="#accounting-software" className="hover:text-white transition-colors">Compare Accounting Platforms</a></li>
                 <li><a href="#tax-consultants" className="hover:text-white transition-colors">Book CA Consultations</a></li>
                 <li><a href="#gst-receipt-display" className="hover:text-white transition-colors">Calculate CGST & SGST</a></li>
-                <li><a href="#accounting-software" className="hover:text-white transition-colors">E-Invoice PDF Generator</a></li>
+                <li>
+                  <button 
+                    onClick={() => setLegalModalOpen(true)} 
+                    className="hover:text-white text-indigo-400 font-semibold transition-colors flex items-center gap-1"
+                  >
+                    <ShieldCheck size={12} /> Disclaimer & Legal Waiver
+                  </button>
+                </li>
               </ul>
             </div>
 
@@ -472,6 +481,12 @@ export default function App() {
               <p className="text-slate-400 text-[11px] leading-relaxed">
                 Calculations provided on this portal are for educational, informational, and general estimation purposes. Consult with a registered Chartered Accountant before submitting final tax liabilities or compliance forms.
               </p>
+              <button 
+                onClick={() => setLegalModalOpen(true)} 
+                className="text-indigo-400 hover:text-indigo-300 transition-colors text-[11px] font-semibold underline flex items-center gap-1 mt-2"
+              >
+                View Complete Liability Waivers & Terms
+              </button>
             </div>
 
           </div>
@@ -480,8 +495,27 @@ export default function App() {
             <span className="text-[11px] text-slate-500 font-mono">
               © 2026 GST Calculator Hub • Built for Maximum SEO & Multi-channel Monetization.
             </span>
-            <div className="flex gap-4 text-[11px] font-medium">
-              <span className="text-slate-500">Developer Cloud Sandbox • Ready for Netlify & Vercel</span>
+            <div className="flex gap-3 text-[11px] font-medium items-center">
+              <button 
+                onClick={() => setLegalModalOpen(true)}
+                className="text-slate-500 hover:text-indigo-400 transition-colors underline"
+              >
+                Disclaimer
+              </button>
+              <span className="text-slate-700">•</span>
+              <button 
+                onClick={() => setLegalModalOpen(true)}
+                className="text-slate-500 hover:text-indigo-400 transition-colors underline"
+              >
+                Terms of Service
+              </button>
+              <span className="text-slate-700">•</span>
+              <button 
+                onClick={() => setLegalModalOpen(true)}
+                className="text-slate-500 hover:text-indigo-400 transition-colors underline"
+              >
+                Privacy Policy
+              </button>
             </div>
           </div>
         </div>
@@ -567,6 +601,12 @@ export default function App() {
               </div>
             </motion.div>
           </div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {legalModalOpen && (
+          <LegalModal isOpen={legalModalOpen} onClose={() => setLegalModalOpen(false)} />
         )}
       </AnimatePresence>
 
