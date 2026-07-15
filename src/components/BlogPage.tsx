@@ -11,9 +11,10 @@ import { BlogPost, SiteSettings } from '../types';
 interface BlogPageProps {
   posts: BlogPost[];
   settings: SiteSettings;
+  onNavigateToCalculator?: () => void;
 }
 
-export default function BlogPage({ posts, settings }: BlogPageProps) {
+export default function BlogPage({ posts, settings, onNavigateToCalculator }: BlogPageProps) {
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -410,13 +411,18 @@ export default function BlogPage({ posts, settings }: BlogPageProps) {
             We partner directly with leading Indian providers like Zoho Books, Vyapar, and Giddh to offer discount codes and exclusive onboarding guidance.
           </p>
         </div>
-        <a
-          href="#accounting-software"
-          className="bg-white hover:bg-slate-100 text-indigo-950 font-semibold px-4.5 py-2 rounded-xl text-xs flex items-center gap-1 transition-all active:scale-95 shrink-0"
+        <button
+          onClick={(e) => {
+            if (onNavigateToCalculator) {
+              e.preventDefault();
+              onNavigateToCalculator();
+            }
+          }}
+          className="bg-white hover:bg-slate-100 text-indigo-950 font-semibold px-4.5 py-2 rounded-xl text-xs flex items-center gap-1 transition-all active:scale-95 shrink-0 cursor-pointer"
         >
           <span>Compare Partner Perks</span>
           <ChevronRight size={14} />
-        </a>
+        </button>
       </div>
 
     </div>

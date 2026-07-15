@@ -222,8 +222,8 @@ export default function App() {
         if (parsed.showSponsorSection === undefined) {
           parsed.showSponsorSection = false;
         }
-        if (parsed.showAffiliateSection === undefined) {
-          parsed.showAffiliateSection = false;
+        if (parsed.showAffiliateSection === undefined || parsed.showAffiliateSection === false) {
+          parsed.showAffiliateSection = true;
         }
         if (parsed.showAdSense === undefined) {
           parsed.showAdSense = true;
@@ -243,7 +243,7 @@ export default function App() {
       consultantSponsorFee: '250',
       adminPasscode: 'admin123',
       showSponsorSection: false,
-      showAffiliateSection: false,
+      showAffiliateSection: true,
       showAdSense: true,
       showBlogSection: true
     };
@@ -721,7 +721,43 @@ export default function App() {
             <SnoopingSEO />
           </>
         ) : (settings.showBlogSection || isOwnerModeEnabled) ? (
-          <BlogPage posts={posts} settings={settings} />
+          <BlogPage
+            posts={posts}
+            settings={settings}
+            onNavigateToCalculator={() => {
+              setCurrentView('calculator');
+              if (!settings.showAffiliateSection) {
+                const updated = { ...settings, showAffiliateSection: true };
+                setSettings(updated);
+                localStorage.setItem('simplytools_settings', JSON.stringify(updated));
+              }
+              
+              // Robust scroll helper with retry and sticky header offset
+              const scrollToSection = () => {
+                const el = document.getElementById('accounting-software');
+                if (el) {
+                  // Calculate scroll position accounting for the sticky header (approx 80px offset)
+                  const headerOffset = 80;
+                  const elementPosition = el.getBoundingClientRect().top + window.scrollY;
+                  const offsetPosition = elementPosition - headerOffset;
+                  
+                  window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                  });
+                  return true;
+                }
+                return false;
+              };
+
+              // Try immediately, and retry with backoffs to guarantee success
+              setTimeout(() => {
+                if (!scrollToSection()) {
+                  setTimeout(scrollToSection, 150);
+                }
+              }, 150);
+            }}
+          />
         ) : (
           <>
             {/* Fallback to calculator if someone tries to reach blog when disabled */}
