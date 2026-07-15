@@ -213,16 +213,56 @@ export default function LegalModal({ isOpen, onClose }: LegalModalProps) {
             <div className="space-y-4">
               <h3 className="text-slate-900 font-display font-bold text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
                 <FileText size={16} className="text-indigo-600" />
-                4. Privacy Policy & Local Storage Disclosures
+                4. Comprehensive Privacy Policy & Google AdSense Compliance Disclosures
               </h3>
               <p>
-                <strong>4.1 Local Storage Preservation:</strong> Your privacy is fully respected. Your local business profiles, tax settings, active calculator numbers, and previous tax ledger lists are stored strictly inside your local browser storage memory (<code className="bg-slate-100 px-1 py-0.5 rounded font-mono">localStorage</code>). SimplyTools does not operate a background tracking server and does not transmit, store, or sell your local tax details or calculations.
+                <strong>4.1 Introduction & Consent:</strong> At SimplyTools (simplytools.in), accessible from our website, one of our main priorities is the privacy of our visitors. This Privacy Policy document outlines the types of information collected and recorded by SimplyTools and how we utilize it. By continuing to use our website, you hereby consent to our Privacy Policy and agree to its terms.
               </p>
+              
+              <div className="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <h4 className="font-bold text-slate-900 text-[11px] uppercase tracking-wider flex items-center gap-1.5 text-indigo-700">
+                  <ShieldCheck size={14} />
+                  4.2 MANDATORY GOOGLE ADSENSE & COOKIES POLICY
+                </h4>
+                <p className="text-slate-600 leading-relaxed text-[11px]">
+                  SimplyTools displays third-party advertisement banners supplied by the Google AdSense network. To ensure full compliance with Google AdSense program policies, we declare the following:
+                </p>
+                <ul className="list-disc pl-5 text-[11px] text-slate-600 space-y-1.5">
+                  <li><strong>Third-Party Vendors & Cookies:</strong> Google and other third-party advertisement vendors use proprietary tracking cookies (including the DoubleClick DART cookie) to serve personalized, contextual ads based on your prior visits to this website and other portals on the internet.</li>
+                  <li><strong>Personalized Advertising:</strong> Google’s use of advertising cookies enables it and its partners to serve targeted ads to our users based on their navigation patterns on SimplyTools and other domains across the World Wide Web.</li>
+                  <li><strong>How to Opt-Out:</strong> You may choose to opt-out of personalized, cookie-based advertising at any time. You can disable custom ads by visiting the official <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline font-semibold">Google Ads Settings</a> page. Alternatively, you may choose to opt-out of third-party vendors' customized advertising cookies by visiting the <a href="https://www.aboutads.info" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline font-semibold">Network Advertising Initiative (NAI) / AboutAds</a> opt-out directory.</li>
+                  <li><strong>Browser Controls:</strong> Most web browsers allow you to block, manage, or delete cookies altogether. You can inspect your browser's help guidelines to manage these preferences.</li>
+                </ul>
+              </div>
+
               <p>
-                <strong>4.2 Google AdSense & Cookies:</strong> If enabled, this website serves Google AdSense advertisement banners. Google uses specific cookie protocols (such as the DART cookie) to serve relevant ads based on your visits to this and other internet portals. You can choose to opt-out of personalized advertising by visiting your browser settings or Google Ad settings.
+                <strong>4.3 Local Browser Storage Storage Memory (localStorage):</strong> To deliver a superior user experience without storing personal accounting logs on external databases, your local business profiles, tax percentage settings, active calculator states, and recent transaction lists are stored locally within your browser's sandbox (<code className="bg-slate-100 px-1 py-0.5 rounded font-mono text-[10px]">localStorage</code>). This data is completely private, remains under your exclusive device control, and is never transmitted, shared, synced, or sold by SimplyTools.
               </p>
+
               <p>
-                <strong>4.3 Contact Forms & Leads:</strong> Any contact or booking forms filled on this website are transmitted securely to provide the requested service. We never sell, lease, or distribute your email, phone, or name to unauthorized cold-calling networks.
+                <strong>4.4 Lead Forms & CA Booking Information:</strong> When you voluntarily submit a request through our CA Consultation & Sponsorship forms, we collect the necessary business contact details (such as Name, Email, Phone Number, City, and Turnover details). This information is solely utilized to process your advisory connection request or booking request with a qualified professional. We enforce strict internal safeguards and never sell, lease, rent, or distribute this data to third-party marketing brokers or cold-calling agencies.
+              </p>
+
+              <div className="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <h4 className="font-bold text-slate-900 text-[11px] uppercase tracking-wider text-slate-800">
+                  4.5 INDIAN DIGITAL PERSONAL DATA PROTECTION (DPDP) ACT, 2023 COMPLIANCE
+                </h4>
+                <p className="text-slate-600 leading-relaxed text-[11px]">
+                  Since our core digital audience consists of Indian MSMEs, tax practitioners, and independent freelancers, we respect and align our operations with the **Digital Personal Data Protection Act (DPDP Act) of India, 2023**:
+                </p>
+                <ul className="list-disc pl-5 text-[11px] text-slate-600 space-y-1.5">
+                  <li><strong>Consent-Based Processing:</strong> We collect contact or consultation details strictly through active, affirmative opt-in consent.</li>
+                  <li><strong>Right to Erasure & Correction:</strong> Users hold the absolute right to correct, update, or request the complete deletion of their personal consultation lead histories or contacts submitted through our forms. To execute these rights, please contact our support desk or request a wipe through the site's local tools.</li>
+                  <li><strong>Minimal Collection:</strong> We collect only the minimum required data necessary to establish a direct connection with your matched CA professional or affiliate software partner.</li>
+                </ul>
+              </div>
+
+              <p>
+                <strong>4.6 California Consumer Privacy Act (CCPA) & GDPR Rights:</strong> Users from the EU (under General Data Protection Regulation) and California (under CCPA) hold statutory rights including the Right to Access, Right to Rectification, Right to Erasure, and Right to Object to data processing. Since we do not track or persist individual user navigation logs on our servers, these protections are naturally maintained. If you believe any of your contact form data was stored inaccurately, you are free to reach out to us directly for an immediate purge.
+              </p>
+
+              <p>
+                <strong>4.7 Contact & Data Controller Information:</strong> If you have any remaining questions, compliance inquiries, or data removal requests regarding our Privacy Policy and Google AdSense guidelines, please feel free to reach out to our team at <span className="font-semibold text-indigo-700">sivasan0606@gmail.com</span>.
               </p>
             </div>
           )}

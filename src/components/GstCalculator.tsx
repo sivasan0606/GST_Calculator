@@ -175,7 +175,7 @@ Calculated on Free GST Calculator Hub`;
         <div className="space-y-5">
           {/* Amount input */}
           <div>
-            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+            <label htmlFor="gst-amount-input" className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
               {isAddGst ? 'Net Amount (Pre-Tax Price)' : 'Total Amount (Inclusive Price)'}
             </label>
             <div className="relative rounded-xl shadow-xs">
@@ -183,6 +183,7 @@ Calculated on Free GST Calculator Hub`;
                 <span className="text-slate-400 font-display font-medium text-base">₹</span>
               </div>
               <input
+                id="gst-amount-input"
                 type="number"
                 value={amountInput}
                 onChange={(e) => setAmountInput(e.target.value)}
@@ -234,10 +235,12 @@ Calculated on Free GST Calculator Hub`;
                 >
                   <div className="relative rounded-lg shadow-xs">
                     <input
+                      id="gst-custom-rate-input"
                       type="number"
                       value={customRate}
                       onChange={(e) => setCustomRate(e.target.value)}
                       placeholder="Enter custom rate e.g. 15"
+                      aria-label="Custom GST Rate Percentage"
                       className="block w-full pr-10 pl-3 py-2 border border-slate-200 rounded-lg font-mono text-xs text-slate-700 placeholder-slate-400 focus:outline-hidden focus:ring-1 focus:ring-indigo-500"
                     />
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -277,11 +280,12 @@ Calculated on Free GST Calculator Hub`;
 
           {/* Save calculation parameters */}
           <div className="pt-2">
-            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+            <label htmlFor="gst-history-label-input" className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
               Save To History Label (Optional)
             </label>
             <div className="flex gap-2">
               <input
+                id="gst-history-label-input"
                 type="text"
                 value={labelInput}
                 onChange={(e) => setLabelInput(e.target.value)}
@@ -322,8 +326,9 @@ Calculated on Free GST Calculator Hub`;
             >
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-[10px] font-semibold text-slate-500 uppercase">Invoice Number</label>
+                  <label htmlFor="gst-invoice-number-input" className="block text-[10px] font-semibold text-slate-500 uppercase">Invoice Number</label>
                   <input
+                    id="gst-invoice-number-input"
                     type="text"
                     value={invoiceNumber}
                     onChange={(e) => setInvoiceNumber(e.target.value)}
@@ -331,8 +336,9 @@ Calculated on Free GST Calculator Hub`;
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-semibold text-slate-500 uppercase">Client Business Name</label>
+                  <label htmlFor="gst-client-name-input" className="block text-[10px] font-semibold text-slate-500 uppercase">Client Business Name</label>
                   <input
+                    id="gst-client-name-input"
                     type="text"
                     value={clientName}
                     onChange={(e) => setClientName(e.target.value)}
@@ -340,8 +346,9 @@ Calculated on Free GST Calculator Hub`;
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-semibold text-slate-500 uppercase">Description of Goods</label>
+                  <label htmlFor="gst-item-name-input" className="block text-[10px] font-semibold text-slate-500 uppercase">Description of Goods</label>
                   <input
+                    id="gst-item-name-input"
                     type="text"
                     value={itemName}
                     onChange={(e) => setItemName(e.target.value)}

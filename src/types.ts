@@ -69,4 +69,18 @@ export interface SiteSettings {
   showSponsorSection?: boolean;
   showAffiliateSection?: boolean;
   showAdSense?: boolean;
+  showBlogSection?: boolean;
 }
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  author: string;
+  category: string;
+  publishedAt: string;
+  readTime: string;
+}
+

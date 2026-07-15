@@ -145,6 +145,8 @@ export default function ConsultationSection({
                 <img
                   src={consultant.image}
                   alt={consultant.name}
+                  width={56}
+                  height={56}
                   className="w-14 h-14 rounded-full object-cover border border-slate-700 mx-auto sm:mx-0 shrink-0"
                   referrerPolicy="no-referrer"
                 />
@@ -216,10 +218,11 @@ export default function ConsultationSection({
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1 flex items-center gap-1">
+                  <label htmlFor="consult-name-input" className="block text-xs font-medium text-slate-300 mb-1 flex items-center gap-1">
                     <User size={12} className="text-indigo-400" /> Full Name <span className="text-emerald-400">*</span>
                   </label>
                   <input
+                    id="consult-name-input"
                     type="text"
                     required
                     value={formData.name}
@@ -231,10 +234,11 @@ export default function ConsultationSection({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1 flex items-center gap-1">
+                    <label htmlFor="consult-email-input" className="block text-xs font-medium text-slate-300 mb-1 flex items-center gap-1">
                       <Mail size={12} className="text-indigo-400" /> Email Address <span className="text-emerald-400">*</span>
                     </label>
                     <input
+                      id="consult-email-input"
                       type="email"
                       required
                       value={formData.email}
@@ -244,10 +248,11 @@ export default function ConsultationSection({
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1 flex items-center gap-1">
+                    <label htmlFor="consult-phone-input" className="block text-xs font-medium text-slate-300 mb-1 flex items-center gap-1">
                       <Phone size={12} className="text-indigo-400" /> Phone Number <span className="text-emerald-400">*</span>
                     </label>
                     <input
+                      id="consult-phone-input"
                       type="tel"
                       required
                       value={formData.phone}
@@ -260,10 +265,11 @@ export default function ConsultationSection({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1 flex items-center gap-1">
+                    <label htmlFor="consult-bizsize-select" className="block text-xs font-medium text-slate-300 mb-1 flex items-center gap-1">
                       <Briefcase size={12} className="text-indigo-400" /> Business Size
                     </label>
                     <select
+                      id="consult-bizsize-select"
                       value={formData.businessType}
                       onChange={(e) => setFormData({...formData, businessType: e.target.value})}
                       className="w-full bg-slate-900/80 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-hidden focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
@@ -275,10 +281,11 @@ export default function ConsultationSection({
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1 flex items-center gap-1">
+                    <label htmlFor="consult-agent-select" className="block text-xs font-medium text-slate-300 mb-1 flex items-center gap-1">
                       <Calendar size={12} className="text-indigo-400" /> Preferred Agent
                     </label>
                     <select
+                      id="consult-agent-select"
                       value={formData.consultantId}
                       onChange={(e) => setFormData({...formData, consultantId: e.target.value})}
                       className="w-full bg-slate-900/80 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-hidden focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
@@ -292,10 +299,11 @@ export default function ConsultationSection({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                  <label htmlFor="consult-message-textarea" className="block text-xs font-medium text-slate-300 mb-1">
                     What can we help you with?
                   </label>
                   <textarea
+                    id="consult-message-textarea"
                     rows={3}
                     value={formData.message}
                     onChange={(e) => setFormData({...formData, message: e.target.value})}

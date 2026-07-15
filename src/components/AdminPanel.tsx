@@ -4,9 +4,9 @@
  */
 
 import React, { useState } from 'react';
-import { Settings, BarChart3, Users, DollarSign, Download, Save, Check, RefreshCw, Trash2, Mail, Phone, Calendar, Info, Globe, ShieldCheck } from 'lucide-react';
+import { Settings, BarChart3, Users, DollarSign, Download, Save, Check, RefreshCw, Trash2, Mail, Phone, Calendar, Info, Globe, ShieldCheck, FileText, Send, BookOpen } from 'lucide-react';
 import { motion } from 'motion/react';
-import { ConsultLead, SiteSettings } from '../types';
+import { ConsultLead, SiteSettings, BlogPost } from '../types';
 
 interface AdminPanelProps {
   settings: SiteSettings;
@@ -16,6 +16,9 @@ interface AdminPanelProps {
   onDeleteLead: (leadId: string) => void;
   affiliateClicks: { [key: string]: number };
   simulatedViews: number;
+  posts: BlogPost[];
+  onAddPost: (post: BlogPost) => void;
+  onDeletePost: (id: string) => void;
 }
 
 export default function AdminPanel({
@@ -25,11 +28,28 @@ export default function AdminPanel({
   onUpdateLeadStatus,
   onDeleteLead,
   affiliateClicks,
-  simulatedViews
+  simulatedViews,
+  posts,
+  onAddPost,
+  onDeletePost
 }: AdminPanelProps) {
-  const [activeTab, setActiveTab] = useState<'overview' | 'settings' | 'leads'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'settings' | 'leads' | 'blog'>('overview');
   const [formData, setFormData] = useState<SiteSettings>({ ...settings });
   const [savedStatus, setSavedStatus] = useState(false);
+
+  React.useEffect(() => {
+    setFormData({ ...settings });
+  }, [settings]);
+
+  // New BlogPost Draft Form State
+  const [newPostTitle, setNewPostTitle] = useState('');
+  const [newPostCategory, setNewPostCategory] = useState('Comparisons');
+  const [newPostExcerpt, setNewPostExcerpt] = useState('');
+  const [newPostContent, setNewPostContent] = useState('');
+  const [newPostAuthor, setNewPostAuthor] = useState('CA Rajesh Kumar');
+  const [newPostReadTime, setNewPostReadTime] = useState('5 min read');
+  const [blogSuccessMsg, setBlogSuccessMsg] = useState('');
+
 
   // Calculate earnings
   const totalClicks = Object.values(affiliateClicks).reduce((a, b) => a + b, 0);
@@ -43,6 +63,41 @@ export default function AdminPanel({
     onSaveSettings(formData);
     setSavedStatus(true);
     setTimeout(() => setSavedStatus(false), 2000);
+  };
+
+  const handlePublishPost = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newPostTitle.trim() || !newPostContent.trim()) {
+      alert("Please provide a title and content body to publish the article.");
+      return;
+    }
+    const slug = newPostTitle
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-');
+
+    onAddPost({
+      id: `post-${Date.now()}`,
+      title: newPostTitle,
+      slug,
+      excerpt: newPostExcerpt || newPostTitle.substring(0, 120) + '...',
+      content: newPostContent,
+      author: newPostAuthor,
+      category: newPostCategory,
+      publishedAt: new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      }),
+      readTime: newPostReadTime
+    });
+
+    setBlogSuccessMsg('✓ Post published successfully!');
+    setNewPostTitle('');
+    setNewPostExcerpt('');
+    setNewPostContent('');
+    setTimeout(() => setBlogSuccessMsg(''), 4000);
   };
 
   const exportLeadsToCSV = () => {
@@ -117,6 +172,14 @@ export default function AdminPanel({
             }`}
           >
             Integration Links
+          </button>
+          <button
+            onClick={() => setActiveTab('blog')}
+            className={`flex-1 sm:flex-none px-3 py-1.5 rounded-md font-semibold transition-all flex items-center justify-center gap-1.5 ${
+              activeTab === 'blog' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            Weekly Blog Manager
           </button>
         </div>
       </div>
@@ -452,6 +515,23 @@ export default function AdminPanel({
                     </span>
                   </div>
                 </label>
+
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={formData.showBlogSection ?? false}
+                    onChange={(e) => setFormData({ ...formData, showBlogSection: e.target.checked })}
+                    className="w-4 h-4 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500 mt-0.5"
+                  />
+                  <div>
+                    <span className="block font-semibold text-white text-xs group-hover:text-indigo-400 transition-colors">
+                      Deploy / Show Blog Page Section (Weekly Resource Hub)
+                    </span>
+                    <span className="block text-[11px] text-slate-500">
+                      Toggle whether the public navigation tab and blog page are active. Keep this unchecked until you are ready to launch the blog publicly.
+                    </span>
+                  </div>
+                </label>
               </div>
             </div>
           </div>
@@ -476,6 +556,165 @@ export default function AdminPanel({
             </motion.div>
           )}
         </form>
+      )}
+
+      {activeTab === 'blog' && (
+        <div className="space-y-6">
+          <div className="bg-indigo-950/60 border border-indigo-500/20 rounded-xl p-4 flex items-start gap-3">
+            <BookOpen className="text-indigo-400 shrink-0 mt-0.5" size={18} />
+            <div>
+              <h4 className="font-display font-semibold text-white text-xs sm:text-sm">Weekly Business Blog Directory Controls</h4>
+              <p className="text-[11px] text-slate-300 mt-0.5 leading-relaxed">
+                Add reviews comparing Zoho, Vyapar, or Giddh, write technical guidelines, and publish weekly articles. Newly published posts are stored in local storage and update immediately in the user view.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Left: Live Articles list */}
+            <div className="lg:col-span-5 space-y-4">
+              <h3 className="font-display font-semibold text-white text-xs uppercase tracking-wider">
+                Live Hub Articles ({posts.length})
+              </h3>
+              
+              {posts.length > 0 ? (
+                <div className="divide-y divide-slate-800 bg-slate-950/30 border border-slate-800 rounded-xl overflow-hidden max-h-[460px] overflow-y-auto">
+                  {posts.map((post) => (
+                    <div key={post.id} className="p-3 hover:bg-slate-800/20 flex justify-between items-start gap-3">
+                      <div className="space-y-1">
+                        <span className="text-[9px] font-bold text-indigo-400 bg-indigo-500/10 px-1.5 py-0.2 rounded">
+                          {post.category}
+                        </span>
+                        <h4 className="font-display font-bold text-xs text-white line-clamp-1">
+                          {post.title}
+                        </h4>
+                        <p className="text-[10px] text-slate-400">
+                          By {post.author} • {post.publishedAt}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => onDeletePost(post.id)}
+                        className="text-slate-500 hover:text-rose-400 p-1 rounded-md hover:bg-slate-800/40 transition-colors"
+                        title="Delete Article"
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="border border-dashed border-slate-800 p-8 text-center text-xs text-slate-400 rounded-xl">
+                  No active articles on the blog. Use the editor to draft one!
+                </div>
+              )}
+            </div>
+
+            {/* Right: Publish New Draft Form */}
+            <div className="lg:col-span-7 bg-slate-800/20 border border-slate-800 p-5 rounded-2xl">
+              <h3 className="font-display font-semibold text-white text-xs uppercase tracking-wider mb-4 flex items-center gap-1.5">
+                <FileText size={14} className="text-indigo-400" />
+                Draft & Publish Weekly Article
+              </h3>
+
+              <form onSubmit={handlePublishPost} className="space-y-4 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-slate-300 font-semibold mb-1">Article Title</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Zoho vs Vyapar vs Giddh: Complete Guide"
+                      value={newPostTitle}
+                      onChange={(e) => setNewPostTitle(e.target.value)}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white placeholder-slate-600 focus:outline-hidden focus:ring-1 focus:ring-indigo-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-300 font-semibold mb-1">Category</label>
+                    <select
+                      value={newPostCategory}
+                      onChange={(e) => setNewPostCategory(e.target.value)}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-300 focus:outline-hidden focus:ring-1 focus:ring-indigo-500"
+                    >
+                      <option value="Comparisons">📊 Comparisons</option>
+                      <option value="Tax Compliance">⚖️ Tax Compliance</option>
+                      <option value="Tutorials">📖 Tutorials</option>
+                      <option value="Software Review">💡 Software Review</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-300 font-semibold mb-1">Author Name</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. CA Rajesh Kumar"
+                      value={newPostAuthor}
+                      onChange={(e) => setNewPostAuthor(e.target.value)}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:outline-hidden focus:ring-1 focus:ring-indigo-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-300 font-semibold mb-1">Estimated Read Time</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. 5 min read"
+                      value={newPostReadTime}
+                      onChange={(e) => setNewPostReadTime(e.target.value)}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:outline-hidden focus:ring-1 focus:ring-indigo-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-slate-300 font-semibold mb-1 font-sans">
+                    Short Excerpt / Hook
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Provide a 1-2 sentence preview text for the directory card..."
+                    value={newPostExcerpt}
+                    onChange={(e) => setNewPostExcerpt(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white placeholder-slate-600 focus:outline-hidden focus:ring-1 focus:ring-indigo-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-slate-300 font-semibold mb-1">
+                    Article Content Body
+                  </label>
+                  <p className="text-[10px] text-slate-500 mb-1 leading-normal">
+                    Format guides: Separate paragraphs with blank lines. Headings start with <code className="bg-slate-950 text-indigo-400 px-1 py-0.2 rounded font-mono">### </code> (sub-section) or <code className="bg-slate-950 text-indigo-400 px-1 py-0.2 rounded font-mono">## </code> (main section). Quotes start with <code className="bg-slate-950 text-indigo-400 px-1 py-0.2 rounded font-mono">&gt; </code>.
+                  </p>
+                  <textarea
+                    required
+                    rows={8}
+                    placeholder="Write article text here...&#10;&#10;## Zoho Books Overview&#10;Zoho Books is spectacular for SaaS billing...&#10;&#10;&gt; Expert Tip: Always file GSTR-1 before the 11th of every month.&#10;&#10;### Conclusion&#10;In summary, Zoho wins on automation while Vyapar dominates physical retail stores."
+                    value={newPostContent}
+                    onChange={(e) => setNewPostContent(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white placeholder-slate-600 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 font-mono text-[11px] leading-relaxed"
+                  />
+                </div>
+
+                <div className="flex justify-between items-center pt-2">
+                  {blogSuccessMsg ? (
+                    <span className="text-emerald-400 text-[11px] font-semibold">{blogSuccessMsg}</span>
+                  ) : (
+                    <span className="text-slate-500 text-[10px]">Ready to publish instantly on site</span>
+                  )}
+                  <button
+                    type="submit"
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5 transition-all shadow active:scale-95 shrink-0"
+                  >
+                    <Send size={12} />
+                    <span>Publish Post</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

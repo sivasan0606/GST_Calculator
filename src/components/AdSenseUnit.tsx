@@ -127,6 +127,7 @@ export default function AdSenseUnit({ slotId, format, adsenseClientId }: AdSense
           onClick={() => setShowCode(!showCode)} 
           className="hover:text-indigo-600 transition-colors ml-1"
           title="AdSense Code Integration Setup"
+          aria-label="Toggle AdSense Code Integration Setup"
         >
           <Settings2 size={10} />
         </button>

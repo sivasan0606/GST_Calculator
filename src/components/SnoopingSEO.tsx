@@ -206,6 +206,8 @@ export default function SnoopingSEO() {
               >
                 <button
                   onClick={() => setOpenFaq(isOpen ? null : index)}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${index}`}
                   className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 font-display font-semibold text-sm sm:text-base text-slate-800"
                 >
                   <span>{item.question}</span>
@@ -215,6 +217,7 @@ export default function SnoopingSEO() {
                 <AnimatePresence>
                   {isOpen && (
                     <motion.div
+                      id={`faq-answer-${index}`}
                       initial={{ height: 0 }}
                       animate={{ height: "auto" }}
                       exit={{ height: 0 }}
