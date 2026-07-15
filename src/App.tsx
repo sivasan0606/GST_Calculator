@@ -228,9 +228,8 @@ export default function App() {
         if (parsed.showAdSense === undefined) {
           parsed.showAdSense = true;
         }
-        if (parsed.showBlogSection === undefined) {
-          parsed.showBlogSection = false;
-        }
+        // Force enable blog section per user request
+        parsed.showBlogSection = true;
         return parsed;
       } catch (e) { /* ignore */ }
     }
@@ -246,7 +245,7 @@ export default function App() {
       showSponsorSection: false,
       showAffiliateSection: false,
       showAdSense: true,
-      showBlogSection: false
+      showBlogSection: true
     };
   });
 
