@@ -27,6 +27,11 @@ export default function GstCalculator({
   const [isInterState, setIsInterState] = useState<boolean>(false);
   const [labelInput, setLabelInput] = useState<string>('');
 
+  // Helper function to format currency value nicely
+  const formatCurrency = (val: number, _unused?: string) => {
+    return `₹${val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
+
   // Invoice generator States
   const [showInvoiceBuilder, setShowInvoiceBuilder] = useState(false);
   const [clientName, setClientName] = useState('Acme Corp');
@@ -384,7 +389,7 @@ Calculated on Free GST Calculator Hub`;
                 TAX COMPONENT LEDGER
               </h3>
               <div className="text-3xl font-display font-bold text-white mt-1">
-                ₹{calculation.totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                {formatCurrency(calculation.totalAmount, calculation.currency)}
               </div>
               <span className="text-[10px] text-slate-400 mt-1 block">
                 {calculation.isAddGst ? 'Exclusive Base Price + GST' : 'Inclusive Total Amount'}
@@ -394,7 +399,7 @@ Calculated on Free GST Calculator Hub`;
             <div className="space-y-3 font-sans text-xs">
               <div className="flex justify-between">
                 <span className="text-slate-400">Base Amount (Tax Exclusive):</span>
-                <span className="font-mono text-slate-200 font-medium">₹{calculation.originalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                <span className="font-mono text-slate-200 font-medium">{formatCurrency(calculation.originalAmount, calculation.currency)}</span>
               </div>
 
               <div className="flex justify-between border-b border-slate-800 pb-2">
@@ -406,29 +411,29 @@ Calculated on Free GST Calculator Hub`;
               {calculation.isInterState ? (
                 <div className="flex justify-between bg-slate-800/40 px-2.5 py-1.5 rounded">
                   <span className="text-sky-300">IGST (Integrated 100%):</span>
-                  <span className="font-mono text-sky-200 font-bold">₹{calculation.igstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                  <span className="font-mono text-sky-200 font-bold">{formatCurrency(calculation.igstAmount, calculation.currency)}</span>
                 </div>
               ) : (
                 <div className="space-y-1.5 bg-slate-800/20 px-2.5 py-2 rounded">
                   <div className="flex justify-between">
                     <span className="text-indigo-300">CGST (Central Tax 50%):</span>
-                    <span className="font-mono text-indigo-200">₹{calculation.cgstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                    <span className="font-mono text-indigo-200">{formatCurrency(calculation.cgstAmount, calculation.currency)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-indigo-300">SGST (State Tax 50%):</span>
-                    <span className="font-mono text-indigo-200">₹{calculation.sgstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                    <span className="font-mono text-indigo-200">{formatCurrency(calculation.sgstAmount, calculation.currency)}</span>
                   </div>
                 </div>
               )}
 
               <div className="flex justify-between border-t border-slate-800 pt-3 text-sm">
                 <span className="text-white font-bold">Total GST Tax:</span>
-                <span className="font-mono text-emerald-400 font-bold">₹{calculation.gstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                <span className="font-mono text-emerald-400 font-bold">{formatCurrency(calculation.gstAmount, calculation.currency)}</span>
               </div>
 
               <div className="flex justify-between border-t border-b border-slate-800 py-3 text-base">
                 <span className="text-white font-display font-semibold">Post-Tax Total:</span>
-                <span className="font-mono text-white font-bold">₹{calculation.totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                <span className="font-mono text-white font-bold">{formatCurrency(calculation.totalAmount, calculation.currency)}</span>
               </div>
             </div>
 
@@ -493,27 +498,27 @@ Calculated on Free GST Calculator Hub`;
                     <tbody>
                       <tr>
                         <td className="p-1.5 font-medium">{itemName}</td>
-                        <td className="p-1.5 text-right font-mono">₹{calculation.originalAmount.toFixed(2)}</td>
+                        <td className="p-1.5 text-right font-mono">{formatCurrency(calculation.originalAmount, calculation.currency)}</td>
                         <td className="p-1.5 text-right font-mono">{calculation.gstRate}%</td>
-                        <td className="p-1.5 text-right font-mono">₹{calculation.gstAmount.toFixed(2)}</td>
-                        <td className="p-1.5 text-right font-bold font-mono">₹{calculation.totalAmount.toFixed(2)}</td>
+                        <td className="p-1.5 text-right font-mono">{formatCurrency(calculation.gstAmount, calculation.currency)}</td>
+                        <td className="p-1.5 text-right font-bold font-mono">{formatCurrency(calculation.totalAmount, calculation.currency)}</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
                 <div className="space-y-1 text-right text-[10px] border-t border-slate-100 pt-2">
-                  <p><span className="text-slate-500">Taxable Value:</span> <strong className="font-mono">₹{calculation.originalAmount.toFixed(2)}</strong></p>
+                  <p><span className="text-slate-500">Taxable Value:</span> <strong className="font-mono">{formatCurrency(calculation.originalAmount, calculation.currency)}</strong></p>
                   
                   {calculation.isInterState ? (
-                    <p><span className="text-sky-600">IGST Output:</span> <strong className="font-mono">₹{calculation.igstAmount.toFixed(2)}</strong></p>
+                    <p><span className="text-sky-600">IGST Output:</span> <strong className="font-mono">{formatCurrency(calculation.igstAmount, calculation.currency)}</strong></p>
                   ) : (
                     <>
-                      <p><span className="text-indigo-600">CGST Output (50%):</span> <strong className="font-mono">₹{calculation.cgstAmount.toFixed(2)}</strong></p>
-                      <p><span className="text-indigo-600">SGST Output (50%):</span> <strong className="font-mono">₹{calculation.sgstAmount.toFixed(2)}</strong></p>
+                      <p><span className="text-indigo-600">CGST Output (50%):</span> <strong className="font-mono">{formatCurrency(calculation.cgstAmount, calculation.currency)}</strong></p>
+                      <p><span className="text-indigo-600">SGST Output (50%):</span> <strong className="font-mono">{formatCurrency(calculation.sgstAmount, calculation.currency)}</strong></p>
                     </>
                   )}
                   
-                  <p className="text-xs pt-1 border-t border-slate-200 font-bold text-slate-900">Total Invoice Amount: <span className="font-mono">₹{calculation.totalAmount.toFixed(2)}</span></p>
+                  <p className="text-xs pt-1 border-t border-slate-200 font-bold text-slate-900">Total Invoice Amount: <span className="font-mono">{formatCurrency(calculation.totalAmount, calculation.currency)}</span></p>
                 </div>
                 <div className="text-[7px] text-slate-400 mt-3 text-center border-t border-slate-100 pt-2 leading-tight">
                   This compliant e-invoice is simulated inside our free tools app. To print or download this layout, click the "Print / PDF" button above.
@@ -527,7 +532,7 @@ Calculated on Free GST Calculator Hub`;
             <span>Please enter a valid amount to start instant calculations.</span>
           </div>
         )}
-
+ 
         {/* Saved Logs History list */}
         <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
           <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
@@ -544,7 +549,7 @@ Calculated on Free GST Calculator Hub`;
               </button>
             )}
           </div>
-
+ 
           {savedCalculations.length > 0 ? (
             <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
               {savedCalculations.map((item) => (
@@ -563,7 +568,7 @@ Calculated on Free GST Calculator Hub`;
                   </div>
                   <div className="text-right shrink-0">
                     <strong className="text-xs font-semibold text-indigo-600 block">
-                      ₹{item.totalAmount.toLocaleString('en-IN')}
+                      {formatCurrency(item.totalAmount)}
                     </strong>
                     <span className="text-[9px] text-slate-400 block mt-0.5">
                       {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

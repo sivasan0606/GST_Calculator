@@ -33,7 +33,7 @@ export default function AdminPanel({
   onAddPost,
   onDeletePost
 }: AdminPanelProps) {
-  const [activeTab, setActiveTab] = useState<'overview' | 'settings' | 'leads' | 'blog'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'content' | 'settings' | 'leads' | 'blog'>('overview');
   const [formData, setFormData] = useState<SiteSettings>({ ...settings });
   const [savedStatus, setSavedStatus] = useState(false);
 
@@ -143,18 +143,26 @@ export default function AdminPanel({
         </div>
 
         {/* Tab Buttons */}
-        <div className="flex bg-slate-800 p-1 rounded-lg text-xs self-stretch sm:self-auto">
+        <div className="flex bg-slate-800 p-1 rounded-lg text-xs self-stretch sm:self-auto overflow-x-auto gap-1">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`flex-1 sm:flex-none px-3 py-1.5 rounded-md font-semibold transition-all ${
+            className={`px-3 py-1.5 rounded-md font-semibold transition-all shrink-0 ${
               activeTab === 'overview' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
             }`}
           >
             Overview
           </button>
           <button
+            onClick={() => setActiveTab('content')}
+            className={`px-3 py-1.5 rounded-md font-semibold transition-all shrink-0 ${
+              activeTab === 'content' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            Site Copy CMS
+          </button>
+          <button
             onClick={() => setActiveTab('leads')}
-            className={`flex-1 sm:flex-none px-3 py-1.5 rounded-md font-semibold transition-all flex items-center justify-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-md font-semibold transition-all shrink-0 flex items-center justify-center gap-1.5 ${
               activeTab === 'leads' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
             }`}
           >
@@ -167,19 +175,19 @@ export default function AdminPanel({
           </button>
           <button
             onClick={() => setActiveTab('settings')}
-            className={`flex-1 sm:flex-none px-3 py-1.5 rounded-md font-semibold transition-all ${
+            className={`px-3 py-1.5 rounded-md font-semibold transition-all shrink-0 ${
               activeTab === 'settings' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
             }`}
           >
-            Integration Links
+            Partner & Ad Links
           </button>
           <button
             onClick={() => setActiveTab('blog')}
-            className={`flex-1 sm:flex-none px-3 py-1.5 rounded-md font-semibold transition-all flex items-center justify-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-md font-semibold transition-all shrink-0 flex items-center justify-center gap-1.5 ${
               activeTab === 'blog' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
             }`}
           >
-            Weekly Blog Manager
+            Blog Manager
           </button>
         </div>
       </div>
@@ -357,6 +365,185 @@ export default function AdminPanel({
             </div>
           )}
         </div>
+      )}
+
+      {activeTab === 'content' && (
+        <form onSubmit={handleSave} className="space-y-6">
+          <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-800 flex items-start gap-3 mb-2">
+            <Globe size={16} className="text-indigo-400 shrink-0 mt-0.5" />
+            <p className="text-[11px] text-slate-400 leading-normal font-sans">
+              Change the public brand name, dynamic page headings, search description tags, tab menu labels, and footer copy in real-time.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs text-slate-300">
+            {/* Branding section */}
+            <div className="col-span-1 md:col-span-2 border-b border-slate-800 pb-3 mt-1">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                Core Website Identity & Navigation Branding
+              </h4>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                Primary Brand / App Name
+              </label>
+              <input
+                type="text"
+                value={formData.siteName || ''}
+                onChange={(e) => setFormData({ ...formData, siteName: e.target.value })}
+                placeholder="e.g. Simply Smart Calculators"
+                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-600 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 font-mono"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                Brand Subtitle / Tagline
+              </label>
+              <input
+                type="text"
+                value={formData.siteSubtitle || ''}
+                onChange={(e) => setFormData({ ...formData, siteSubtitle: e.target.value })}
+                placeholder="e.g. Multi-purpose Financial & Tax Estimators"
+                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-600 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 font-mono"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                  Calculators Tab Label
+                </label>
+                <input
+                  type="text"
+                  value={formData.calculatorsTabName || ''}
+                  onChange={(e) => setFormData({ ...formData, calculatorsTabName: e.target.value })}
+                  placeholder="e.g. Smart Calculators"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-600 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 font-mono"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                  Resource Hub Tab Label
+                </label>
+                <input
+                  type="text"
+                  value={formData.blogTabName || ''}
+                  onChange={(e) => setFormData({ ...formData, blogTabName: e.target.value })}
+                  placeholder="e.g. Resource Hub"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-600 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 font-mono"
+                />
+              </div>
+            </div>
+
+            {/* GST Calculator Copy Section */}
+            <div className="col-span-1 md:col-span-2 border-b border-slate-800 pb-3 mt-4">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                GST Calculator Copy Config
+              </h4>
+            </div>
+
+            <div className="col-span-1 md:col-span-2">
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                GST Calculator Section Heading
+              </label>
+              <input
+                type="text"
+                value={formData.gstTitle || ''}
+                onChange={(e) => setFormData({ ...formData, gstTitle: e.target.value })}
+                placeholder="e.g. Accurate Online GST Calculator Tool"
+                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-600 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 font-mono"
+              />
+            </div>
+
+            <div className="col-span-1 md:col-span-2">
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                GST Calculator Pitch Description (SEO-friendly)
+              </label>
+              <textarea
+                value={formData.gstSubtitle || ''}
+                onChange={(e) => setFormData({ ...formData, gstSubtitle: e.target.value })}
+                placeholder="e.g. Toggle between additive or subtractive rates..."
+                rows={2}
+                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-600 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 font-mono text-[11px]"
+              />
+            </div>
+
+            {/* Cost-Plus Calculator Copy Section */}
+            <div className="col-span-1 md:col-span-2 border-b border-slate-800 pb-3 mt-4">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                Cost-Plus Pricing Calculator Copy Config
+              </h4>
+            </div>
+
+            <div className="col-span-1 md:col-span-2">
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                Cost-Plus Calculator Section Heading
+              </label>
+              <input
+                type="text"
+                value={formData.costPlusTitle || ''}
+                onChange={(e) => setFormData({ ...formData, costPlusTitle: e.target.value })}
+                placeholder="e.g. Cost-Plus Pricing Calculator"
+                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-600 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 font-mono"
+              />
+            </div>
+
+            <div className="col-span-1 md:col-span-2">
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                Cost-Plus Calculator Pitch Description (SEO-friendly)
+              </label>
+              <textarea
+                value={formData.costPlusSubtitle || ''}
+                onChange={(e) => setFormData({ ...formData, costPlusSubtitle: e.target.value })}
+                placeholder="e.g. Easily optimize unit selling prices, profit markups, and margins..."
+                rows={2}
+                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-600 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 font-mono text-[11px]"
+              />
+            </div>
+
+            {/* Footer Copy Section */}
+            <div className="col-span-1 md:col-span-2 border-b border-slate-800 pb-3 mt-4">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                Footer Copyright & Compliance Copy
+              </h4>
+            </div>
+
+            <div className="col-span-1 md:col-span-2">
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                Footer Copyright Text Line
+              </label>
+              <input
+                type="text"
+                value={formData.footerText || ''}
+                onChange={(e) => setFormData({ ...formData, footerText: e.target.value })}
+                placeholder="e.g. © 2026 Simply Smart Calculators Hub • Built for Maximum SEO..."
+                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-600 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 font-mono"
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
+            <button
+              type="submit"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5 transition-all shadow active:scale-95"
+            >
+              <Save size={14} />
+              <span>Save Content Changes</span>
+            </button>
+          </div>
+
+          {savedStatus && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-center text-xs text-emerald-400 font-medium font-sans"
+            >
+              ✓ System branding and headings updated instantly!
+            </motion.div>
+          )}
+        </form>
       )}
 
       {activeTab === 'settings' && (

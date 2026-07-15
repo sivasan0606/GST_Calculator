@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'motion/react';
 
 // Components
 import GstCalculator from './components/GstCalculator';
+import CostPlusCalculator from './components/CostPlusCalculator';
 import AdSenseUnit from './components/AdSenseUnit';
 import AffiliateSection from './components/AffiliateSection';
 import ConsultationSection from './components/ConsultationSection';
@@ -18,7 +19,7 @@ import LegalModal from './components/LegalModal';
 import BlogPage from './components/BlogPage';
 
 // Types
-import { GSTCalculation, ConsultLead, SiteSettings, BlogPost } from './types';
+import { GSTCalculation, ConsultLead, SiteSettings, BlogPost, CostPlusCalculation } from './types';
 
 const DEFAULT_POSTS: BlogPost[] = [
   {
@@ -230,6 +231,18 @@ export default function App() {
         }
         // Force enable blog section per user request
         parsed.showBlogSection = true;
+        
+        // Dynamic content defaults
+        if (!parsed.siteName) parsed.siteName = 'Simply Smart Calculators';
+        if (!parsed.siteSubtitle) parsed.siteSubtitle = 'Multi-purpose Financial & Tax Estimators';
+        if (!parsed.gstTitle) parsed.gstTitle = 'Accurate Online GST Calculator Tool';
+        if (!parsed.gstSubtitle) parsed.gstSubtitle = 'Toggle between additive or subtractive rates, select custom brackets, and generate tax-compliant invoice receipts instantly. 100% compliant with the latest government slabs.';
+        if (!parsed.costPlusTitle) parsed.costPlusTitle = 'Cost-Plus Pricing Calculator';
+        if (!parsed.costPlusSubtitle) parsed.costPlusSubtitle = 'Easily optimize unit selling prices, profit markups, and margins. Automatically calculate volume discounts, build bulk tier price sheets, and export breakdowns instantly.';
+        if (!parsed.calculatorsTabName) parsed.calculatorsTabName = 'Smart Calculators';
+        if (!parsed.blogTabName) parsed.blogTabName = 'Resource Hub';
+        if (!parsed.footerText) parsed.footerText = '© 2026 Simply Smart Calculators Hub • Built for Maximum SEO & Multi-channel Monetization.';
+
         return parsed;
       } catch (e) { /* ignore */ }
     }
@@ -245,7 +258,16 @@ export default function App() {
       showSponsorSection: false,
       showAffiliateSection: true,
       showAdSense: true,
-      showBlogSection: true
+      showBlogSection: true,
+      siteName: 'Simply Smart Calculators',
+      siteSubtitle: 'Multi-purpose Financial & Tax Estimators',
+      gstTitle: 'Accurate Online GST Calculator Tool',
+      gstSubtitle: 'Toggle between additive or subtractive rates, select custom brackets, and generate tax-compliant invoice receipts instantly. 100% compliant with the latest government slabs.',
+      costPlusTitle: 'Cost-Plus Pricing Calculator',
+      costPlusSubtitle: 'Easily optimize unit selling prices, profit markups, and margins. Automatically calculate volume discounts, build bulk tier price sheets, and export breakdowns instantly.',
+      calculatorsTabName: 'Smart Calculators',
+      blogTabName: 'Resource Hub',
+      footerText: '© 2026 Simply Smart Calculators Hub • Built for Maximum SEO & Multi-channel Monetization.'
     };
   });
 
@@ -289,6 +311,15 @@ export default function App() {
     return [];
   });
 
+  // Cost-Plus History State
+  const [costPlusHistory, setCostPlusHistory] = useState<CostPlusCalculation[]>(() => {
+    const saved = localStorage.getItem('costplus_calc_history');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { /* ignore */ }
+    }
+    return [];
+  });
+
   // Click Metrics & View Simulations (For monetization visualizer)
   const [affiliateClicks, setAffiliateClicks] = useState<{ [key: string]: number }>(() => {
     const saved = localStorage.getItem('gst_affiliate_clicks');
@@ -308,6 +339,7 @@ export default function App() {
   
   // Navigation & weekly blog state
   const [currentView, setCurrentView] = useState<'calculator' | 'blog'>('calculator');
+  const [calculatorType, setCalculatorType] = useState<'gst' | 'costplus'>('gst');
   const [posts, setPosts] = useState<BlogPost[]>(() => {
     const saved = localStorage.getItem('gst_site_blog_posts');
     if (saved) {
@@ -409,6 +441,10 @@ export default function App() {
   }, [history]);
 
   useEffect(() => {
+    localStorage.setItem('costplus_calc_history', JSON.stringify(costPlusHistory));
+  }, [costPlusHistory]);
+
+  useEffect(() => {
     localStorage.setItem('gst_affiliate_clicks', JSON.stringify(affiliateClicks));
   }, [affiliateClicks]);
 
@@ -478,6 +514,14 @@ export default function App() {
     setHistory([]);
   };
 
+  const handleAddCostPlusCalculation = (calc: CostPlusCalculation) => {
+    setCostPlusHistory(prev => [calc, ...prev.slice(0, 19)]); // limit logs to last 20
+  };
+
+  const handleClearCostPlusHistory = () => {
+    setCostPlusHistory([]);
+  };
+
   const handleLeadSubmit = (newLeadData: Omit<ConsultLead, 'id' | 'timestamp' | 'status'>) => {
     const newLead: ConsultLead = {
       ...newLeadData,
@@ -544,10 +588,10 @@ export default function App() {
             </div>
             <div>
               <h1 className="font-display font-bold text-slate-900 text-base sm:text-lg tracking-tight leading-none">
-                GST Calculator
+                {settings.siteName || 'Simply Smart Calculators'}
               </h1>
               <span className="text-[10px] text-slate-500 font-medium block mt-1 tracking-wider uppercase font-mono">
-                Official Tax compliance Hub
+                {settings.siteSubtitle || 'Multi-purpose Financial & Tax Estimators'}
               </span>
             </div>
           </div>
@@ -634,7 +678,7 @@ export default function App() {
                 }`}
               >
                 <Calculator size={16} />
-                <span>GST Calculator</span>
+                <span>{settings.calculatorsTabName || 'Smart Calculators'}</span>
               </button>
               <button
                 onClick={() => setCurrentView('blog')}
@@ -645,7 +689,7 @@ export default function App() {
                 }`}
               >
                 <BookOpen size={16} />
-                <span>Weekly Resource Hub</span>
+                <span>{settings.blogTabName || 'Resource Hub'}</span>
                 <span className="bg-indigo-100 text-indigo-700 text-[9px] font-bold px-2 py-0.5 rounded-full animate-pulse">
                   New
                 </span>
@@ -656,26 +700,77 @@ export default function App() {
 
         {currentView === 'calculator' ? (
           <>
-            {/* SEO Intro Title Pitch */}
-            <div className="text-center max-w-2xl mx-auto mb-10">
-              <span className="inline-flex items-center gap-1 text-indigo-700 bg-indigo-50 font-display text-[10px] sm:text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
-                <Sparkles size={12} className="text-indigo-600" />
-                Instant SGST, CGST, and IGST breakdowns
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-display font-bold text-slate-900 tracking-tight leading-none sm:leading-tight">
-                Accurate Online GST Calculator Tool
-              </h2>
-              <p className="text-slate-600 text-xs sm:text-sm mt-3 leading-relaxed">
-                Toggle between additive or subtractive rates, select custom brackets, and generate tax-compliant invoice receipts instantly. 100% compliant with the latest government slabs.
-              </p>
+            {/* Sub-Calculator Tabs */}
+            <div className="flex bg-slate-100 p-1 rounded-xl max-w-md mx-auto mb-10 font-sans">
+              <button
+                onClick={() => setCalculatorType('gst')}
+                className={`flex-1 text-center font-display text-xs sm:text-sm font-semibold py-2.5 rounded-lg transition-all ${
+                  calculatorType === 'gst'
+                    ? 'bg-indigo-600 text-white shadow-xs font-bold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                GST Calculator
+              </button>
+              <button
+                onClick={() => setCalculatorType('costplus')}
+                className={`flex-1 text-center font-display text-xs sm:text-sm font-semibold py-2.5 rounded-lg transition-all ${
+                  calculatorType === 'costplus'
+                    ? 'bg-indigo-600 text-white shadow-xs font-bold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                Cost-Plus Pricing Calculator
+              </button>
             </div>
 
-            {/* GST Calculator component block */}
-            <GstCalculator
-              onHistoryChange={handleAddCalculation}
-              savedCalculations={history}
-              onClearHistory={handleClearHistory}
-            />
+            {calculatorType === 'gst' ? (
+              <>
+                {/* SEO Intro Title Pitch */}
+                <div className="text-center max-w-2xl mx-auto mb-10">
+                  <span className="inline-flex items-center gap-1 text-indigo-700 bg-indigo-50 font-display text-[10px] sm:text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+                    <Sparkles size={12} className="text-indigo-600" />
+                    Instant SGST, CGST, and IGST breakdowns
+                  </span>
+                  <h2 className="text-3xl sm:text-4xl font-display font-bold text-slate-900 tracking-tight leading-none sm:leading-tight">
+                    {settings.gstTitle || 'Accurate Online GST Calculator Tool'}
+                  </h2>
+                  <p className="text-slate-600 text-xs sm:text-sm mt-3 leading-relaxed">
+                    {settings.gstSubtitle || 'Toggle between additive or subtractive rates, select custom brackets, and generate tax-compliant invoice receipts instantly. 100% compliant with the latest government slabs.'}
+                  </p>
+                </div>
+
+                {/* GST Calculator component block */}
+                <GstCalculator
+                  onHistoryChange={handleAddCalculation}
+                  savedCalculations={history}
+                  onClearHistory={handleClearHistory}
+                />
+              </>
+            ) : (
+              <>
+                {/* Cost-Plus Calculator SEO Header */}
+                <div className="text-center max-w-2xl mx-auto mb-10">
+                  <span className="inline-flex items-center gap-1 text-indigo-700 bg-indigo-50 font-display text-[10px] sm:text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+                    <DollarSign size={12} className="text-indigo-600" />
+                    Variable Production & Profit Margin Optimizations
+                  </span>
+                  <h2 className="text-3xl sm:text-4xl font-display font-bold text-slate-900 tracking-tight leading-none sm:leading-tight">
+                    {settings.costPlusTitle || 'Cost-Plus Pricing Calculator'}
+                  </h2>
+                  <p className="text-slate-600 text-xs sm:text-sm mt-3 leading-relaxed">
+                    {settings.costPlusSubtitle || 'Easily optimize unit selling prices, profit markups, and margins. Automatically calculate volume discounts, build bulk tier price sheets, and export breakdowns instantly.'}
+                  </p>
+                </div>
+
+                {/* Cost-Plus Calculator component block */}
+                <CostPlusCalculator
+                  onHistoryChange={handleAddCostPlusCalculation}
+                  savedCalculations={costPlusHistory}
+                  onClearHistory={handleClearCostPlusHistory}
+                />
+              </>
+            )}
 
             {/* In-Content Native Banner Ad slot */}
             {settings.showAdSense !== false && !showAdmin && !passcodeModalOpen && !legalModalOpen && (
@@ -718,7 +813,7 @@ export default function App() {
             )}
 
             {/* Extensive SEO FAQ & Compliance Guides */}
-            <SnoopingSEO />
+            <SnoopingSEO type={calculatorType} />
           </>
         ) : (settings.showBlogSection || isOwnerModeEnabled) ? (
           <BlogPage
@@ -775,7 +870,7 @@ export default function App() {
                 onTrackClick={handleTrackAffiliateClick}
               />
             )}
-            <SnoopingSEO />
+            <SnoopingSEO type={calculatorType} />
           </>
         )}
 
@@ -839,7 +934,7 @@ export default function App() {
 
           <div className="flex flex-col sm:flex-row justify-between items-center pt-8 gap-4">
             <span className="text-[11px] text-slate-500 font-mono">
-              © 2026 GST Calculator Hub • Built for Maximum SEO & Multi-channel Monetization.
+              {settings.footerText || '© 2026 Simply Smart Calculators Hub • Built for Maximum SEO & Multi-channel Monetization.'}
             </span>
             <div className="flex gap-3 text-[11px] font-medium items-center">
               <button 

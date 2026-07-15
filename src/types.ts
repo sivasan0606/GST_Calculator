@@ -16,6 +16,7 @@ export interface GSTCalculation {
   totalAmount: number;
   timestamp: number;
   label?: string;
+  currency?: 'INR' | 'USD' | 'EUR';
 }
 
 export interface AffiliateSoftware {
@@ -70,6 +71,15 @@ export interface SiteSettings {
   showAffiliateSection?: boolean;
   showAdSense?: boolean;
   showBlogSection?: boolean;
+  siteName?: string;
+  siteSubtitle?: string;
+  gstTitle?: string;
+  gstSubtitle?: string;
+  costPlusTitle?: string;
+  costPlusSubtitle?: string;
+  calculatorsTabName?: string;
+  blogTabName?: string;
+  footerText?: string;
 }
 
 export interface BlogPost {
@@ -82,5 +92,19 @@ export interface BlogPost {
   category: string;
   publishedAt: string;
   readTime: string;
+}
+
+export interface CostPlusCalculation {
+  materialCost: number;
+  laborCost: number;
+  overheadCost: number;
+  unitCost: number;
+  markupRate: number;
+  markupAmount: number;
+  sellingPrice: number;
+  profitMargin: number;
+  timestamp: number;
+  label?: string;
+  currency?: 'INR' | 'USD' | 'EUR';
 }
 
