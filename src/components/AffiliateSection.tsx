@@ -35,8 +35,17 @@ export default function AffiliateSection({
       description: 'The absolute best GST-compliant accounting system for Indian enterprises. Fully automated e-invoicing, digital e-way bills, direct return filing to GST Portal, and elegant mobile apps.',
       pros: ['100% GST compliant out-of-the-box', 'Direct GST API filing connection', 'Generous free tier for startups & micro-biz'],
       pricing: 'Free or from ₹749/month',
-      affiliateUrl: zohoLink,
-      defaultUrl: 'https://www.zoho.com/books/'
+      affiliateUrl: zohoLink || 'https://go.zoho.com/J82J',
+      defaultUrl: 'https://go.zoho.com/J82J',
+      exclusiveOffer: {
+        badge: 'Exclusive Deal',
+        text: '$100 wallet credits will be provided to end customers who sign up using this affiliate link.',
+        conditions: [
+          'Wallet credit is valid for a period of 60 days.',
+          'Exclusive benefit given to the end users under the affiliate program.',
+          'Only for New customers.'
+        ]
+      }
     },
     {
       id: 'vyapar',
@@ -46,7 +55,7 @@ export default function AffiliateSection({
       description: 'Still making paper bills? Switch to Vyapar App, trusted by over 1 Crore+ happy customers. 91% of businesses who use Vyapar report 5X more profits and streamlined accounting.',
       pros: ['GST-Ready Billing & Secure SSL Protection', 'Trusted by ICAI Professional Accountants', 'Inventory tracking with WhatsApp payment reminders'],
       pricing: '7-Day Free Trial, then starts from ₹1,999/year',
-      affiliateUrl: vyaparLink,
+      affiliateUrl: vyaparLink || 'https://www.vyaparapp.in/?referrer_code=6VDQKQM',
       defaultUrl: 'https://www.vyaparapp.in/?referrer_code=6VDQKQM',
       promoCode: '6VDQKQM'
     },
@@ -151,6 +160,31 @@ export default function AffiliateSection({
                     </div>
                   ))}
                 </div>
+
+                {/* Exclusive Offer Banner */}
+                {soft.exclusiveOffer && (
+                  <div className="bg-emerald-50/70 border border-emerald-200/60 rounded-xl p-3.5 mb-5 shadow-2xs">
+                    <div className="flex items-center gap-1.5 mb-1.5">
+                      <span className="bg-emerald-600 text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md">
+                        {soft.exclusiveOffer.badge}
+                      </span>
+                      <span className="text-emerald-900 font-bold text-xs">
+                        $100 Wallet Credit Included!
+                      </span>
+                    </div>
+                    <p className="text-slate-700 text-xs font-semibold leading-relaxed">
+                      {soft.exclusiveOffer.text}
+                    </p>
+                    <ul className="mt-2 space-y-1 pl-1 border-t border-emerald-200/50 pt-2">
+                      {soft.exclusiveOffer.conditions.map((cond, cIdx) => (
+                        <li key={cIdx} className="text-[10px] text-slate-600 flex items-start gap-1.5 leading-normal">
+                          <span className="text-emerald-600 font-bold shrink-0">•</span>
+                          <span>{cond}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
                 {/* Promo/Referral Code Banner */}
                 {soft.promoCode && (

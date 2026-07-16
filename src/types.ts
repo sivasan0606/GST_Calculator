@@ -30,6 +30,11 @@ export interface AffiliateSoftware {
   affiliateUrl: string;
   defaultUrl: string;
   promoCode?: string;
+  exclusiveOffer?: {
+    badge: string;
+    text: string;
+    conditions: string[];
+  };
 }
 
 export interface TaxConsultant {

@@ -180,7 +180,7 @@ export default function BlogPage({ posts, settings, onNavigateToCalculator }: Bl
                       <p className="text-[11px] text-slate-500 mt-0.5">Simple, offline billing & stock tracking tailored for Indian retail shops.</p>
                     </div>
                     <a
-                      href={settings.vyaparLink || '#'}
+                      href={settings.vyaparLink || 'https://www.vyaparapp.in/?referrer_code=6VDQKQM'}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-orange-600 hover:bg-orange-700 text-white font-semibold text-xs px-5 py-2.5 rounded-xl inline-flex items-center gap-1.5 transition-all shadow-sm active:scale-95 whitespace-nowrap"
@@ -193,21 +193,37 @@ export default function BlogPage({ posts, settings, onNavigateToCalculator }: Bl
               }
 
               if (paragraph.includes('Zoho Affiliate Link')) {
+                const finalLink = settings.zohoLink || 'https://go.zoho.com/J82J';
                 return (
-                  <div key={idx} className="my-6 p-5 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div className="text-center sm:text-left">
-                      <h4 className="font-display font-bold text-slate-900 text-sm">Automate with Zoho Books</h4>
-                      <p className="text-[11px] text-slate-500 mt-0.5">Automated accounting, recurring invoices, and 40+ Zoho app integrations.</p>
+                  <div key={idx} className="my-6 border border-blue-200 rounded-2xl bg-gradient-to-br from-blue-50/50 to-indigo-50/30 overflow-hidden shadow-xs">
+                    <div className="p-5 flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-blue-100">
+                      <div className="text-center sm:text-left">
+                        <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
+                          <h4 className="font-display font-bold text-slate-900 text-sm">Automate with Zoho Books</h4>
+                          <span className="bg-emerald-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">EXCLUSIVE DEAL</span>
+                        </div>
+                        <p className="text-[11px] text-slate-500">Automated accounting, recurring invoices, and 40+ Zoho app integrations.</p>
+                      </div>
+                      <a
+                        href={finalLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs px-5 py-2.5 rounded-xl inline-flex items-center gap-1.5 transition-all shadow-sm active:scale-95 whitespace-nowrap shrink-0"
+                      >
+                        <span>Claim Your $100 Zoho Credit</span>
+                        <ChevronRight size={14} />
+                      </a>
                     </div>
-                    <a
-                      href={settings.zohoLink || '#'}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs px-5 py-2.5 rounded-xl inline-flex items-center gap-1.5 transition-all shadow-sm active:scale-95 whitespace-nowrap"
-                    >
-                      <span>Start Your Free Trial of Zoho Books</span>
-                      <ChevronRight size={14} />
-                    </a>
+                    <div className="bg-emerald-50/40 px-5 py-3 text-left">
+                      <p className="text-slate-800 text-[11px] font-semibold flex items-center gap-1">
+                        <span className="text-emerald-600 text-sm">🎁</span> Exclusive Offer: Get $100 in Wallet Credits when you sign up using our partner link!
+                      </p>
+                      <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-[10px] text-slate-500">
+                        <span>• Valid for 60 days from registration</span>
+                        <span>• Strictly for new customers</span>
+                        <span>• Partner program exclusive benefit</span>
+                      </div>
+                    </div>
                   </div>
                 );
               }

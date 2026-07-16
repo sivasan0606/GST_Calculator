@@ -208,11 +208,14 @@ export default function App() {
         if (!parsed.adminPasscode) {
           parsed.adminPasscode = 'admin123';
         }
+        if (!parsed.zohoLink || parsed.zohoLink === '') {
+          parsed.zohoLink = 'https://go.zoho.com/J82J';
+        }
         if (parsed.quickbooksLink && !parsed.vyaparLink) {
           parsed.vyaparLink = parsed.quickbooksLink;
         }
-        if (!parsed.vyaparLink) {
-          parsed.vyaparLink = '';
+        if (!parsed.vyaparLink || parsed.vyaparLink === '') {
+          parsed.vyaparLink = 'https://www.vyaparapp.in/?referrer_code=6VDQKQM';
         }
         if (parsed.xeroLink && !parsed.giddhLink) {
           parsed.giddhLink = parsed.xeroLink;
@@ -248,7 +251,7 @@ export default function App() {
     }
     return {
       adsenseClientId: '',
-      zohoLink: '',
+      zohoLink: 'https://go.zoho.com/J82J',
       vyaparLink: 'https://www.vyaparapp.in/?referrer_code=6VDQKQM',
       giddhLink: '',
       tallyLink: '',
