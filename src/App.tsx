@@ -4,12 +4,17 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Calculator, Settings, ShieldCheck, Star, Sparkles, DollarSign, ExternalLink, RefreshCw, Layers, CheckCircle2, Lock, Unlock, ShieldAlert, X, BookOpen } from 'lucide-react';
+import { Calculator, Settings, ShieldCheck, Star, Sparkles, DollarSign, ExternalLink, RefreshCw, Layers, CheckCircle2, Lock, Unlock, ShieldAlert, X, BookOpen, Home, Percent, TrendingUp, Calendar } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 // Components
 import GstCalculator from './components/GstCalculator';
 import CostPlusCalculator from './components/CostPlusCalculator';
+import IncomeTaxCalculator from './components/IncomeTaxCalculator';
+import TdsCalculator from './components/TdsCalculator';
+import HraCalculator from './components/HraCalculator';
+import RunwayCalculator from './components/RunwayCalculator';
+import WorkingCapitalCalculator from './components/WorkingCapitalCalculator';
 import AdSenseUnit from './components/AdSenseUnit';
 import AffiliateSection from './components/AffiliateSection';
 import ConsultationSection from './components/ConsultationSection';
@@ -83,7 +88,7 @@ The choice comes down to what you sell.
 If you sell physical products and need quick, simple, offline-capable GST billing from your phone or shop counter, go with Vyapar.
 
 If you sell services, deal with retainer contracts, and want a highly automated, cloud-based system that can scale into a massive enterprise, go with Zoho Books.`,
-    author: 'CA Aarav Mehta',
+    author: 'Aarav Mehta',
     category: 'Comparisons',
     publishedAt: 'Jul 14, 2026',
     readTime: '6 min read'
@@ -136,7 +141,7 @@ How Software Prevents Audit Flags:
 
 ## Final Thoughts: Getting it right the first time
 If you accidentally charge CGST + SGST on an interstate deal, you cannot simply adjust the entry. You must pay the correct IGST first and then file a refund claim for the wrongly paid local tax. Save yourself the stress by automating your business ledger today!`,
-    author: 'CA Shreya Rao',
+    author: 'Shreya Rao',
     category: 'Tax Compliance',
     publishedAt: 'Jul 07, 2026',
     readTime: '4 min read'
@@ -191,7 +196,7 @@ Current Turnover Rules:
 
 ## Final Thoughts: Stop creating manual invoices
 Drafting invoices in Word or Excel is an accident waiting to happen. Missing a single mandatory field or typing a 14-digit GSTIN instead of 15 will render your invoice invalid. Using specialized GST accounting software guarantees compliance out-of-the-box and lets you focus on growing your business.`,
-    author: 'CA Rajesh Kumar',
+    author: 'Rajesh Kumar',
     category: 'Tutorials',
     publishedAt: 'Jun 28, 2026',
     readTime: '5 min read'
@@ -220,8 +225,8 @@ export default function App() {
         if (parsed.xeroLink && !parsed.giddhLink) {
           parsed.giddhLink = parsed.xeroLink;
         }
-        if (!parsed.giddhLink) {
-          parsed.giddhLink = '';
+        if (!parsed.giddhLink || parsed.giddhLink === '') {
+          parsed.giddhLink = 'https://giddh.com?ref=kpe65SV';
         }
         if (parsed.showSponsorSection === undefined) {
           parsed.showSponsorSection = false;
@@ -253,7 +258,7 @@ export default function App() {
       adsenseClientId: '',
       zohoLink: 'https://go.zoho.com/J82J',
       vyaparLink: 'https://www.vyaparapp.in/?referrer_code=6VDQKQM',
-      giddhLink: '',
+      giddhLink: 'https://giddh.com?ref=kpe65SV',
       tallyLink: '',
       customConsultationLink: '',
       consultantSponsorFee: '250',
@@ -342,7 +347,8 @@ export default function App() {
   
   // Navigation & weekly blog state
   const [currentView, setCurrentView] = useState<'calculator' | 'blog'>('calculator');
-  const [calculatorType, setCalculatorType] = useState<'gst' | 'costplus'>('gst');
+  const [calculatorType, setCalculatorType] = useState<'gst' | 'costplus' | 'income-tax' | 'tds' | 'hra' | 'runway' | 'working-capital'>('gst');
+  const [activeCategoryTab, setActiveCategoryTab] = useState<'all' | 'tax' | 'business' | 'roadmap'>('all');
   const [posts, setPosts] = useState<BlogPost[]>(() => {
     const saved = localStorage.getItem('gst_site_blog_posts');
     if (saved) {
@@ -605,10 +611,6 @@ export default function App() {
               <ShieldCheck size={14} className="text-emerald-600" />
               <span>FY 2026-27 Portal Active</span>
             </div>
-            <div className="flex items-center gap-1">
-              <span className="text-slate-400">Monthly Traffic:</span>
-              <strong className="text-slate-800 font-semibold">{simulatedViews.toLocaleString()} searches</strong>
-            </div>
           </div>
 
           {/* Settings Admin Toggle */}
@@ -703,31 +705,339 @@ export default function App() {
 
         {currentView === 'calculator' ? (
           <>
-            {/* Sub-Calculator Tabs */}
-            <div className="flex bg-slate-100 p-1 rounded-xl max-w-md mx-auto mb-10 font-sans">
-              <button
-                onClick={() => setCalculatorType('gst')}
-                className={`flex-1 text-center font-display text-xs sm:text-sm font-semibold py-2.5 rounded-lg transition-all ${
-                  calculatorType === 'gst'
-                    ? 'bg-indigo-600 text-white shadow-xs font-bold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                }`}
-              >
-                GST Calculator
-              </button>
-              <button
-                onClick={() => setCalculatorType('costplus')}
-                className={`flex-1 text-center font-display text-xs sm:text-sm font-semibold py-2.5 rounded-lg transition-all ${
-                  calculatorType === 'costplus'
-                    ? 'bg-indigo-600 text-white shadow-xs font-bold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                }`}
-              >
-                Cost-Plus Pricing Calculator
-              </button>
+            {/* Category Segmented Pill Bar */}
+            <div className="max-w-4xl mx-auto mb-8 font-sans">
+              <div className="flex flex-wrap justify-center gap-1.5 p-1 bg-slate-100 rounded-2xl max-w-2xl mx-auto">
+                <button
+                  onClick={() => setActiveCategoryTab('all')}
+                  className={`flex-1 py-2.5 px-4 text-xs sm:text-sm font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+                    activeCategoryTab === 'all'
+                      ? 'bg-white text-slate-900 shadow-xs'
+                      : 'text-slate-500 hover:text-slate-900'
+                  }`}
+                >
+                  <span>All Tools</span>
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeCategoryTab === 'all' ? 'bg-indigo-50 text-indigo-600 font-bold' : 'bg-slate-200 text-slate-600'}`}>7</span>
+                </button>
+                <button
+                  onClick={() => setActiveCategoryTab('tax')}
+                  className={`flex-1 py-2.5 px-4 text-xs sm:text-sm font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+                    activeCategoryTab === 'tax'
+                      ? 'bg-white text-slate-900 shadow-xs'
+                      : 'text-slate-500 hover:text-slate-900'
+                  }`}
+                >
+                  <Sparkles size={14} className="text-indigo-500" />
+                  <span>Tax Lab</span>
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeCategoryTab === 'tax' ? 'bg-indigo-50 text-indigo-600 font-bold' : 'bg-slate-200 text-slate-600'}`}>4</span>
+                </button>
+                <button
+                  onClick={() => setActiveCategoryTab('business')}
+                  className={`flex-1 py-2.5 px-4 text-xs sm:text-sm font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+                    activeCategoryTab === 'business'
+                      ? 'bg-white text-slate-900 shadow-xs'
+                      : 'text-slate-500 hover:text-slate-900'
+                  }`}
+                >
+                  <DollarSign size={14} className="text-emerald-500" />
+                  <span>Business</span>
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeCategoryTab === 'business' ? 'bg-indigo-50 text-indigo-600 font-bold' : 'bg-slate-200 text-slate-600'}`}>3</span>
+                </button>
+                <button
+                  onClick={() => setActiveCategoryTab('roadmap')}
+                  className={`flex-1 py-2.5 px-4 text-xs sm:text-sm font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+                    activeCategoryTab === 'roadmap'
+                      ? 'bg-white text-slate-900 shadow-xs'
+                      : 'text-slate-500 hover:text-slate-900'
+                  }`}
+                >
+                  <Star size={14} className="text-amber-500" />
+                  <span>Roadmap</span>
+                  <span className="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full font-bold animate-pulse">New</span>
+                </button>
+              </div>
             </div>
 
-            {calculatorType === 'gst' ? (
+            {/* Spacious Grid based on activeCategoryTab */}
+            <div className="max-w-4xl mx-auto mb-10 font-sans">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeCategoryTab}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.15 }}
+                  className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
+                >
+                  {/* Tax Tools */}
+                  {(activeCategoryTab === 'all' || activeCategoryTab === 'tax') && (
+                    <>
+                      {/* GST */}
+                      <button
+                        onClick={() => setCalculatorType('gst')}
+                        className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
+                          calculatorType === 'gst'
+                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
+                            : 'bg-white border-slate-100 text-slate-800 hover:border-slate-300 hover:shadow-xs'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <div className={`p-2 rounded-xl ${calculatorType === 'gst' ? 'bg-indigo-500 text-white' : 'bg-indigo-50 text-indigo-600'}`}>
+                            <Percent size={18} />
+                          </div>
+                          {calculatorType === 'gst' && <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-500 text-white px-2 py-0.5 rounded-md">Active</span>}
+                        </div>
+                        <div>
+                          <h5 className="font-bold text-sm">GST Breakdown</h5>
+                          <p className={`text-[11px] mt-1 line-clamp-2 ${calculatorType === 'gst' ? 'text-indigo-100' : 'text-slate-500'}`}>
+                            Breakdown CGST, SGST, & IGST under current Indian tax slabs.
+                          </p>
+                        </div>
+                      </button>
+
+                      {/* Income Tax */}
+                      <button
+                        onClick={() => setCalculatorType('income-tax')}
+                        className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
+                          calculatorType === 'income-tax'
+                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
+                            : 'bg-white border-slate-100 text-slate-800 hover:border-slate-300 hover:shadow-xs'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <div className={`p-2 rounded-xl ${calculatorType === 'income-tax' ? 'bg-indigo-500 text-white' : 'bg-indigo-50 text-indigo-600'}`}>
+                            <Calculator size={18} />
+                          </div>
+                          {calculatorType === 'income-tax' && <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-500 text-white px-2 py-0.5 rounded-md">Active</span>}
+                        </div>
+                        <div>
+                          <h5 className="font-bold text-sm">Income Tax</h5>
+                          <p className={`text-[11px] mt-1 line-clamp-2 ${calculatorType === 'income-tax' ? 'text-indigo-100' : 'text-slate-500'}`}>
+                            Instantly compare tax liabilities under New vs Old regimes.
+                          </p>
+                        </div>
+                      </button>
+
+                      {/* TDS (194J) */}
+                      <button
+                        onClick={() => setCalculatorType('tds')}
+                        className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
+                          calculatorType === 'tds'
+                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
+                            : 'bg-white border-slate-100 text-slate-800 hover:border-slate-300 hover:shadow-xs'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <div className={`p-2 rounded-xl ${calculatorType === 'tds' ? 'bg-indigo-500 text-white' : 'bg-indigo-50 text-indigo-600'}`}>
+                            <ShieldAlert size={18} />
+                          </div>
+                          {calculatorType === 'tds' && <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-500 text-white px-2 py-0.5 rounded-md">Active</span>}
+                        </div>
+                        <div>
+                          <h5 className="font-bold text-sm">TDS (Sec 194J)</h5>
+                          <p className={`text-[11px] mt-1 line-clamp-2 ${calculatorType === 'tds' ? 'text-indigo-100' : 'text-slate-500'}`}>
+                            Estimate withholding tax on professional & technical contracts.
+                          </p>
+                        </div>
+                      </button>
+
+                      {/* HRA */}
+                      <button
+                        onClick={() => setCalculatorType('hra')}
+                        className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
+                          calculatorType === 'hra'
+                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
+                            : 'bg-white border-slate-100 text-slate-800 hover:border-slate-300 hover:shadow-xs'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <div className={`p-2 rounded-xl ${calculatorType === 'hra' ? 'bg-indigo-500 text-white' : 'bg-indigo-50 text-indigo-600'}`}>
+                            <Home size={18} />
+                          </div>
+                          {calculatorType === 'hra' && <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-500 text-white px-2 py-0.5 rounded-md">Active</span>}
+                        </div>
+                        <div>
+                          <h5 className="font-bold text-sm">HRA Exemption</h5>
+                          <p className={`text-[11px] mt-1 line-clamp-2 ${calculatorType === 'hra' ? 'text-indigo-100' : 'text-slate-500'}`}>
+                            Determine house lease allowances tax-exemption limit under Sec 10(13A).
+                          </p>
+                        </div>
+                      </button>
+                    </>
+                  )}
+
+                  {/* Business Tools */}
+                  {(activeCategoryTab === 'all' || activeCategoryTab === 'business') && (
+                    <>
+                      {/* Cost Plus */}
+                      <button
+                        onClick={() => setCalculatorType('costplus')}
+                        className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
+                          calculatorType === 'costplus'
+                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
+                            : 'bg-white border-slate-100 text-slate-800 hover:border-slate-300 hover:shadow-xs'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <div className={`p-2 rounded-xl ${calculatorType === 'costplus' ? 'bg-indigo-500 text-white' : 'bg-emerald-50 text-emerald-600'}`}>
+                            <TrendingUp size={18} />
+                          </div>
+                          {calculatorType === 'costplus' && <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-500 text-white px-2 py-0.5 rounded-md">Active</span>}
+                        </div>
+                        <div>
+                          <h5 className="font-bold text-sm">Cost-Plus Pricing</h5>
+                          <p className={`text-[11px] mt-1 line-clamp-2 ${calculatorType === 'costplus' ? 'text-indigo-100' : 'text-slate-500'}`}>
+                            Calculate selling margins, cost markups, and optimized product retail.
+                          </p>
+                        </div>
+                      </button>
+
+                      {/* Cash Runway */}
+                      <button
+                        onClick={() => setCalculatorType('runway')}
+                        className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
+                          calculatorType === 'runway'
+                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
+                            : 'bg-white border-slate-100 text-slate-800 hover:border-slate-300 hover:shadow-xs'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <div className={`p-2 rounded-xl ${calculatorType === 'runway' ? 'bg-indigo-500 text-white' : 'bg-emerald-50 text-emerald-600'}`}>
+                            <Calculator size={18} />
+                          </div>
+                          {calculatorType === 'runway' && <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-500 text-white px-2 py-0.5 rounded-md">Active</span>}
+                        </div>
+                        <div>
+                          <h5 className="font-bold text-sm">Cash Runway</h5>
+                          <p className={`text-[11px] mt-1 line-clamp-2 ${calculatorType === 'runway' ? 'text-indigo-100' : 'text-slate-500'}`}>
+                            Calculate survival months based on cash balance reserves & net burn rate.
+                          </p>
+                        </div>
+                      </button>
+
+                      {/* Working Capital */}
+                      <button
+                        onClick={() => setCalculatorType('working-capital')}
+                        className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
+                          calculatorType === 'working-capital'
+                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
+                            : 'bg-white border-slate-100 text-slate-800 hover:border-slate-300 hover:shadow-xs'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <div className={`p-2 rounded-xl ${calculatorType === 'working-capital' ? 'bg-indigo-500 text-white' : 'bg-emerald-50 text-emerald-600'}`}>
+                            <Calendar size={18} />
+                          </div>
+                          {calculatorType === 'working-capital' && <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-500 text-white px-2 py-0.5 rounded-md">Active</span>}
+                        </div>
+                        <div>
+                          <h5 className="font-bold text-sm">Working Capital Gap</h5>
+                          <p className={`text-[11px] mt-1 line-clamp-2 ${calculatorType === 'working-capital' ? 'text-indigo-100' : 'text-slate-500'}`}>
+                            Track gap days and capital squeezed between sourcing and customer dues.
+                          </p>
+                        </div>
+                      </button>
+                    </>
+                  )}
+
+                  {/* Future Roadmap Section */}
+                  {activeCategoryTab === 'roadmap' && (
+                    <>
+                      {/* SIP Investment */}
+                      <div className="text-left p-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 flex flex-col justify-between h-[140px]">
+                        <div className="flex items-center justify-between w-full">
+                          <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
+                            <TrendingUp size={18} />
+                          </div>
+                          <span className="text-[9px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md">Planned Q3</span>
+                        </div>
+                        <div>
+                          <h5 className="font-bold text-sm text-slate-700">SIP & Mutual Funds</h5>
+                          <p className="text-[11px] mt-1 text-slate-400 line-clamp-2">
+                            Compound investment growth and dynamic wealth projections.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* FD & PPF */}
+                      <div className="text-left p-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 flex flex-col justify-between h-[140px]">
+                        <div className="flex items-center justify-between w-full">
+                          <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
+                            <Calculator size={18} />
+                          </div>
+                          <span className="text-[9px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md">Planned Q3</span>
+                        </div>
+                        <div>
+                          <h5 className="font-bold text-sm text-slate-700">FD Yield & PPF</h5>
+                          <p className="text-[11px] mt-1 text-slate-400 line-clamp-2">
+                            Estimate fixed deposit maturity yields & public provident fund gains.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Loans & EMI */}
+                      <div className="text-left p-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 flex flex-col justify-between h-[140px]">
+                        <div className="flex items-center justify-between w-full">
+                          <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
+                            <Calendar size={18} />
+                          </div>
+                          <span className="text-[9px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md">Planned Q4</span>
+                        </div>
+                        <div>
+                          <h5 className="font-bold text-sm text-slate-700">Loans & Amortized EMI</h5>
+                          <p className="text-[11px] mt-1 text-slate-400 line-clamp-2">
+                            Analyze housing, auto, and personal debt payments.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* CTC In-Hand */}
+                      <div className="text-left p-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 flex flex-col justify-between h-[140px]">
+                        <div className="flex items-center justify-between w-full">
+                          <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
+                            <DollarSign size={18} />
+                          </div>
+                          <span className="text-[9px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md">Planned Q4</span>
+                        </div>
+                        <div>
+                          <h5 className="font-bold text-sm text-slate-700">CTC In-Hand & EPF</h5>
+                          <p className="text-[11px] mt-1 text-slate-400 line-clamp-2">
+                            Deconstruct salary structures to compute actual in-hand payouts.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Health & Fitness */}
+                      <div className="text-left p-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 flex flex-col justify-between h-[140px]">
+                        <div className="flex items-center justify-between w-full">
+                          <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
+                            <Star size={18} />
+                          </div>
+                          <span className="text-[9px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md">Planned</span>
+                        </div>
+                        <div>
+                          <h5 className="font-bold text-sm text-slate-700">Health & Calorie Index</h5>
+                          <p className="text-[11px] mt-1 text-slate-400 line-clamp-2">
+                            Quick calculations for Body Mass Index, metabolic activity, and calories.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Suggest Box */}
+                      <div className="text-center p-5 rounded-2xl border border-dashed border-indigo-200 bg-indigo-50/40 flex flex-col justify-center items-center h-[140px]">
+                        <Sparkles size={20} className="text-indigo-500 animate-pulse mb-1.5" />
+                        <h5 className="font-bold text-xs text-indigo-950">Have a suggestion?</h5>
+                        <p className="text-[10px] text-indigo-700 mt-1 max-w-[180px] mx-auto">
+                          Submit requested utility ideas to our planning team.
+                        </p>
+                      </div>
+                    </>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {calculatorType === 'gst' && (
               <>
                 {/* SEO Intro Title Pitch */}
                 <div className="text-center max-w-2xl mx-auto mb-10">
@@ -750,7 +1060,9 @@ export default function App() {
                   onClearHistory={handleClearHistory}
                 />
               </>
-            ) : (
+            )}
+
+            {calculatorType === 'costplus' && (
               <>
                 {/* Cost-Plus Calculator SEO Header */}
                 <div className="text-center max-w-2xl mx-auto mb-10">
@@ -772,6 +1084,96 @@ export default function App() {
                   savedCalculations={costPlusHistory}
                   onClearHistory={handleClearCostPlusHistory}
                 />
+              </>
+            )}
+
+            {calculatorType === 'income-tax' && (
+              <>
+                <div className="text-center max-w-2xl mx-auto mb-10">
+                  <span className="inline-flex items-center gap-1 text-indigo-700 bg-indigo-50 font-display text-[10px] sm:text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+                    <Sparkles size={12} className="text-indigo-600" />
+                    New vs Old Regime Comparison (FY 2025-26)
+                  </span>
+                  <h2 className="text-3xl sm:text-4xl font-display font-bold text-slate-900 tracking-tight leading-none sm:leading-tight">
+                    Income Tax Calculator (New vs. Old Regime)
+                  </h2>
+                  <p className="text-slate-600 text-xs sm:text-sm mt-3 leading-relaxed">
+                    Calculate your exact income tax liability under both regimes. Compare standard deductions, rebate under section 87A, cess, and find the most tax-efficient regime for your salary automatically.
+                  </p>
+                </div>
+                <IncomeTaxCalculator />
+              </>
+            )}
+
+            {calculatorType === 'tds' && (
+              <>
+                <div className="text-center max-w-2xl mx-auto mb-10">
+                  <span className="inline-flex items-center gap-1 text-indigo-700 bg-indigo-50 font-display text-[10px] sm:text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+                    <ShieldCheck size={12} className="text-indigo-600" />
+                    Vendor Payments & Compliance Tracking
+                  </span>
+                  <h2 className="text-3xl sm:text-4xl font-display font-bold text-slate-900 tracking-tight leading-none sm:leading-tight">
+                    TDS Calculator for Professional Fees (Sec 194J)
+                  </h2>
+                  <p className="text-slate-600 text-xs sm:text-sm mt-3 leading-relaxed">
+                    Instantly calculate TDS for professional/technical fees under Section 194J. Ensure compliant tax deductions excluding the GST component with custom limits and director payment guidelines.
+                  </p>
+                </div>
+                <TdsCalculator />
+              </>
+            )}
+
+            {calculatorType === 'hra' && (
+              <>
+                <div className="text-center max-w-2xl mx-auto mb-10">
+                  <span className="inline-flex items-center gap-1 text-indigo-700 bg-indigo-50 font-display text-[10px] sm:text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+                    <Home size={12} className="text-indigo-600" />
+                    Salaried Tax Deductions & Exemptions
+                  </span>
+                  <h2 className="text-3xl sm:text-4xl font-display font-bold text-slate-900 tracking-tight leading-none sm:leading-tight">
+                    HRA Exemption Calculator (Sec 10(13A))
+                  </h2>
+                  <p className="text-slate-600 text-xs sm:text-sm mt-3 leading-relaxed">
+                    Maximize your tax savings. Calculate the exact tax-exempt portion of your House Rent Allowance using the three regulatory clauses. Determine your taxable HRA automatically.
+                  </p>
+                </div>
+                <HraCalculator />
+              </>
+            )}
+
+            {calculatorType === 'runway' && (
+              <>
+                <div className="text-center max-w-2xl mx-auto mb-10">
+                  <span className="inline-flex items-center gap-1 text-indigo-700 bg-indigo-50 font-display text-[10px] sm:text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+                    <DollarSign size={12} className="text-indigo-600" />
+                    Capital Runway & Burn Rate Optimization
+                  </span>
+                  <h2 className="text-3xl sm:text-4xl font-display font-bold text-slate-900 tracking-tight leading-none sm:leading-tight">
+                    Startup Cash Runway Calculator
+                  </h2>
+                  <p className="text-slate-600 text-xs sm:text-sm mt-3 leading-relaxed">
+                    Determine how many months of operational runway your business or startup has based on liquid reserves and net burn rate. Toggle interactive sliders to plan cost-reductions and growth goals.
+                  </p>
+                </div>
+                <RunwayCalculator />
+              </>
+            )}
+
+            {calculatorType === 'working-capital' && (
+              <>
+                <div className="text-center max-w-2xl mx-auto mb-10">
+                  <span className="inline-flex items-center gap-1 text-indigo-700 bg-indigo-50 font-display text-[10px] sm:text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+                    <Calendar size={12} className="text-indigo-600" />
+                    Cash Conversion Cycle & Capital Squeezes
+                  </span>
+                  <h2 className="text-3xl sm:text-4xl font-display font-bold text-slate-900 tracking-tight leading-none sm:leading-tight">
+                    Working Capital Gap Calculator
+                  </h2>
+                  <p className="text-slate-600 text-xs sm:text-sm mt-3 leading-relaxed">
+                    Calculate the operational cash flow gap between paying suppliers for raw materials and receiving payments from clients. Identify tied-up capital and bridge funding needs instantly.
+                  </p>
+                </div>
+                <WorkingCapitalCalculator />
               </>
             )}
 

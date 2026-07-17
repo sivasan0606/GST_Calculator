@@ -173,6 +173,16 @@ export default function BlogPage({ posts, settings, onNavigateToCalculator }: Bl
               }
               // Render affiliate links with custom premium CTA cards
               if (paragraph.includes('Vyapar Affiliate Link')) {
+                const getVyaparLink = (link: string) => {
+                  const defaultLink = 'https://www.vyaparapp.in/?referrer_code=6VDQKQM';
+                  if (!link || link.trim() === '') return defaultLink;
+                  if (link.includes('vyaparapp.in') && !link.includes('referrer_code')) {
+                    const separator = link.includes('?') ? '&' : '?';
+                    return `${link}${separator}referrer_code=6VDQKQM`;
+                  }
+                  return link;
+                };
+                const finalVyaparLink = getVyaparLink(settings.vyaparLink);
                 return (
                   <div key={idx} className="my-6 p-5 bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="text-center sm:text-left">
@@ -180,7 +190,7 @@ export default function BlogPage({ posts, settings, onNavigateToCalculator }: Bl
                       <p className="text-[11px] text-slate-500 mt-0.5">Simple, offline billing & stock tracking tailored for Indian retail shops.</p>
                     </div>
                     <a
-                      href={settings.vyaparLink || 'https://www.vyaparapp.in/?referrer_code=6VDQKQM'}
+                      href={finalVyaparLink}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-orange-600 hover:bg-orange-700 text-white font-semibold text-xs px-5 py-2.5 rounded-xl inline-flex items-center gap-1.5 transition-all shadow-sm active:scale-95 whitespace-nowrap"
@@ -229,6 +239,16 @@ export default function BlogPage({ posts, settings, onNavigateToCalculator }: Bl
               }
 
               if (paragraph.includes('Giddh Unique Sign-Up Link') || paragraph.includes('Giddh Affiliate Link')) {
+                const getGiddhLink = (link: string) => {
+                  const defaultLink = 'https://giddh.com?ref=kpe65SV';
+                  if (!link || link.trim() === '') return defaultLink;
+                  if (link.includes('giddh.com') && !link.includes('ref=')) {
+                    const separator = link.includes('?') ? '&' : '?';
+                    return `${link}${separator}ref=kpe65SV`;
+                  }
+                  return link;
+                };
+                const finalGiddhLink = getGiddhLink(settings.giddhLink);
                 return (
                   <div key={idx} className="my-6 p-5 bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="text-center sm:text-left">
@@ -236,7 +256,7 @@ export default function BlogPage({ posts, settings, onNavigateToCalculator }: Bl
                       <p className="text-[11px] text-slate-500 mt-0.5">Real-time analytical insights, multi-branch reports, and developer-first REST APIs.</p>
                     </div>
                     <a
-                      href={settings.giddhLink || '#'}
+                      href={finalGiddhLink}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-teal-600 hover:bg-teal-700 text-white font-semibold text-xs px-5 py-2.5 rounded-xl inline-flex items-center gap-1.5 transition-all shadow-sm active:scale-95 whitespace-nowrap"

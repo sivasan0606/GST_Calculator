@@ -116,19 +116,19 @@ export default function LegalModal({ isOpen, onClose }: LegalModalProps) {
             <div className="space-y-4">
               <h3 className="text-slate-900 font-display font-bold text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
                 <AlertTriangle size={16} className="text-indigo-600" />
-                1. Tax & Calculation Accuracy Disclaimer (The &quot;Waiver&quot;)
+                1. Tax, Financial & Operational Accuracy Disclaimer (The &quot;Waiver&quot;)
               </h3>
               <p>
-                <strong>1.1 No Professional Advice:</strong> SimplyTools provides a digital Goods and Services Tax (GST) estimation software tool. This application is designed solely for preliminary, self-educational reference. It does not contain, constitute, represent, or substitute for professional Chartered Accountant (CA) services, professional legal advice, or financial planning.
+                <strong>1.1 No Professional Advice:</strong> SimplyTools provides digital calculation and estimation software tools including: Goods and Services Tax (GST) computation, Cost-Plus pricing models, Income Tax (Old vs. New regimes) projections, TDS (Tax Deducted at Source) splits, House Rent Allowance (HRA) exemptions, Startup Cash Runway / Burn rates, and Working Capital cycles. This application is designed solely for preliminary, self-educational reference. It does not contain, constitute, represent, or substitute for professional Chartered Accountant (CA) services, registered financial advisory, audit consultations, or legal planning.
               </p>
               <p>
-                <strong>1.2 Estimation Warranty:</strong> While we employ diligent mathematical checks, we provide absolutely no warranty or representation regarding the accuracy, completeness, timeliness, mathematical validity, or relevance of the tax percentages, CGST/SGST/IGST splits, reverse charge, or calculations shown. Indian tax policies are subject to rapid revisions by the GST Council.
+                <strong>1.2 Estimation & Policy Amendments:</strong> While we employ rigorous mathematical validations and align our tools with statutory rules (such as the enhanced ₹75,000 Standard Deduction under the New Tax Regime, CBDT Circular No. 23/2017 guidelines regarding TDS on GST invoices, and standard HRA Metro/Non-Metro thresholds), we provide absolutely no warranty or representation regarding the accuracy, completeness, mathematical validity, or current relevance of the tax percentages, formulas, or outputs shown. Indian tax policies, corporate guidelines, and financial regulations are subject to rapid and retroactive revisions by the GST Council, Central Board of Direct Taxes (CBDT), and Parliament.
               </p>
               <p className="bg-slate-50 p-3 rounded-lg border border-slate-100 font-medium">
-                <strong>1.3 ASSUMPTION OF FINANCIAL RISK:</strong> By utilizing our calculators, you explicitly acknowledge that any final decisions, financial accounting, statutory filings, return submissions, or declarations are executed at your own sole risk. SimplyTools, its founders, and operators shall not be responsible, under any scenario, for tax shortfalls, computational errors, assessment penalties, interest levies, or filing fines.
+                <strong>1.3 ASSUMPTION OF FINANCIAL & COMPLIANCE RISK:</strong> By utilizing our calculators, you explicitly acknowledge that any final decisions, tax returns, payroll calculations, sales invoice pricing, inventory budgeting, or corporate fundraising strategies are executed at your own sole risk. SimplyTools, its founders, and operators shall not be held liable, under any scenario, for tax shortfalls, business losses, missed runway projections, audit failures, interest levies, or compliance penalties.
               </p>
               <p>
-                <strong>1.4 No Liability for System Downtime:</strong> SimplyTools shall have no liability for system errors, bugs, database misconfigurations, browser incompatibilities, server latency, or data losses experienced during tax calculation runs.
+                <strong>1.4 No Liability for System Downtime or Logic Bugs:</strong> SimplyTools shall have no liability for system errors, decimal rounding mismatches, browser cache issues, server latency, or temporary service interruptions experienced during planning runs.
               </p>
             </div>
           )}

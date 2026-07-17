@@ -46,7 +46,7 @@ export default function AdminPanel({
   const [newPostCategory, setNewPostCategory] = useState('Comparisons');
   const [newPostExcerpt, setNewPostExcerpt] = useState('');
   const [newPostContent, setNewPostContent] = useState('');
-  const [newPostAuthor, setNewPostAuthor] = useState('CA Rajesh Kumar');
+  const [newPostAuthor, setNewPostAuthor] = useState('Rajesh Kumar');
   const [newPostReadTime, setNewPostReadTime] = useState('5 min read');
   const [blogSuccessMsg, setBlogSuccessMsg] = useState('');
 
@@ -835,7 +835,7 @@ export default function AdminPanel({
                     <label className="block text-slate-300 font-semibold mb-1">Author Name</label>
                     <input
                       type="text"
-                      placeholder="e.g. CA Rajesh Kumar"
+                      placeholder="e.g. Rajesh Kumar"
                       value={newPostAuthor}
                       onChange={(e) => setNewPostAuthor(e.target.value)}
                       className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white focus:outline-hidden focus:ring-1 focus:ring-indigo-500"

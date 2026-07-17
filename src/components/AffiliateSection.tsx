@@ -26,6 +26,26 @@ export default function AffiliateSection({
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
+  const getVyaparLink = (link: string) => {
+    const defaultLink = 'https://www.vyaparapp.in/?referrer_code=6VDQKQM';
+    if (!link || link.trim() === '') return defaultLink;
+    if (link.includes('vyaparapp.in') && !link.includes('referrer_code')) {
+      const separator = link.includes('?') ? '&' : '?';
+      return `${link}${separator}referrer_code=6VDQKQM`;
+    }
+    return link;
+  };
+
+  const getGiddhLink = (link: string) => {
+    const defaultLink = 'https://giddh.com?ref=kpe65SV';
+    if (!link || link.trim() === '') return defaultLink;
+    if (link.includes('giddh.com') && !link.includes('ref=')) {
+      const separator = link.includes('?') ? '&' : '?';
+      return `${link}${separator}ref=kpe65SV`;
+    }
+    return link;
+  };
+
   const softs: AffiliateSoftware[] = [
     {
       id: 'zoho',
@@ -55,7 +75,7 @@ export default function AffiliateSection({
       description: 'Still making paper bills? Switch to Vyapar App, trusted by over 1 Crore+ happy customers. 91% of businesses who use Vyapar report 5X more profits and streamlined accounting.',
       pros: ['GST-Ready Billing & Secure SSL Protection', 'Trusted by ICAI Professional Accountants', 'Inventory tracking with WhatsApp payment reminders'],
       pricing: '7-Day Free Trial, then starts from ₹1,999/year',
-      affiliateUrl: vyaparLink || 'https://www.vyaparapp.in/?referrer_code=6VDQKQM',
+      affiliateUrl: getVyaparLink(vyaparLink),
       defaultUrl: 'https://www.vyaparapp.in/?referrer_code=6VDQKQM',
       promoCode: '6VDQKQM'
     },
@@ -67,8 +87,8 @@ export default function AffiliateSection({
       description: 'An elegant, modern, cloud-first double-entry accounting software designed specifically for Indian businesses. Offers secure automated invoicing, bank reconciliation, and real-time GST reports.',
       pros: ['Automated GST filing & ledger reconciliations', 'Multi-currency cloud dashboard tracking', 'Direct API integrations & developer-friendly hooks'],
       pricing: 'Free Trial available, then ₹800/year onwards',
-      affiliateUrl: giddhLink,
-      defaultUrl: 'https://giddh.com/'
+      affiliateUrl: getGiddhLink(giddhLink),
+      defaultUrl: 'https://giddh.com?ref=kpe65SV'
     },
     {
       id: 'tally',
