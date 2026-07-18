@@ -30,71 +30,114 @@ export default function HraCalculator() {
   };
 
   const calculateHra = () => {
-    const scale = 1; // All calculations will be presented in the selected frequency, but let's calculate both
     const basic = parseFloat(basicSalaryInput) || 0;
     const da = parseFloat(daInput) || 0;
     const hraReceived = parseFloat(hraInput) || 0;
     const rentPaid = parseFloat(rentInput) || 0;
 
-    const salaryForHra = basic + da;
+    // We can define monthly and annual variables
+    let basicM = 0, daM = 0, hraM = 0, rentM = 0;
+    let basicA = 0, daA = 0, hraA = 0, rentA = 0;
 
-    // Rule 1: Actual HRA Received
-    const rule1 = hraReceived;
+    if (frequency === 'monthly') {
+      basicM = basic; daM = da; hraM = hraReceived; rentM = rentPaid;
+      basicA = basic * 12; daA = da * 12; hraA = hraReceived * 12; rentA = rentPaid * 12;
+    } else {
+      basicA = basic; daA = da; hraA = hraReceived; rentA = rentPaid;
+      basicM = basic / 12; daM = da / 12; hraM = hraReceived / 12; rentM = rentPaid / 12;
+    }
 
-    // Rule 2: Rent Paid - 10% of Salary
-    const tenPercentSalary = salaryForHra * 0.10;
-    const rule2 = Math.max(0, rentPaid - tenPercentSalary);
-
-    // Rule 3: 50% of Salary (Metro) or 40% (Non-metro)
+    // Calculations for Monthly
+    const salaryForHraM = basicM + daM;
+    const rule1_M = hraM;
+    const tenPercentSalaryM = salaryForHraM * 0.10;
+    const rule2_M = Math.max(0, rentM - tenPercentSalaryM);
     const metroPercent = isMetro ? 0.50 : 0.40;
-    const rule3 = salaryForHra * metroPercent;
+    const rule3_M = salaryForHraM * metroPercent;
+    const exemptHraM = Math.min(rule1_M, rule2_M, rule3_M);
+    const taxableHraM = Math.max(0, hraM - exemptHraM);
 
-    // Exemption is the minimum of the three rules
-    const exemptHra = Math.min(rule1, rule2, rule3);
-    const taxableHra = Math.max(0, hraReceived - exemptHra);
+    // Calculations for Annually
+    const salaryForHraA = basicA + daA;
+    const rule1_A = hraA;
+    const tenPercentSalaryA = salaryForHraA * 0.10;
+    const rule2_A = Math.max(0, rentA - tenPercentSalaryA);
+    const rule3_A = salaryForHraA * metroPercent;
+    const exemptHraA = Math.min(rule1_A, rule2_A, rule3_A);
+    const taxableHraA = Math.max(0, hraA - exemptHraA);
 
     // Identify which rule is the bottleneck
     let bottleneckRule = 1;
-    if (exemptHra === rule2) bottleneckRule = 2;
-    else if (exemptHra === rule3) bottleneckRule = 3;
+    if (exemptHraM === rule2_M) bottleneckRule = 2;
+    else if (exemptHraM === rule3_M) bottleneckRule = 3;
 
     setCalculation({
       basic,
       da,
       hraReceived,
       rentPaid,
-      salaryForHra,
-      tenPercentSalary,
-      rule1,
-      rule2,
-      rule3,
-      exemptHra,
-      taxableHra,
-      bottleneckRule,
+      frequency,
       isMetro,
-      frequency
+      monthly: {
+        basic: basicM,
+        da: daM,
+        hraReceived: hraM,
+        rentPaid: rentM,
+        salaryForHra: salaryForHraM,
+        tenPercentSalary: tenPercentSalaryM,
+        rule1: rule1_M,
+        rule2: rule2_M,
+        rule3: rule3_M,
+        exemptHra: exemptHraM,
+        taxableHra: taxableHraM,
+      },
+      annually: {
+        basic: basicA,
+        da: daA,
+        hraReceived: hraA,
+        rentPaid: rentA,
+        salaryForHra: salaryForHraA,
+        tenPercentSalary: tenPercentSalaryA,
+        rule1: rule1_A,
+        rule2: rule2_A,
+        rule3: rule3_A,
+        exemptHra: exemptHraA,
+        taxableHra: taxableHraA,
+      },
+      bottleneckRule
     });
   };
 
   const copyBreakdown = () => {
     if (!calculation) return;
-    const freqLabel = calculation.frequency === 'monthly' ? 'Monthly' : 'Annual';
     const text = `--- HRA TAX EXEMPTION REPORT (Section 10(13A)) ---
-Calculation Frequency: ${freqLabel}
-Basic Salary: ${formatCurrency(calculation.basic)}
-Dearness Allowance (DA): ${formatCurrency(calculation.da)}
-HRA Received: ${formatCurrency(calculation.hraReceived)}
-Actual Rent Paid: ${formatCurrency(calculation.rentPaid)}
 Living in Metro City: ${calculation.isMetro ? 'Yes' : 'No'}
 
---- THE THREE TAX CLAUSES ---
-1. Actual HRA Received: ${formatCurrency(calculation.rule1)}
-2. Rent Paid minus 10% of Salary: ${formatCurrency(calculation.rule2)} (Salary 10%: ${formatCurrency(calculation.tenPercentSalary)})
-3. ${calculation.isMetro ? '50%' : '40%'} of Salary (Metro limit): ${formatCurrency(calculation.rule3)}
+--- MONTHLY BREAKDOWN ---
+Basic Salary: ${formatCurrency(calculation.monthly.basic)}
+Dearness Allowance (DA): ${formatCurrency(calculation.monthly.da)}
+HRA Received: ${formatCurrency(calculation.monthly.hraReceived)}
+Actual Rent Paid: ${formatCurrency(calculation.monthly.rentPaid)}
+- Exempt House Rent Allowance: ${formatCurrency(calculation.monthly.exemptHra)} (Fully Tax-Exempt)
+- Taxable House Rent Allowance: ${formatCurrency(calculation.monthly.taxableHra)} (Added to Taxable Income)
 
---- FINAL DETERMINATION ---
-Exempt House Rent Allowance: ${formatCurrency(calculation.exemptHra)} (Fully Tax-Exempt)
-Taxable House Rent Allowance: ${formatCurrency(calculation.taxableHra)} (Added to Taxable Income)
+--- ANNUAL BREAKDOWN ---
+Basic Salary: ${formatCurrency(calculation.annually.basic)}
+Dearness Allowance (DA): ${formatCurrency(calculation.annually.da)}
+HRA Received: ${formatCurrency(calculation.annually.hraReceived)}
+Actual Rent Paid: ${formatCurrency(calculation.annually.rentPaid)}
+- Exempt House Rent Allowance: ${formatCurrency(calculation.annually.exemptHra)} (Fully Tax-Exempt)
+- Taxable House Rent Allowance: ${formatCurrency(calculation.annually.taxableHra)} (Added to Taxable Income)
+
+--- THE THREE TAX CLAUSES (Comparison) ---
+1. Actual HRA Received:
+   Monthly: ${formatCurrency(calculation.monthly.rule1)} | Annual: ${formatCurrency(calculation.annually.rule1)}
+2. Rent Paid minus 10% of Salary:
+   Monthly: ${formatCurrency(calculation.monthly.rule2)} | Annual: ${formatCurrency(calculation.annually.rule2)}
+3. ${calculation.isMetro ? '50%' : '40%'} of Salary (Metro limit):
+   Monthly: ${formatCurrency(calculation.monthly.rule3)} | Annual: ${formatCurrency(calculation.annually.rule3)}
+
+* Bottleneck rule active: Clause #${calculation.bottleneckRule}
 ---------------------------------------------------`;
 
     navigator.clipboard.writeText(text);
@@ -307,57 +350,86 @@ Taxable House Rent Allowance: ${formatCurrency(calculation.taxableHra)} (Added t
 
         {/* Exemption Output Details (Right) */}
         <div className="space-y-6">
-          <div className="bg-slate-950 text-white p-6 rounded-2xl border border-slate-800 space-y-4 shadow-sm">
-            <span className="text-[10px] text-indigo-300 font-bold tracking-wider uppercase bg-indigo-950/80 px-2 py-0.5 rounded-md">TAX EXEMPTION SUMMARY</span>
+          <div className="bg-slate-950 text-white p-6 rounded-2xl border border-slate-800 space-y-5 shadow-sm">
+            <span className="text-[10px] text-indigo-300 font-bold tracking-wider uppercase bg-indigo-950/80 px-2.5 py-1 rounded-md">TAX EXEMPTION SUMMARY</span>
             
-            <div className="flex justify-between items-center border-b border-slate-900 pb-3">
-              <div>
-                <span className="text-xs text-slate-400 block">Exempt HRA Amount:</span>
-                <span className="text-[10px] text-emerald-400 font-semibold bg-emerald-950 px-2 py-0.5 rounded-md mt-0.5 inline-block">100% Tax-Free Exemption</span>
+            {/* Side-by-Side Monthly and Annually Cards */}
+            <div className="grid grid-cols-2 gap-4 border-b border-slate-900 pb-5">
+              {/* Monthly Column */}
+              <div className="bg-slate-900/50 p-3 rounded-xl border border-slate-900/60">
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-2 text-center border-b border-slate-800 pb-1">Monthly Summary</span>
+                
+                <div className="mb-3 text-center sm:text-left">
+                  <span className="text-[10px] text-slate-400 block">Exempt HRA:</span>
+                  <span className="text-md sm:text-lg font-black text-emerald-400">{formatCurrency(calculation.monthly.exemptHra)}</span>
+                </div>
+                <div className="text-center sm:text-left">
+                  <span className="text-[10px] text-slate-400 block">Taxable HRA:</span>
+                  <span className="text-sm sm:text-md font-bold text-rose-400">{formatCurrency(calculation.monthly.taxableHra)}</span>
+                </div>
               </div>
-              <span className="text-2xl sm:text-3xl font-black text-emerald-400 tracking-tight">{formatCurrency(calculation.exemptHra)}</span>
+
+              {/* Annual Column */}
+              <div className="bg-slate-900/50 p-3 rounded-xl border border-slate-900/60">
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-2 text-center border-b border-slate-800 pb-1">Annual Summary</span>
+                
+                <div className="mb-3 text-center sm:text-left">
+                  <span className="text-[10px] text-slate-400 block">Exempt HRA:</span>
+                  <span className="text-md sm:text-lg font-black text-emerald-400">{formatCurrency(calculation.annually.exemptHra)}</span>
+                </div>
+                <div className="text-center sm:text-left">
+                  <span className="text-[10px] text-slate-400 block">Taxable HRA:</span>
+                  <span className="text-sm sm:text-md font-bold text-rose-400">{formatCurrency(calculation.annually.taxableHra)}</span>
+                </div>
+              </div>
             </div>
 
-            <div className="flex justify-between items-center border-b border-slate-900 pb-3">
-              <div>
-                <span className="text-xs text-slate-400 block">Taxable HRA Amount:</span>
-                <span className="text-[10px] text-rose-400 font-semibold bg-rose-950 px-2 py-0.5 rounded-md mt-0.5 inline-block">Added to Gross Income</span>
+            {/* Visual clause meter with side-by-side Monthly/Annual values */}
+            <div className="space-y-3.5 pt-1">
+              <div className="flex justify-between items-center">
+                <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">The Three Clauses (Lowest is Exempt):</span>
+                <span className="text-[9px] text-indigo-300 font-medium">Monthly / [Annual]</span>
               </div>
-              <span className="text-xl sm:text-2xl font-bold text-rose-400 tracking-tight">{formatCurrency(calculation.taxableHra)}</span>
-            </div>
-
-            {/* Visual clause meter */}
-            <div className="space-y-3.5 pt-2">
-              <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">The Three Exemption Clauses (Lowest is Exempt):</span>
               
-              <div className={`p-3 rounded-xl border text-xs flex justify-between items-center ${
+              <div className={`p-3 rounded-xl border text-xs flex justify-between items-center gap-2 ${
                 calculation.bottleneckRule === 1 
                   ? 'border-emerald-600 bg-emerald-950/20 text-slate-100 font-medium' 
                   : 'border-slate-800 text-slate-400'
               }`}>
                 <span>1. Actual HRA Received</span>
-                <span className="font-semibold">{formatCurrency(calculation.rule1)}</span>
+                <span className="font-semibold text-right">
+                  <span className="text-slate-100">{formatCurrency(calculation.monthly.rule1)}</span>
+                  <span className="text-[10px] text-slate-500 ml-1.5 font-normal">[{formatCurrency(calculation.annually.rule1)}]</span>
+                </span>
               </div>
 
-              <div className={`p-3 rounded-xl border text-xs flex justify-between items-center ${
+              <div className={`p-3 rounded-xl border text-xs flex justify-between items-center gap-2 ${
                 calculation.bottleneckRule === 2 
                   ? 'border-emerald-600 bg-emerald-950/20 text-slate-100 font-medium' 
                   : 'border-slate-800 text-slate-400'
               }`}>
                 <div>
                   <span className="block">2. Rent Paid minus 10% of Salary</span>
-                  <span className="block text-[10px] opacity-75 mt-0.5">(Salary 10% was {formatCurrency(calculation.tenPercentSalary)})</span>
+                  <span className="block text-[10px] opacity-75 mt-0.5">
+                    (Salary 10% is {formatCurrency(calculation.monthly.tenPercentSalary)} / {formatCurrency(calculation.annually.tenPercentSalary)})
+                  </span>
                 </div>
-                <span className="font-semibold">{formatCurrency(calculation.rule2)}</span>
+                <span className="font-semibold text-right">
+                  <span className="text-slate-100">{formatCurrency(calculation.monthly.rule2)}</span>
+                  <span className="text-[10px] text-slate-500 ml-1.5 font-normal">[{formatCurrency(calculation.annually.rule2)}]</span>
+                </span>
               </div>
 
-              <div className={`p-3 rounded-xl border text-xs flex justify-between items-center ${
+              <div className={`p-3 rounded-xl border text-xs flex justify-between items-center gap-2 ${
                 calculation.bottleneckRule === 3 
                   ? 'border-emerald-600 bg-emerald-950/20 text-slate-100 font-medium' 
                   : 'border-slate-800 text-slate-400'
               }`}>
-                <span>3. {isMetro ? '50%' : '40%'} of Salary ({isMetro ? 'Metro' : 'Non-metro'} cap)</span>
-                <span className="font-semibold">{formatCurrency(calculation.rule3)}</span>
+                <span>3. {isMetro ? '50%' : '40%'} of Salary ({isMetro ? 'Metro' : 'Non-metro'} limit)</span>
+                <span className="font-semibold text-right">
+                  <span className="text-slate-100">{formatCurrency(calculation.monthly.rule3)}</span>
+                  <span className="text-[10px] text-slate-500 ml-1.5 font-normal">[{formatCurrency(calculation.annually.rule3)}]</span>
+                </span>
               </div>
             </div>
           </div>

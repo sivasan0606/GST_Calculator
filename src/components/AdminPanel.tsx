@@ -46,7 +46,7 @@ export default function AdminPanel({
   const [newPostCategory, setNewPostCategory] = useState('Comparisons');
   const [newPostExcerpt, setNewPostExcerpt] = useState('');
   const [newPostContent, setNewPostContent] = useState('');
-  const [newPostAuthor, setNewPostAuthor] = useState('Rajesh Kumar');
+  const [newPostAuthor, setNewPostAuthor] = useState('Tax Resource Desk');
   const [newPostReadTime, setNewPostReadTime] = useState('5 min read');
   const [blogSuccessMsg, setBlogSuccessMsg] = useState('');
 

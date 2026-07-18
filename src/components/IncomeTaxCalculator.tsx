@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { Percent, Clipboard, Check, RotateCcw, HelpCircle, FileText, Download, TrendingUp, Info, Printer, Calculator } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-export default function IncomeTaxCalculator() {
+export default function IncomeTaxCalculator({ onNavigateToHra }: { onNavigateToHra?: () => void }) {
   // Inputs
   const [grossIncomeInput, setGrossIncomeInput] = useState<string>('1200000');
   const [isSalaried, setIsSalaried] = useState<boolean>(true);
@@ -413,8 +413,12 @@ Tax Savings: ${formatCurrency(difference)}
               <label className="block text-slate-700 text-xs sm:text-sm font-semibold mb-1 flex justify-between">
                 <span>HRA Tax Exemption Amount</span>
                 <span className="text-indigo-600 text-[10px] hover:underline cursor-pointer font-medium" onClick={() => {
-                  const el = document.getElementById('hra-calculator');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  if (onNavigateToHra) {
+                    onNavigateToHra();
+                  } else {
+                    const el = document.getElementById('hra-calculator');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }
                 }}>Go to HRA Calculator</span>
               </label>
               <div className="relative rounded-lg shadow-2xs">

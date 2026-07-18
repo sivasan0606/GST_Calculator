@@ -88,7 +88,7 @@ The choice comes down to what you sell.
 If you sell physical products and need quick, simple, offline-capable GST billing from your phone or shop counter, go with Vyapar.
 
 If you sell services, deal with retainer contracts, and want a highly automated, cloud-based system that can scale into a massive enterprise, go with Zoho Books.`,
-    author: 'Aarav Mehta',
+    author: 'Tax Resource Desk',
     category: 'Comparisons',
     publishedAt: 'Jul 14, 2026',
     readTime: '6 min read'
@@ -141,7 +141,7 @@ How Software Prevents Audit Flags:
 
 ## Final Thoughts: Getting it right the first time
 If you accidentally charge CGST + SGST on an interstate deal, you cannot simply adjust the entry. You must pay the correct IGST first and then file a refund claim for the wrongly paid local tax. Save yourself the stress by automating your business ledger today!`,
-    author: 'Shreya Rao',
+    author: 'Tax Resource Desk',
     category: 'Tax Compliance',
     publishedAt: 'Jul 07, 2026',
     readTime: '4 min read'
@@ -196,7 +196,7 @@ Current Turnover Rules:
 
 ## Final Thoughts: Stop creating manual invoices
 Drafting invoices in Word or Excel is an accident waiting to happen. Missing a single mandatory field or typing a 14-digit GSTIN instead of 15 will render your invoice invalid. Using specialized GST accounting software guarantees compliance out-of-the-box and lets you focus on growing your business.`,
-    author: 'Rajesh Kumar',
+    author: 'Tax Resource Desk',
     category: 'Tutorials',
     publishedAt: 'Jun 28, 2026',
     readTime: '5 min read'
@@ -354,8 +354,11 @@ export default function App() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Force update any of the posts if they do not match our premium layouts
+        // Force update any of the posts if they do not match our premium layouts or have old author names
         const hasOldPost = parsed.some((p: any) => 
+          (p.id === 'post-1' && p.author !== 'Tax Resource Desk') ||
+          (p.id === 'post-2' && p.author !== 'Tax Resource Desk') ||
+          (p.id === 'post-3' && p.author !== 'Tax Resource Desk') ||
           (p.id === 'post-1' && !p.content.includes('👉 Vyapar Affiliate Link')) ||
           (p.id === 'post-2' && !p.content.includes('👉 Vyapar Affiliate Link')) ||
           (p.id === 'post-3' && !p.content.includes('👉 Vyapar Affiliate Link'))
@@ -448,6 +451,12 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('gst_calc_history', JSON.stringify(history));
   }, [history]);
+
+  useEffect(() => {
+    if (!isAuthorized && activeCategoryTab === 'roadmap') {
+      setActiveCategoryTab('all');
+    }
+  }, [isAuthorized, activeCategoryTab]);
 
   useEffect(() => {
     localStorage.setItem('costplus_calc_history', JSON.stringify(costPlusHistory));
@@ -743,18 +752,20 @@ export default function App() {
                   <span>Business</span>
                   <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeCategoryTab === 'business' ? 'bg-indigo-50 text-indigo-600 font-bold' : 'bg-slate-200 text-slate-600'}`}>3</span>
                 </button>
-                <button
-                  onClick={() => setActiveCategoryTab('roadmap')}
-                  className={`flex-1 py-2.5 px-4 text-xs sm:text-sm font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
-                    activeCategoryTab === 'roadmap'
-                      ? 'bg-white text-slate-900 shadow-xs'
-                      : 'text-slate-500 hover:text-slate-900'
-                  }`}
-                >
-                  <Star size={14} className="text-amber-500" />
-                  <span>Roadmap</span>
-                  <span className="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full font-bold animate-pulse">New</span>
-                </button>
+                {isAuthorized && (
+                  <button
+                    onClick={() => setActiveCategoryTab('roadmap')}
+                    className={`flex-1 py-2.5 px-4 text-xs sm:text-sm font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+                      activeCategoryTab === 'roadmap'
+                        ? 'bg-white text-slate-900 shadow-xs'
+                        : 'text-slate-500 hover:text-slate-900'
+                    }`}
+                  >
+                    <Star size={14} className="text-amber-500" />
+                    <span>Roadmap</span>
+                    <span className="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full font-bold animate-pulse">New</span>
+                  </button>
+                )}
               </div>
             </div>
 
@@ -941,7 +952,7 @@ export default function App() {
                   )}
 
                   {/* Future Roadmap Section */}
-                  {activeCategoryTab === 'roadmap' && (
+                  {activeCategoryTab === 'roadmap' && isAuthorized && (
                     <>
                       {/* SIP Investment */}
                       <div className="text-left p-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 flex flex-col justify-between h-[140px]">
@@ -1101,7 +1112,15 @@ export default function App() {
                     Calculate your exact income tax liability under both regimes. Compare standard deductions, rebate under section 87A, cess, and find the most tax-efficient regime for your salary automatically.
                   </p>
                 </div>
-                <IncomeTaxCalculator />
+                <IncomeTaxCalculator onNavigateToHra={() => {
+                  setCalculatorType('hra');
+                  setTimeout(() => {
+                    const el = document.getElementById('hra-calculator');
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }, 100);
+                }} />
               </>
             )}
 
