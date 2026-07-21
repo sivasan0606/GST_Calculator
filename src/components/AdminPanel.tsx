@@ -623,6 +623,19 @@ export default function AdminPanel({
 
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1">
+                Razorpay Affiliate Referral Link
+              </label>
+              <input
+                type="text"
+                value={formData.razorpayLink || ''}
+                onChange={(e) => setFormData({ ...formData, razorpayLink: e.target.value })}
+                placeholder="https://razorpay.com?referrer=..."
+                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-600 focus:outline-hidden focus:ring-1 focus:ring-indigo-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Custom Tax consultation Booking URL (e.g. Calendly)
               </label>
               <input

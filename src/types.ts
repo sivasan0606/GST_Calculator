@@ -69,6 +69,7 @@ export interface SiteSettings {
   vyaparLink: string;
   giddhLink: string;
   tallyLink: string;
+  razorpayLink?: string;
   customConsultationLink: string;
   consultantSponsorFee: string;
   adminPasscode?: string;

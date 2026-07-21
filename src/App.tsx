@@ -8,6 +8,7 @@ import { Calculator, Settings, ShieldCheck, Star, Sparkles, DollarSign, External
 import { motion, AnimatePresence } from 'motion/react';
 
 // Components
+import Logo from './components/Logo';
 import GstCalculator from './components/GstCalculator';
 import CostPlusCalculator from './components/CostPlusCalculator';
 import IncomeTaxCalculator from './components/IncomeTaxCalculator';
@@ -22,6 +23,13 @@ import SnoopingSEO from './components/SnoopingSEO';
 import AdminPanel from './components/AdminPanel';
 import LegalModal from './components/LegalModal';
 import BlogPage from './components/BlogPage';
+import RazorpayPromo from './components/RazorpayPromo';
+
+export const TAGLINES = [
+  "Smarter Math. Zero Noise",
+  "The Ultimate Financial & Tax Toolkit for Indian Businesses",
+  "Smart, Simple, and Reliable Calculators for Modern Enterprise"
+];
 
 // Types
 import { GSTCalculation, ConsultLead, SiteSettings, BlogPost, CostPlusCalculation } from './types';
@@ -213,8 +221,8 @@ export default function App() {
         if (!parsed.adminPasscode) {
           parsed.adminPasscode = 'admin123';
         }
-        if (!parsed.zohoLink || parsed.zohoLink === '') {
-          parsed.zohoLink = 'https://go.zoho.com/J82J';
+        if (!parsed.zohoLink || parsed.zohoLink === '' || parsed.zohoLink === 'https://go.zoho.com/J82J') {
+          parsed.zohoLink = 'https://go.zoho.com/2ysQ';
         }
         if (parsed.quickbooksLink && !parsed.vyaparLink) {
           parsed.vyaparLink = parsed.quickbooksLink;
@@ -237,29 +245,33 @@ export default function App() {
         if (parsed.showAdSense === undefined) {
           parsed.showAdSense = true;
         }
+        if (!parsed.razorpayLink || parsed.razorpayLink === '') {
+          parsed.razorpayLink = 'https://rzp.io/rzp/LDcj8IDc';
+        }
         // Force enable blog section per user request
         parsed.showBlogSection = true;
         
         // Dynamic content defaults
-        if (!parsed.siteName) parsed.siteName = 'Simply Smart Calculators';
-        if (!parsed.siteSubtitle) parsed.siteSubtitle = 'Multi-purpose Financial & Tax Estimators';
+        if (!parsed.siteName) parsed.siteName = 'SimplyTools';
+        if (!parsed.siteSubtitle) parsed.siteSubtitle = 'Smarter Math. Zero Noise';
         if (!parsed.gstTitle) parsed.gstTitle = 'Accurate Online GST Calculator Tool';
         if (!parsed.gstSubtitle) parsed.gstSubtitle = 'Toggle between additive or subtractive rates, select custom brackets, and generate tax-compliant invoice receipts instantly. 100% compliant with the latest government slabs.';
         if (!parsed.costPlusTitle) parsed.costPlusTitle = 'Cost-Plus Pricing Calculator';
         if (!parsed.costPlusSubtitle) parsed.costPlusSubtitle = 'Easily optimize unit selling prices, profit markups, and margins. Automatically calculate volume discounts, build bulk tier price sheets, and export breakdowns instantly.';
         if (!parsed.calculatorsTabName) parsed.calculatorsTabName = 'Smart Calculators';
         if (!parsed.blogTabName) parsed.blogTabName = 'Resource Hub';
-        if (!parsed.footerText) parsed.footerText = '© 2026 Simply Smart Calculators Hub • Built for Maximum SEO & Multi-channel Monetization.';
+        if (!parsed.footerText) parsed.footerText = '© 2026 SimplyTools • Built for Maximum SEO & Multi-channel Monetization.';
 
         return parsed;
       } catch (e) { /* ignore */ }
     }
     return {
       adsenseClientId: '',
-      zohoLink: 'https://go.zoho.com/J82J',
+      zohoLink: 'https://go.zoho.com/2ysQ',
       vyaparLink: 'https://www.vyaparapp.in/?referrer_code=6VDQKQM',
       giddhLink: 'https://giddh.com?ref=kpe65SV',
       tallyLink: '',
+      razorpayLink: 'https://rzp.io/rzp/LDcj8IDc',
       customConsultationLink: '',
       consultantSponsorFee: '250',
       adminPasscode: 'admin123',
@@ -267,15 +279,15 @@ export default function App() {
       showAffiliateSection: true,
       showAdSense: true,
       showBlogSection: true,
-      siteName: 'Simply Smart Calculators',
-      siteSubtitle: 'Multi-purpose Financial & Tax Estimators',
+      siteName: 'SimplyTools',
+      siteSubtitle: 'Smarter Math. Zero Noise',
       gstTitle: 'Accurate Online GST Calculator Tool',
       gstSubtitle: 'Toggle between additive or subtractive rates, select custom brackets, and generate tax-compliant invoice receipts instantly. 100% compliant with the latest government slabs.',
       costPlusTitle: 'Cost-Plus Pricing Calculator',
       costPlusSubtitle: 'Easily optimize unit selling prices, profit markups, and margins. Automatically calculate volume discounts, build bulk tier price sheets, and export breakdowns instantly.',
       calculatorsTabName: 'Smart Calculators',
       blogTabName: 'Resource Hub',
-      footerText: '© 2026 Simply Smart Calculators Hub • Built for Maximum SEO & Multi-channel Monetization.'
+      footerText: '© 2026 SimplyTools • Built for Maximum SEO & Multi-channel Monetization.'
     };
   });
 
@@ -344,6 +356,12 @@ export default function App() {
 
   // Admin Console View State
   const [showAdmin, setShowAdmin] = useState(false);
+
+  // Selected tagline option state
+  const [selectedTaglineIndex, setSelectedTaglineIndex] = useState<number>(() => {
+    const saved = localStorage.getItem('simplytools_tagline_index');
+    return saved ? parseInt(saved, 10) : 0;
+  });
   
   // Navigation & weekly blog state
   const [currentView, setCurrentView] = useState<'calculator' | 'blog'>('calculator');
@@ -600,16 +618,14 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           
           {/* Logo Brand */}
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-sm shadow-indigo-600/20">
-              <Calculator size={20} />
-            </div>
+          <div className="flex items-center gap-3">
+            <Logo variant="mark" size={38} />
             <div>
-              <h1 className="font-display font-bold text-slate-900 text-base sm:text-lg tracking-tight leading-none">
-                {settings.siteName || 'Simply Smart Calculators'}
+              <h1 className="font-display font-bold text-[#5A39D0] text-lg sm:text-xl tracking-tight leading-none">
+                simply<span className="relative inline-block">tools<span className="absolute left-0 -bottom-0.5 w-full h-[2.5px] bg-[#A2EDD0] rounded-full"></span></span>
               </h1>
-              <span className="text-[10px] text-slate-500 font-medium block mt-1 tracking-wider uppercase font-mono">
-                {settings.siteSubtitle || 'Multi-purpose Financial & Tax Estimators'}
+              <span className="text-[10px] sm:text-xs text-indigo-600 font-bold block mt-1 tracking-tight">
+                {TAGLINES[selectedTaglineIndex]}
               </span>
             </div>
           </div>
@@ -650,6 +666,62 @@ export default function App() {
           )}
         </div>
       </header>
+
+      {/* Interactive Tagline Selector Bar */}
+      <div id="interactive-tagline-selector" className="bg-slate-950 border-b border-slate-800 py-3 px-4 relative overflow-hidden">
+        {/* Decorative background grid pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
+        
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-4 relative z-10">
+          <div className="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
+            <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-display text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-xs shrink-0 select-none">
+              <Sparkles size={11} className="animate-pulse" />
+              Live Tagline Selector
+            </span>
+            <div>
+              <p className="text-xs font-semibold text-slate-100">
+                Pick your preferred tagline to display on SimplyTools:
+              </p>
+              <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5">
+                Click any option below to change the header subtitle dynamically.
+              </p>
+            </div>
+          </div>
+          
+          {/* Options Switcher */}
+          <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
+            {TAGLINES.map((tagline, idx) => {
+              const isSelected = selectedTaglineIndex === idx;
+              return (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    setSelectedTaglineIndex(idx);
+                    localStorage.setItem('simplytools_tagline_index', idx.toString());
+                  }}
+                  className={`relative px-3.5 py-2 rounded-xl text-left text-xs font-medium transition-all duration-200 flex items-center gap-2.5 cursor-pointer border ${
+                    isSelected
+                      ? 'bg-indigo-600 border-indigo-500 text-white shadow-sm shadow-indigo-950/50 scale-[1.01]'
+                      : 'bg-slate-900/60 hover:bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 border ${
+                    isSelected ? 'bg-emerald-500 border-emerald-400' : 'bg-slate-800 border-slate-700'
+                  }`}>
+                    {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
+                  </span>
+                  <div className="flex flex-col items-start leading-none gap-1">
+                    <span className={`text-[8px] uppercase font-bold tracking-wider ${isSelected ? 'text-indigo-200' : 'text-slate-500'}`}>
+                      Tagline Option {idx + 1}
+                    </span>
+                    <span className="font-semibold text-[11px] leading-tight tracking-tight">{tagline}</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
 
       {/* Main Content Stage */}
       <main className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
@@ -1094,6 +1166,11 @@ export default function App() {
                   onHistoryChange={handleAddCostPlusCalculation}
                   savedCalculations={costPlusHistory}
                   onClearHistory={handleClearCostPlusHistory}
+                  zohoLink={settings.zohoLink}
+                />
+                <RazorpayPromo
+                  affiliateUrl={settings.razorpayLink}
+                  onTrackClick={handleTrackAffiliateClick}
                 />
               </>
             )}
@@ -1174,7 +1251,14 @@ export default function App() {
                     Determine how many months of operational runway your business or startup has based on liquid reserves and net burn rate. Toggle interactive sliders to plan cost-reductions and growth goals.
                   </p>
                 </div>
-                <RunwayCalculator />
+                <RunwayCalculator
+                  razorpayLink={settings.razorpayLink}
+                  zohoLink={settings.zohoLink}
+                />
+                <RazorpayPromo
+                  affiliateUrl={settings.razorpayLink}
+                  onTrackClick={handleTrackAffiliateClick}
+                />
               </>
             )}
 
@@ -1192,7 +1276,14 @@ export default function App() {
                     Calculate the operational cash flow gap between paying suppliers for raw materials and receiving payments from clients. Identify tied-up capital and bridge funding needs instantly.
                   </p>
                 </div>
-                <WorkingCapitalCalculator />
+                <WorkingCapitalCalculator
+                  razorpayLink={settings.razorpayLink}
+                  zohoLink={settings.zohoLink}
+                />
+                <RazorpayPromo
+                  affiliateUrl={settings.razorpayLink}
+                  onTrackClick={handleTrackAffiliateClick}
+                />
               </>
             )}
 
@@ -1307,14 +1398,14 @@ export default function App() {
             
             {/* Branding Column */}
             <div>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
-                  <Calculator size={16} />
-                </div>
-                <strong className="font-display font-bold text-white text-sm tracking-tight">GST Tax Hub</strong>
+              <div className="flex items-center gap-2.5 mb-4">
+                <Logo variant="mark" size={30} />
+                <span className="font-display font-bold text-white text-base tracking-tight leading-none">
+                  simply<span className="relative inline-block text-white">tools<span className="absolute left-0 -bottom-0.5 w-full h-[2.5px] bg-[#A2EDD0] rounded-full"></span></span>
+                </span>
               </div>
               <p className="text-slate-400 text-[11px] leading-relaxed max-w-xs">
-                A high-performance compliance calculator engineered for speed and visual clarity. Drive free organic search traffic and monetize easily through built-in partner links.
+                A high-performance, compliant tax and financial toolbox designed for speed and visual precision. Automate estimations and resolve critical software bugs effortlessly.
               </p>
             </div>
 

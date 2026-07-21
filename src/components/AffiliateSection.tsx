@@ -55,8 +55,8 @@ export default function AffiliateSection({
       description: 'The absolute best GST-compliant accounting system for Indian enterprises. Fully automated e-invoicing, digital e-way bills, direct return filing to GST Portal, and elegant mobile apps.',
       pros: ['100% GST compliant out-of-the-box', 'Direct GST API filing connection', 'Generous free tier for startups & micro-biz'],
       pricing: 'Free or from ₹749/month',
-      affiliateUrl: zohoLink || 'https://go.zoho.com/J82J',
-      defaultUrl: 'https://go.zoho.com/J82J',
+      affiliateUrl: zohoLink || 'https://go.zoho.com/2ysQ',
+      defaultUrl: 'https://go.zoho.com/2ysQ',
       exclusiveOffer: {
         badge: 'Exclusive Deal',
         text: '$100 wallet credits will be provided to end customers who sign up using this affiliate link.',

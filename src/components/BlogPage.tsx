@@ -323,7 +323,7 @@ export default function BlogPage({ posts, settings, onNavigateToCalculator }: Bl
               }
 
               if (paragraph.includes('Zoho Affiliate Link')) {
-                const finalLink = settings.zohoLink || 'https://go.zoho.com/J82J';
+                const finalLink = settings.zohoLink || 'https://go.zoho.com/2ysQ';
                 return (
                   <div key={idx} className="my-6 border border-blue-200 rounded-2xl bg-gradient-to-br from-blue-50/50 to-indigo-50/30 overflow-hidden shadow-xs">
                     <div className="p-5 flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-blue-100">

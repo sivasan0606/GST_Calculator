@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Percent, Clipboard, Check, RotateCcw, HelpCircle, FileText, Plus, Printer, DollarSign, Info } from 'lucide-react';
+import { Percent, Clipboard, Check, RotateCcw, HelpCircle, FileText, Plus, Printer, DollarSign, Info, ArrowUpRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { CostPlusCalculation } from '../types';
 
@@ -12,12 +12,14 @@ interface CostPlusCalculatorProps {
   onHistoryChange: (calc: CostPlusCalculation) => void;
   savedCalculations: CostPlusCalculation[];
   onClearHistory: () => void;
+  zohoLink?: string;
 }
 
 export default function CostPlusCalculator({
   onHistoryChange,
   savedCalculations,
-  onClearHistory
+  onClearHistory,
+  zohoLink
 }: CostPlusCalculatorProps) {
   // Input States
   const [materialCostInput, setMaterialCostInput] = useState<string>('500');
@@ -583,6 +585,18 @@ Calculated on SimplyTools Cost-Plus Pricing Hub`;
                   <p className="text-[10px] text-indigo-300/60 mt-2 font-sans">
                     With cost-plus markup, a {calculation.markupRate}% markup provides a gross profit margin of {calculation.profitMargin.toFixed(1)}% on sales revenue.
                   </p>
+                </div>
+
+                {/* Soft Recommendation for Zoho Books */}
+                <div className="bg-gradient-to-r from-blue-950 to-indigo-950 border border-blue-900/40 rounded-xl p-3.5 mt-3 flex items-start gap-3">
+                  <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 mt-0.5 shrink-0">
+                    <Check size={14} />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[11px] text-slate-300 leading-normal font-sans">
+                      Ready to automate your invoicing and margins? Try <a href={zohoLink || "https://go.zoho.com/2ysQ"} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-bold underline inline-flex items-center gap-0.5">Zoho Books <ArrowUpRight size={10} /></a>.
+                    </p>
+                  </div>
                 </div>
               </div>
             ) : (

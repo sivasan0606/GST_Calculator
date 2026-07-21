@@ -4,9 +4,14 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Percent, Clipboard, Check, RotateCcw, HelpCircle, FileText, Download, ShieldAlert, Sparkles, Printer, Calculator, DollarSign, TrendingUp, AlertTriangle } from 'lucide-react';
+import { Percent, Clipboard, Check, RotateCcw, HelpCircle, FileText, Download, ShieldAlert, Sparkles, Printer, Calculator, DollarSign, TrendingUp, AlertTriangle, ArrowUpRight } from 'lucide-react';
 
-export default function RunwayCalculator() {
+interface RunwayCalculatorProps {
+  razorpayLink?: string;
+  zohoLink?: string;
+}
+
+export default function RunwayCalculator({ razorpayLink, zohoLink }: RunwayCalculatorProps) {
   // Currency options
   const [currency, setCurrency] = useState<'INR' | 'USD' | 'EUR'>('INR');
 
@@ -405,6 +410,56 @@ New Runway: ${runwayText}
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Recommended Financial & Banking Tools Card */}
+          <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 space-y-4">
+            <h4 className="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-1.5">
+              <Sparkles size={14} className="text-indigo-600 animate-pulse" />
+              Empower Your Business Treasury
+            </h4>
+            
+            <div className="space-y-3">
+              {/* RazorpayX Promotion */}
+              <div className="bg-white border border-slate-100 rounded-xl p-3.5 shadow-2xs hover:border-slate-200 transition-colors">
+                <p className="text-xs font-bold text-slate-900 mb-1 flex items-center justify-between">
+                  <span>Smart Payouts via RazorpayX</span>
+                  <span className="text-[10px] bg-indigo-50 text-indigo-700 font-bold px-2 py-0.5 rounded uppercase tracking-wider scale-95">Recommended</span>
+                </p>
+                <p className="text-[11px] text-slate-500 leading-relaxed mb-3 font-medium">
+                  Need better control over your cash flow and payouts? Explore RazorpayX to automate commercial bank accounts, pay vendors in bulk, and schedule salaries with one tap.
+                </p>
+                <a
+                  href={razorpayLink || "https://rzp.io/rzp/LDcj8IDc"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs font-bold text-indigo-600 hover:text-indigo-700 hover:underline cursor-pointer"
+                >
+                  <span>Explore RazorpayX</span>
+                  <ArrowUpRight size={12} />
+                </a>
+              </div>
+
+              {/* Zoho Books Advertisement */}
+              <div className="bg-gradient-to-br from-blue-50/50 to-indigo-50/30 border border-blue-100 rounded-xl p-3.5 shadow-2xs">
+                <p className="text-xs font-bold text-blue-900 mb-1 flex items-center justify-between">
+                  <span>Zoho Books Accounting</span>
+                  <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded uppercase tracking-wider scale-95">Ad</span>
+                </p>
+                <p className="text-[11px] text-slate-600 leading-relaxed mb-3 font-medium">
+                  Automate your bookkeeping, client invoicing, tax filings, and margins effortlessly. Try Zoho Books to stay 100% compliant with real-time financial tracking.
+                </p>
+                <a
+                  href={zohoLink || "https://go.zoho.com/2ysQ"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline cursor-pointer"
+                >
+                  <span>Try Zoho Books Today</span>
+                  <ArrowUpRight size={12} />
+                </a>
+              </div>
+            </div>
           </div>
 
           {/* Actionable tip or warning */}
