@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { BookOpen, HelpCircle, Percent, FileSpreadsheet, ChevronDown, ChevronUp } from 'lucide-react';
+import { BookOpen, HelpCircle, Percent, FileSpreadsheet, ChevronDown, ChevronUp, Coins, CreditCard, DollarSign } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface FaqItem {
@@ -159,8 +159,44 @@ const workingCapitalFaqData: FaqItem[] = [
   }
 ];
 
+const razorpayFaqData: FaqItem[] = [
+  {
+    question: "How is the Razorpay payment gateway transaction fee calculated?",
+    answer: "Razorpay charges a percentage-based processing fee per transaction. The standard rate is 2% for domestic credit/debit cards, net banking, and wallets, and 3% for international cards, corporate cards, and Amex. To obtain the total fee deduction, you must also add 18% GST on top of the processing fee.",
+    keywords: ["razorpay fees", "gateway transaction cost", "processing commission India"]
+  },
+  {
+    question: "Do payment gateways in India charge GST on transaction fees?",
+    answer: "Yes, under Indian tax regulations, payment gateways must levy 18% Goods and Services Tax (GST) on the commission they charge. For example, if the gateway fee is 2% on a ₹10,000 payment (₹200), the GST on the fee will be 18% of ₹200 (₹36), resulting in a total deduction of ₹236.",
+    keywords: ["gst on payment gateway", "18% gst payment processing", "withholding tax gateway"]
+  },
+  {
+    question: "How does the 'Pass Fee to Client' (Reverse) calculator work?",
+    answer: "If you want to receive exactly your project's target amount (e.g., ₹10,000) in your bank, you must bill your client a higher invoice amount to offset the processor's cut. The reverse formula is: Invoice Amount = Target Net Payout ÷ [1 - (Fee Rate × (1 + GST Rate))]. For standard 2% cards with 18% GST, you would bill ₹10,241.71.",
+    keywords: ["pass fee to client formula", "invoice surcharge", "payment gateway calculator india"]
+  }
+];
+
+const gstInvoiceFaqData: FaqItem[] = [
+  {
+    question: "What are the mandatory fields for a valid GST Tax Invoice in India?",
+    answer: "A valid GST tax invoice must include: (1) Seller's name, address, and GSTIN, (2) Buyer's name, address, and GSTIN (if registered), (3) Unique sequential Invoice Number, (4) Date of issue, (5) Description, quantity, unit, and value of goods/services, (6) Separate breakdown of CGST, SGST, and IGST rates and amounts, and (7) Place of Supply declaration.",
+    keywords: ["mandatory gst invoice fields", "gstin formatting rules", "cgst sgst igst split rules"]
+  },
+  {
+    question: "How do you determine whether to apply CGST + SGST vs IGST?",
+    answer: "This is determined by comparing the Location of the Supplier (the seller's state) and the Place of Supply (the client's billing state). If they are in the same state, it is an intra-state transaction, and you must charge equal parts CGST and SGST (e.g., 9% + 9% for an 18% total). If they are in different states, it is an inter-state transaction, and you must charge full IGST (18%).",
+    keywords: ["place of supply rules", "cgst sgst vs igst state rules", "intra state tax billing"]
+  },
+  {
+    question: "Why should freelancers and small businesses link invoices with Razorpay?",
+    answer: "Manually tracking client transfers is slow and error-prone. Linking digital invoices directly with a unique Razorpay payment link allows clients to settle dues via UPI, credit cards, net banking, or wallets instantly. Razorpay also triggers automated settlement reports matching payments with invoice IDs.",
+    keywords: ["razorpay invoice automation", "freelancer payment collection india", "digital payment links in pdf"]
+  }
+];
+
 interface SnoopingSEOProps {
-  type?: 'gst' | 'costplus' | 'income-tax' | 'tds' | 'hra' | 'runway' | 'working-capital';
+  type?: 'gst' | 'costplus' | 'income-tax' | 'tds' | 'hra' | 'runway' | 'working-capital' | 'razorpay-fee' | 'gst-invoice';
 }
 
 export default function SnoopingSEO({ type = 'gst' }: SnoopingSEOProps) {
@@ -180,6 +216,8 @@ export default function SnoopingSEO({ type = 'gst' }: SnoopingSEOProps) {
       case 'hra': return hraFaqData;
       case 'runway': return runwayFaqData;
       case 'working-capital': return workingCapitalFaqData;
+      case 'razorpay-fee': return razorpayFaqData;
+      case 'gst-invoice': return gstInvoiceFaqData;
       default: return gstFaqData;
     }
   };
@@ -974,6 +1012,228 @@ export default function SnoopingSEO({ type = 'gst' }: SnoopingSEOProps) {
           <h3 className="font-display font-bold text-slate-900 text-lg mb-6 flex items-center gap-2">
             <HelpCircle className="text-rose-600" size={20} />
             Frequently Asked Questions — Working Capital Gap & Liquidity
+          </h3>
+
+          <div className="space-y-3">
+            {faqData.map((item, index) => {
+              const isOpen = openFaq === index;
+              return (
+                <div 
+                  key={index}
+                  className="border border-slate-200/80 rounded-xl overflow-hidden transition-all duration-200 bg-slate-50/20 hover:bg-slate-50/50"
+                >
+                  <button
+                    onClick={() => setOpenFaq(isOpen ? null : index)}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${index}`}
+                    className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 font-display font-semibold text-sm sm:text-base text-slate-800"
+                  >
+                    <span>{item.question}</span>
+                    {isOpen ? <ChevronUp size={16} className="text-slate-500" /> : <ChevronDown size={16} className="text-slate-500" />}
+                  </button>
+                  
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div
+                        id={`faq-answer-${index}`}
+                        initial={{ height: 0 }}
+                        animate={{ height: "auto" }}
+                        exit={{ height: 0 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="p-4 sm:p-5 pt-0 border-t border-slate-100 text-xs sm:text-sm text-slate-600 leading-relaxed font-sans">
+                          <p>{item.answer}</p>
+                          {/* SEO tag hints */}
+                          <div className="flex flex-wrap gap-1.5 mt-3">
+                            {item.keywords.map((kw, i) => (
+                              <span key={i} className="bg-slate-100 text-slate-500 text-[10px] font-mono px-2 py-0.5 rounded">
+                                #{kw}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </article>
+    );
+  }
+
+  // Rendering Razorpay Payouts
+  if (type === 'razorpay-fee') {
+    return (
+      <article className="my-16 bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 lg:p-10 shadow-xs">
+        {/* Dynamic SEO Badge */}
+        <div className="flex items-center gap-2 mb-4">
+          <span className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-800 text-[10px] sm:text-xs px-2.5 py-1 rounded-full border border-indigo-200/50 font-semibold font-display uppercase tracking-wider">
+            <BookOpen size={12} /> Merchant settlements
+          </span>
+          <span className="text-slate-600 text-xs font-mono font-medium">• Payment Gateway fee mechanics</span>
+        </div>
+
+        <h2 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 tracking-tight leading-tight">
+          Guide to Payment Gateway Rates, GST, & Net Settlement Calculations
+        </h2>
+        <p className="text-slate-600 text-sm mt-3 leading-relaxed max-w-3xl">
+          For freelancers, independent creators, agency owners, and MSMEs in India, understanding merchant fee structures is critical to protecting margins. This reference guide explains how payment processor commissions and GST shape your actual cash payouts.
+        </p>
+
+        {/* Formulas Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
+          <div className="bg-slate-50 border border-slate-100 rounded-xl p-5">
+            <h3 className="font-display font-bold text-slate-800 text-base mb-4 flex items-center gap-2">
+              <Percent size={16} className="text-indigo-600" />
+              Standard Razorpay Fee Structure
+            </h3>
+            <div className="space-y-3 font-sans text-xs text-slate-600">
+              <p>
+                Under standard Indian merchant guidelines, processing fees are applied differently based on the client's funding method:
+              </p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li><strong>UPI:</strong> Usually 0.0% fee on standard transactions.</li>
+                <li><strong>RuPay Debit Cards:</strong> Zero MDR mandated by Govt guidelines.</li>
+                <li><strong>Credit Cards / Netbanking:</strong> Flat 2.0% processing fee.</li>
+                <li><strong>International Credit Cards:</strong> Flat 3.0% processing commission.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="bg-slate-50 border border-slate-100 rounded-xl p-5">
+            <h3 className="font-display font-bold text-slate-800 text-base mb-4 flex items-center gap-2">
+              <CreditCard size={16} className="text-indigo-600" />
+              GST on Commission Fees & Surcharges
+            </h3>
+            <div className="space-y-3 font-sans text-xs text-slate-600">
+              <p>
+                In addition to standard processing commissions, Indian tax law mandates an <strong>18% GST rate</strong> on top of the gateway's service charges.
+              </p>
+              <code className="block bg-slate-900 text-indigo-300 font-mono text-xs p-2.5 rounded text-center">
+                Effective Fee Rate = Standard Rate × 1.18
+              </code>
+              <p className="text-[11px] leading-normal bg-white p-2 rounded border border-slate-200/60">
+                This means a standard 2.0% credit card transaction has an actual effective deduction of <strong>2.36%</strong> on your invoice amount.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* FAQ Accordion Section */}
+        <div className="border-t border-slate-100 pt-8 mt-8">
+          <h3 className="font-display font-bold text-slate-900 text-lg mb-6 flex items-center gap-2">
+            <HelpCircle className="text-indigo-600" size={20} />
+            Frequently Asked Questions — Razorpay Fees & Net Surcharges
+          </h3>
+
+          <div className="space-y-3">
+            {faqData.map((item, index) => {
+              const isOpen = openFaq === index;
+              return (
+                <div 
+                  key={index}
+                  className="border border-slate-200/80 rounded-xl overflow-hidden transition-all duration-200 bg-slate-50/20 hover:bg-slate-50/50"
+                >
+                  <button
+                    onClick={() => setOpenFaq(isOpen ? null : index)}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${index}`}
+                    className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 font-display font-semibold text-sm sm:text-base text-slate-800"
+                  >
+                    <span>{item.question}</span>
+                    {isOpen ? <ChevronUp size={16} className="text-slate-500" /> : <ChevronDown size={16} className="text-slate-500" />}
+                  </button>
+                  
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div
+                        id={`faq-answer-${index}`}
+                        initial={{ height: 0 }}
+                        animate={{ height: "auto" }}
+                        exit={{ height: 0 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="p-4 sm:p-5 pt-0 border-t border-slate-100 text-xs sm:text-sm text-slate-600 leading-relaxed font-sans">
+                          <p>{item.answer}</p>
+                          {/* SEO tag hints */}
+                          <div className="flex flex-wrap gap-1.5 mt-3">
+                            {item.keywords.map((kw, i) => (
+                              <span key={i} className="bg-slate-100 text-slate-500 text-[10px] font-mono px-2 py-0.5 rounded">
+                                #{kw}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </article>
+    );
+  }
+
+  // Rendering GST Invoice Generator
+  if (type === 'gst-invoice') {
+    return (
+      <article className="my-16 bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 lg:p-10 shadow-xs">
+        {/* Dynamic SEO Badge */}
+        <div className="flex items-center gap-2 mb-4">
+          <span className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-800 text-[10px] sm:text-xs px-2.5 py-1 rounded-full border border-indigo-200/50 font-semibold font-display uppercase tracking-wider">
+            <BookOpen size={12} /> Billing compliance
+          </span>
+          <span className="text-slate-600 text-xs font-mono font-medium">• Professional invoice formatting</span>
+        </div>
+
+        <h2 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 tracking-tight leading-tight">
+          Guide to GST Invoicing Rules, Tax Split Calculations, & Instant Client Surcharges
+        </h2>
+        <p className="text-slate-600 text-sm mt-3 leading-relaxed max-w-3xl">
+          For agencies, freelancers, and independent developers in India, issuing precise tax invoices is not just legally mandatory—it protects cash flows. This guide outlines how to handle tax splits and payment gateways easily.
+        </p>
+
+        {/* Formulas Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
+          <div className="bg-slate-50 border border-slate-100 rounded-xl p-5">
+            <h3 className="font-display font-bold text-slate-800 text-base mb-4 flex items-center gap-2">
+              <Percent size={16} className="text-indigo-600" />
+              Tax Split Mechanics (CGST/SGST vs IGST)
+            </h3>
+            <div className="space-y-3 font-sans text-xs text-slate-600">
+              <p>
+                The tax splits apply automatically depending on where you and your client are located:
+              </p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li><strong>Local Supply:</strong> When both states match, split the GST evenly between CGST (Central Tax) and SGST (State Tax).</li>
+                <li><strong>Interstate Supply:</strong> When states differ, apply the full percentage to IGST (Integrated Tax).</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="bg-slate-50 border border-slate-100 rounded-xl p-5">
+            <h3 className="font-display font-bold text-slate-800 text-base mb-4 flex items-center gap-2">
+              <Coins size={16} className="text-indigo-600" />
+              Embedded Payment Link Surcharges
+            </h3>
+            <div className="space-y-3 font-sans text-xs text-slate-600">
+              <p>
+                To avoid losing credit/debit card processing percentages on large client transfers, many digital freelancers add a surcharge or use Razorpay's auto-generated links to specify exact payable settlements.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* FAQ Accordion Section */}
+        <div className="border-t border-slate-100 pt-8 mt-8">
+          <h3 className="font-display font-bold text-slate-900 text-lg mb-6 flex items-center gap-2">
+            <HelpCircle className="text-indigo-600" size={20} />
+            Frequently Asked Questions — GST Invoicing & Payment Links
           </h3>
 
           <div className="space-y-3">

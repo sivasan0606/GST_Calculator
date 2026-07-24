@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SimplyTools - GST, Cost Plus, Income Tax, TDS, HRA, Runway & Working Capital Calculators</title>
-    <meta name="description" content="Calculate GST (CGST, SGST, IGST), Cost-Plus Markup, Income Tax (New vs Old Regime), TDS, HRA Exemption, Startup Cash Runway, and Working Capital Gap instantly. Free, accurate, and comprehensive business calculation suite." />
-    <meta name="keywords" content="GST calculator, online GST calculator, CGST calculator, SGST calculator, IGST calculator, Goods and Services Tax India, cost plus pricing calculator, cost-plus markup calculator, profit margin calculator, income tax calculator, tax regime calculator, TDS calculator, HRA exemption calculator, startup cash runway, working capital calculator, cash conversion cycle, net burn rate calculator, add GST, remove GST, tax calculator India, best GST billing software, Vyapar App referral code, Vyapar coupon code 6VDQKQM, Zoho Books affiliate, Giddh cloud accounting, Tally Prime GST, business financial calculators, simplytools, simplytools.in" />
+    <meta name="description" content="Calculate GST (CGST, SGST, IGST), Cost-Plus Markup, Income Tax (New vs Old Regime), TDS under Sec 194J/194C, HRA Exemption, Startup Cash Runway, and Working Capital Gap instantly. Free, accurate, and statutory-aligned financial calculator suite." />
+    <meta name="keywords" content="GST calculator, online GST calculator, CGST calculator, SGST calculator, IGST calculator, Goods and Services Tax India, cost plus pricing calculator, profit margin calculator, income tax calculator, tax regime calculator, TDS calculator, HRA exemption calculator, startup cash runway, working capital calculator, cash conversion cycle, simplytools" />
     <meta name="author" content="SimplyTools" />
     <link rel="canonical" href="https://simplytools.in/" />
 
@@ -37,10 +37,27 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "SimplyTools",
+      "url": "https://simplytools.in/",
+      "logo": "https://simplytools.in/favicon.svg",
+      "description": "Financial and tax calculation portal providing GST, Income Tax, TDS, HRA, and business financial software tools.",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "sivasan0606@gmail.com",
+        "contactType": "customer support",
+        "availableLanguage": ["English", "Hindi"]
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "SimplyTools Financial & Tax Calculator Suite",
-      "description": "Calculate CGST/SGST/IGST tax splits, Cost-Plus pricing margins, Income Tax (New vs Old), TDS rates, HRA exemptions, Startup cash runway, and Working Capital gaps instantly.",
-      "applicationCategory": "BusinessApplication",
+      "url": "https://simplytools.in/",
+      "description": "Calculate CGST/SGST/IGST tax splits, Cost-Plus pricing margins, Income Tax (New vs Old), TDS rates under Sec 194J/194C, HRA exemptions, Startup cash runway, and Working Capital gaps instantly.",
+      "applicationCategory": "FinanceApplication",
       "operatingSystem": "All",
       "browserRequirements": "Requires HTML5/JavaScript",
       "offers": {
@@ -57,10 +74,26 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "What is the formula to calculate GST?",
+          "name": "What is the formula to calculate GST in India?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "To add GST: GST Amount = Original Cost x (GST Rate / 100). Total Cost = Original Cost + GST Amount. To remove GST: GST Amount = Total Cost - [Total Cost / (1 + (GST Rate / 100))]. Net Cost = Total Cost - GST Amount."
+            "text": "To add GST: GST Amount = Original Cost x (GST Rate / 100). Total Price = Original Cost + GST Amount. To remove GST: GST Amount = Total Price - [Total Price / (1 + (GST Rate / 100))]. Net Base Cost = Total Price - GST Amount."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does TDS apply on the GST component of an invoice?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No! According to CBDT Circular No. 23/2017, where the GST component on services is indicated separately on the invoice, TDS must be deducted ONLY on the base value/amount of the services and not on the GST component."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the enhanced Standard Deduction under the New Tax Regime?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Under the New Tax Regime, the Standard Deduction for salaried taxpayers has been enhanced to ₹75,000 annually (up from ₹50,000), providing higher tax savings for middle-income earners."
           }
         },
         {
@@ -68,7 +101,7 @@
           "name": "How is a startup's Cash Runway calculated?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Cash Runway is calculated using the formula: Cash Runway (Months) = Current Cash Balance ÷ Net Monthly Burn Rate. Net monthly burn is your total monthly expenses minus your total monthly revenues."
+            "text": "Cash Runway is calculated as: Cash Runway (Months) = Current Cash Balance ÷ Net Monthly Burn Rate. Net monthly burn equals total monthly cash expenses minus total monthly cash revenues."
           }
         },
         {
@@ -76,15 +109,7 @@
           "name": "What is the Working Capital Gap?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The Working Capital Gap represents the total amount of current assets (Receivables + Inventory) minus current liabilities (Payables). It shows the net funding required to sustain day-to-day operations before external bank borrowings or lines of credit are introduced."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How do I use the Vyapar App referral promo code?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "During registration in the Vyapar App (India's leading billing & accounting software), you can enter the referral code '6VDQKQM' to link your account and access exclusive partner benefits, including the 7-day trial and discount features."
+            "text": "The Working Capital Gap represents total current assets (Receivables + Inventory) minus current liabilities (Payables). It indicates the net operational cash required before bank credit lines or external loans are introduced."
           }
         }
       ]
@@ -182,6 +207,20 @@
             <blockquote style="background-color: #f3f4f6; padding: 12px; margin: 0; border-radius: 6px; font-family: monospace; font-size: 13px;">
               Working Capital Gap = (Accounts Receivable + Inventory) - Accounts Payable<br>
               Cash Conversion Cycle (Days) = Days Inventory Outstanding + Days Sales Outstanding - Days Payable Outstanding
+            </blockquote>
+          </section>
+
+          <!-- 6. Razorpay Fee & Net Payout Section -->
+          <section style="margin-bottom: 32px;">
+            <h2 style="font-size: 20px; font-weight: bold; color: #111827; margin-bottom: 8px;">Razorpay Fee & Net Payout Calculations</h2>
+            <p style="font-size: 14px; line-height: 1.6; color: #374151; margin: 0 0 12px 0;">
+              Plan your sales, billing, and freelancing project payouts securely. Calculate Razorpay processing fees (standard 2% on credit cards/wallets, 3% on international credit cards) and account for the mandatory 18% GST on the processing fee to see exactly how much cash settles in your bank.
+            </p>
+            <blockquote style="background-color: #f3f4f6; padding: 12px; margin: 0; border-radius: 6px; font-family: monospace; font-size: 13px;">
+              Gateway Fee = Invoice Amount × (Processor Rate / 100)<br>
+              GST on Fee = Gateway Fee × 0.18<br>
+              Total Deductions = Gateway Fee + GST on Fee<br>
+              Net Payout = Invoice Amount - Total Deductions
             </blockquote>
           </section>
         </main>

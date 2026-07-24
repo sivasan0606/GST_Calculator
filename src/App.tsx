@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Calculator, Settings, ShieldCheck, Star, Sparkles, DollarSign, ExternalLink, RefreshCw, Layers, CheckCircle2, Lock, Unlock, ShieldAlert, X, BookOpen, Home, Percent, TrendingUp, Calendar } from 'lucide-react';
+import { Calculator, Settings, ShieldCheck, Star, Sparkles, DollarSign, ExternalLink, RefreshCw, Layers, CheckCircle2, Lock, Unlock, ShieldAlert, X, BookOpen, Home, Percent, TrendingUp, Calendar, Coins, FileSpreadsheet } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 // Components
@@ -16,6 +16,8 @@ import TdsCalculator from './components/TdsCalculator';
 import HraCalculator from './components/HraCalculator';
 import RunwayCalculator from './components/RunwayCalculator';
 import WorkingCapitalCalculator from './components/WorkingCapitalCalculator';
+import RazorpayFeeCalculator from './components/RazorpayFeeCalculator';
+import GstInvoiceGenerator from './components/GstInvoiceGenerator';
 import AdSenseUnit from './components/AdSenseUnit';
 import AffiliateSection from './components/AffiliateSection';
 import ConsultationSection from './components/ConsultationSection';
@@ -24,6 +26,7 @@ import AdminPanel from './components/AdminPanel';
 import LegalModal from './components/LegalModal';
 import BlogPage from './components/BlogPage';
 import RazorpayPromo from './components/RazorpayPromo';
+import { AboutPage, ContactPage, PrivacyPolicyPage, TermsPage, DisclaimerPage, EditorialPolicyPage } from './components/pages/StaticPages';
 
 export const TAGLINES = [
   "Smarter Math. Zero Noise",
@@ -363,9 +366,9 @@ export default function App() {
     return saved ? parseInt(saved, 10) : 0;
   });
   
-  // Navigation & weekly blog state
-  const [currentView, setCurrentView] = useState<'calculator' | 'blog'>('calculator');
-  const [calculatorType, setCalculatorType] = useState<'gst' | 'costplus' | 'income-tax' | 'tds' | 'hra' | 'runway' | 'working-capital'>('gst');
+  // Navigation & static pages state
+  const [currentView, setCurrentView] = useState<'calculator' | 'blog' | 'about' | 'contact' | 'privacy' | 'terms' | 'disclaimer' | 'editorial'>('calculator');
+  const [calculatorType, setCalculatorType] = useState<'gst' | 'costplus' | 'income-tax' | 'tds' | 'hra' | 'runway' | 'working-capital' | 'razorpay-fee' | 'gst-invoice'>('gst');
   const [activeCategoryTab, setActiveCategoryTab] = useState<'all' | 'tax' | 'business' | 'roadmap'>('all');
   const [posts, setPosts] = useState<BlogPost[]>(() => {
     const saved = localStorage.getItem('gst_site_blog_posts');
@@ -754,10 +757,10 @@ export default function App() {
         {/* Navigation Tab Switcher */}
         {(settings.showBlogSection || isOwnerModeEnabled) && (
           <div className="flex justify-center border-b border-slate-200 mb-8 font-sans">
-            <div className="flex gap-8">
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-8">
               <button
                 onClick={() => setCurrentView('calculator')}
-                className={`pb-4 px-2 text-sm font-semibold border-b-2 transition-all flex items-center gap-2 ${
+                className={`pb-4 px-2 text-xs sm:text-sm font-semibold border-b-2 transition-all flex items-center gap-2 ${
                   currentView === 'calculator'
                     ? 'border-indigo-600 text-indigo-600'
                     : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -768,7 +771,7 @@ export default function App() {
               </button>
               <button
                 onClick={() => setCurrentView('blog')}
-                className={`pb-4 px-2 text-sm font-semibold border-b-2 transition-all flex items-center gap-2 ${
+                className={`pb-4 px-2 text-xs sm:text-sm font-semibold border-b-2 transition-all flex items-center gap-2 ${
                   currentView === 'blog'
                     ? 'border-indigo-600 text-indigo-600'
                     : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -780,11 +783,43 @@ export default function App() {
                   New
                 </span>
               </button>
+              <button
+                onClick={() => setCurrentView('about')}
+                className={`pb-4 px-2 text-xs sm:text-sm font-semibold border-b-2 transition-all flex items-center gap-2 ${
+                  currentView === 'about'
+                    ? 'border-indigo-600 text-indigo-600'
+                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                <span>About Us</span>
+              </button>
+              <button
+                onClick={() => setCurrentView('contact')}
+                className={`pb-4 px-2 text-xs sm:text-sm font-semibold border-b-2 transition-all flex items-center gap-2 ${
+                  currentView === 'contact'
+                    ? 'border-indigo-600 text-indigo-600'
+                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                <span>Contact & Support</span>
+              </button>
             </div>
           </div>
         )}
 
-        {currentView === 'calculator' ? (
+        {currentView === 'about' ? (
+          <AboutPage onNavigateHome={() => setCurrentView('calculator')} onNavigateToView={(view) => setCurrentView(view as any)} />
+        ) : currentView === 'contact' ? (
+          <ContactPage onNavigateHome={() => setCurrentView('calculator')} onNavigateToView={(view) => setCurrentView(view as any)} />
+        ) : currentView === 'privacy' ? (
+          <PrivacyPolicyPage onNavigateHome={() => setCurrentView('calculator')} onNavigateToView={(view) => setCurrentView(view as any)} />
+        ) : currentView === 'terms' ? (
+          <TermsPage onNavigateHome={() => setCurrentView('calculator')} onNavigateToView={(view) => setCurrentView(view as any)} />
+        ) : currentView === 'disclaimer' ? (
+          <DisclaimerPage onNavigateHome={() => setCurrentView('calculator')} onNavigateToView={(view) => setCurrentView(view as any)} />
+        ) : currentView === 'editorial' ? (
+          <EditorialPolicyPage onNavigateHome={() => setCurrentView('calculator')} onNavigateToView={(view) => setCurrentView(view as any)} />
+        ) : currentView === 'calculator' ? (
           <>
             {/* Category Segmented Pill Bar */}
             <div className="max-w-4xl mx-auto mb-8 font-sans">
@@ -798,7 +833,7 @@ export default function App() {
                   }`}
                 >
                   <span>All Tools</span>
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeCategoryTab === 'all' ? 'bg-indigo-50 text-indigo-600 font-bold' : 'bg-slate-200 text-slate-600'}`}>7</span>
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeCategoryTab === 'all' ? 'bg-indigo-50 text-indigo-600 font-bold' : 'bg-slate-200 text-slate-600'}`}>9</span>
                 </button>
                 <button
                   onClick={() => setActiveCategoryTab('tax')}
@@ -810,7 +845,7 @@ export default function App() {
                 >
                   <Sparkles size={14} className="text-indigo-500" />
                   <span>Tax Lab</span>
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeCategoryTab === 'tax' ? 'bg-indigo-50 text-indigo-600 font-bold' : 'bg-slate-200 text-slate-600'}`}>4</span>
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeCategoryTab === 'tax' ? 'bg-indigo-50 text-indigo-600 font-bold' : 'bg-slate-200 text-slate-600'}`}>5</span>
                 </button>
                 <button
                   onClick={() => setActiveCategoryTab('business')}
@@ -822,7 +857,7 @@ export default function App() {
                 >
                   <DollarSign size={14} className="text-emerald-500" />
                   <span>Business</span>
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeCategoryTab === 'business' ? 'bg-indigo-50 text-indigo-600 font-bold' : 'bg-slate-200 text-slate-600'}`}>3</span>
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeCategoryTab === 'business' ? 'bg-indigo-50 text-indigo-600 font-bold' : 'bg-slate-200 text-slate-600'}`}>5</span>
                 </button>
                 {isAuthorized && (
                   <button
@@ -946,6 +981,29 @@ export default function App() {
                           </p>
                         </div>
                       </button>
+
+                      {/* GST Invoice Generator (Tax) */}
+                      <button
+                        onClick={() => setCalculatorType('gst-invoice')}
+                        className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
+                          calculatorType === 'gst-invoice'
+                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
+                            : 'bg-white border-slate-100 text-slate-800 hover:border-slate-300 hover:shadow-xs'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <div className={`p-2 rounded-xl ${calculatorType === 'gst-invoice' ? 'bg-indigo-500 text-white' : 'bg-indigo-50 text-indigo-600'}`}>
+                            <FileSpreadsheet size={18} />
+                          </div>
+                          {calculatorType === 'gst-invoice' && <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-500 text-white px-2 py-0.5 rounded-md">Active</span>}
+                        </div>
+                        <div>
+                          <h5 className="font-bold text-sm">Invoice Generator</h5>
+                          <p className={`text-[11px] mt-1 line-clamp-2 ${calculatorType === 'gst-invoice' ? 'text-indigo-100' : 'text-slate-500'}`}>
+                            Generate tax-compliant invoices with custom Razorpay payment links.
+                          </p>
+                        </div>
+                      </button>
                     </>
                   )}
 
@@ -1017,6 +1075,52 @@ export default function App() {
                           <h5 className="font-bold text-sm">Working Capital Gap</h5>
                           <p className={`text-[11px] mt-1 line-clamp-2 ${calculatorType === 'working-capital' ? 'text-indigo-100' : 'text-slate-500'}`}>
                             Track gap days and capital squeezed between sourcing and customer dues.
+                          </p>
+                        </div>
+                      </button>
+
+                      {/* Razorpay Fee & Payout */}
+                      <button
+                        onClick={() => setCalculatorType('razorpay-fee')}
+                        className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
+                          calculatorType === 'razorpay-fee'
+                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
+                            : 'bg-white border-slate-100 text-slate-800 hover:border-slate-300 hover:shadow-xs'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <div className={`p-2 rounded-xl ${calculatorType === 'razorpay-fee' ? 'bg-indigo-500 text-white' : 'bg-emerald-50 text-emerald-600'}`}>
+                            <Coins size={18} />
+                          </div>
+                          {calculatorType === 'razorpay-fee' && <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-500 text-white px-2 py-0.5 rounded-md">Active</span>}
+                        </div>
+                        <div>
+                          <h5 className="font-bold text-sm">Razorpay Payouts</h5>
+                          <p className={`text-[11px] mt-1 line-clamp-2 ${calculatorType === 'razorpay-fee' ? 'text-indigo-100' : 'text-slate-500'}`}>
+                            Calculate transaction cuts, GST deductions, and net bank settlements.
+                          </p>
+                        </div>
+                      </button>
+
+                      {/* GST Invoice Generator (Business) */}
+                      <button
+                        onClick={() => setCalculatorType('gst-invoice')}
+                        className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
+                          calculatorType === 'gst-invoice'
+                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
+                            : 'bg-white border-slate-100 text-slate-800 hover:border-slate-300 hover:shadow-xs'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <div className={`p-2 rounded-xl ${calculatorType === 'gst-invoice' ? 'bg-indigo-500 text-white' : 'bg-emerald-50 text-emerald-600'}`}>
+                            <FileSpreadsheet size={18} />
+                          </div>
+                          {calculatorType === 'gst-invoice' && <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-500 text-white px-2 py-0.5 rounded-md">Active</span>}
+                        </div>
+                        <div>
+                          <h5 className="font-bold text-sm">Invoice Generator</h5>
+                          <p className={`text-[11px] mt-1 line-clamp-2 ${calculatorType === 'gst-invoice' ? 'text-indigo-100' : 'text-slate-500'}`}>
+                            Generate tax-compliant invoices with custom Razorpay payment links.
                           </p>
                         </div>
                       </button>
@@ -1287,6 +1391,48 @@ export default function App() {
               </>
             )}
 
+            {calculatorType === 'razorpay-fee' && (
+              <>
+                <div className="text-center max-w-2xl mx-auto mb-10">
+                  <span className="inline-flex items-center gap-1 text-indigo-700 bg-indigo-50 font-display text-[10px] sm:text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+                    <Coins size={12} className="text-indigo-600" />
+                    Transaction Fee & Bank Settlement Estimations
+                  </span>
+                  <h2 className="text-3xl sm:text-4xl font-display font-bold text-slate-900 tracking-tight leading-none sm:leading-tight">
+                    Razorpay Fee & Payout Calculator
+                  </h2>
+                  <p className="text-slate-600 text-xs sm:text-sm mt-3 leading-relaxed">
+                    Sellers, freelancers, and businesses: calculate standard processing charges, GST deductions, and net payouts, or reverse calculate how much to invoice your client to keep 100% of your earnings.
+                  </p>
+                </div>
+                <RazorpayFeeCalculator
+                  razorpayLink={settings.razorpayLink}
+                  onTrackClick={handleTrackAffiliateClick}
+                />
+              </>
+            )}
+
+            {calculatorType === 'gst-invoice' && (
+              <>
+                <div className="text-center max-w-2xl mx-auto mb-10">
+                  <span className="inline-flex items-center gap-1 text-indigo-700 bg-indigo-50 font-display text-[10px] sm:text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+                    <FileSpreadsheet size={12} className="text-indigo-600" />
+                    GST Invoice & Fast Settlements Hub
+                  </span>
+                  <h2 className="text-3xl sm:text-4xl font-display font-bold text-slate-900 tracking-tight leading-none sm:leading-tight">
+                    GST Invoice & Payment Link Generator
+                  </h2>
+                  <p className="text-slate-600 text-xs sm:text-sm mt-3 leading-relaxed">
+                    Instantly generate professional GST invoices for your clients. Input line items, compute tax splits, and generate customized Razorpay collection links to collect payments globally.
+                  </p>
+                </div>
+                <GstInvoiceGenerator
+                  razorpayLink={settings.razorpayLink}
+                  onTrackClick={handleTrackAffiliateClick}
+                />
+              </>
+            )}
+
             {/* In-Content Native Banner Ad slot */}
             {settings.showAdSense !== false && !showAdmin && !passcodeModalOpen && !legalModalOpen && (
               <AdSenseUnit 
@@ -1392,11 +1538,11 @@ export default function App() {
       </main>
 
       {/* Elegant informative Footer */}
-      <footer className="bg-slate-900 text-slate-400 text-xs py-12 border-t border-slate-800">
+      <footer className="bg-slate-900 text-slate-400 text-xs py-12 border-t border-slate-800 font-sans">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-slate-800">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-8 border-b border-slate-800">
             
-            {/* Branding Column */}
+            {/* Column 1: Publisher Branding & Mission */}
             <div>
               <div className="flex items-center gap-2.5 mb-4">
                 <Logo variant="mark" size={30} />
@@ -1404,73 +1550,167 @@ export default function App() {
                   simply<span className="relative inline-block text-white">tools<span className="absolute left-0 -bottom-0.5 w-full h-[2.5px] bg-[#A2EDD0] rounded-full"></span></span>
                 </span>
               </div>
-              <p className="text-slate-400 text-[11px] leading-relaxed max-w-xs">
-                A high-performance, compliant tax and financial toolbox designed for speed and visual precision. Automate estimations and resolve critical software bugs effortlessly.
+              <p className="text-slate-400 text-[11px] leading-relaxed">
+                SimplyTools is a digital financial and tax calculation portal providing mathematically audited, statutory-aligned estimation utilities for freelancers, chartered accountants, startups, and small business owners across India.
               </p>
+              <div className="mt-3 flex items-center gap-2 text-[10px] text-emerald-400 font-mono">
+                <ShieldCheck size={14} />
+                <span>CBDT & GST Council Circular Compliant</span>
+              </div>
             </div>
 
-            {/* Quick Links */}
+            {/* Column 2: Financial Calculators */}
             <div>
               <h4 className="font-display font-semibold text-white text-xs uppercase tracking-wider mb-3">
-                Calculator Slabs
+                Financial Utilities
               </h4>
-              <ul className="space-y-1.5 text-[11px]">
-                <li><a href="#accounting-software" className="hover:text-white transition-colors">Compare Accounting Platforms</a></li>
-                <li><a href="#tax-consultants" className="hover:text-white transition-colors">Book CA Consultations</a></li>
-                <li><a href="#gst-receipt-display" className="hover:text-white transition-colors">Calculate CGST & SGST</a></li>
+              <ul className="space-y-2 text-[11px]">
                 <li>
-                  <button 
-                    onClick={() => setLegalModalOpen(true)} 
-                    className="hover:text-white text-indigo-400 font-semibold transition-colors flex items-center gap-1"
-                  >
-                    <ShieldCheck size={12} /> Disclaimer & Legal Waiver
+                  <button onClick={() => { setCurrentView('calculator'); setCalculatorType('gst'); }} className="hover:text-white transition-colors text-slate-300">
+                    GST Rate Splitter (CGST/SGST/IGST)
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => { setCurrentView('calculator'); setCalculatorType('costplus'); }} className="hover:text-white transition-colors text-slate-300">
+                    Cost-Plus Pricing & Profit Margins
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => { setCurrentView('calculator'); setCalculatorType('income-tax'); }} className="hover:text-white transition-colors text-slate-300">
+                    Income Tax Slabs (New vs. Old Regime)
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => { setCurrentView('calculator'); setCalculatorType('tds'); }} className="hover:text-white transition-colors text-slate-300">
+                    TDS Rates & CBDT Sec 194J/194C Rules
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => { setCurrentView('calculator'); setCalculatorType('hra'); }} className="hover:text-white transition-colors text-slate-300">
+                    HRA Rent Exemption Calculator
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => { setCurrentView('calculator'); setCalculatorType('runway'); }} className="hover:text-white transition-colors text-slate-300">
+                    Startup Cash Runway & Net Burn
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => { setCurrentView('calculator'); setCalculatorType('working-capital'); }} className="hover:text-white transition-colors text-slate-300">
+                    Working Capital Gap Estimator
                   </button>
                 </li>
               </ul>
             </div>
 
-            {/* Disclaimer & SEO declaration */}
+            {/* Column 3: Comparison & Tutorials */}
             <div>
               <h4 className="font-display font-semibold text-white text-xs uppercase tracking-wider mb-3">
-                Compliance Disclaimer
+                Resource & Guides
               </h4>
-              <p className="text-slate-400 text-[11px] leading-relaxed">
-                Calculations provided on this portal are for educational, informational, and general estimation purposes. Consult with a registered Chartered Accountant before submitting final tax liabilities or compliance forms.
-              </p>
-              <button 
-                onClick={() => setLegalModalOpen(true)} 
-                className="text-indigo-400 hover:text-indigo-300 transition-colors text-[11px] font-semibold underline flex items-center gap-1 mt-2"
-              >
-                View Complete Liability Waivers & Terms
-              </button>
+              <ul className="space-y-2 text-[11px]">
+                <li>
+                  <button onClick={() => setCurrentView('blog')} className="hover:text-white transition-colors text-slate-300 text-left">
+                    Zoho Books vs. Vyapar Comparison
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setCurrentView('blog')} className="hover:text-white transition-colors text-slate-300 text-left">
+                    SGST, CGST & IGST Place of Supply Rules
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setCurrentView('blog')} className="hover:text-white transition-colors text-slate-300 text-left">
+                    GST Invoice Rules & Mandatory Formats 2026
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setCurrentView('blog')} className="hover:text-white transition-colors text-slate-300 text-left">
+                    Software Troubleshooting Guides (Zoho/Vyapar/Giddh)
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 4: Publisher Policies & Compliance */}
+            <div>
+              <h4 className="font-display font-semibold text-white text-xs uppercase tracking-wider mb-3">
+                Publisher Policies & Info
+              </h4>
+              <ul className="space-y-2 text-[11px]">
+                <li>
+                  <button onClick={() => setCurrentView('about')} className="hover:text-white transition-colors text-slate-300">
+                    About Us & Mission
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setCurrentView('contact')} className="hover:text-white transition-colors text-slate-300">
+                    Contact Us & Support Desk
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setCurrentView('editorial')} className="hover:text-white transition-colors text-slate-300">
+                    Editorial & E-E-A-T Standards
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setCurrentView('privacy')} className="hover:text-white transition-colors text-slate-300">
+                    Privacy Policy & Cookie Disclosures
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setCurrentView('terms')} className="hover:text-white transition-colors text-slate-300">
+                    Terms of Service
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setCurrentView('disclaimer')} className="hover:text-white transition-colors text-slate-300">
+                    Statutory & Financial Disclaimer
+                  </button>
+                </li>
+              </ul>
             </div>
 
           </div>
 
           <div className="flex flex-col sm:flex-row justify-between items-center pt-8 gap-4">
             <span className="text-[11px] text-slate-500 font-mono">
-              {settings.footerText || '© 2026 Simply Smart Calculators Hub • Built for Maximum SEO & Multi-channel Monetization.'}
+              {settings.footerText || '© 2026 SimplyTools • Built for Precision Financial Calculations & AdSense Compliance.'}
             </span>
-            <div className="flex gap-3 text-[11px] font-medium items-center">
+            <div className="flex flex-wrap gap-3 text-[11px] font-medium items-center justify-center">
               <button 
-                onClick={() => setLegalModalOpen(true)}
-                className="text-slate-500 hover:text-indigo-400 transition-colors underline"
+                onClick={() => setCurrentView('about')}
+                className="text-slate-400 hover:text-indigo-400 transition-colors underline"
               >
-                Disclaimer
+                About Us
               </button>
               <span className="text-slate-700">•</span>
               <button 
-                onClick={() => setLegalModalOpen(true)}
-                className="text-slate-500 hover:text-indigo-400 transition-colors underline"
+                onClick={() => setCurrentView('contact')}
+                className="text-slate-400 hover:text-indigo-400 transition-colors underline"
+              >
+                Contact
+              </button>
+              <span className="text-slate-700">•</span>
+              <button 
+                onClick={() => setCurrentView('privacy')}
+                className="text-slate-400 hover:text-indigo-400 transition-colors underline"
+              >
+                Privacy Policy
+              </button>
+              <span className="text-slate-700">•</span>
+              <button 
+                onClick={() => setCurrentView('terms')}
+                className="text-slate-400 hover:text-indigo-400 transition-colors underline"
               >
                 Terms of Service
               </button>
               <span className="text-slate-700">•</span>
               <button 
-                onClick={() => setLegalModalOpen(true)}
-                className="text-slate-500 hover:text-indigo-400 transition-colors underline"
+                onClick={() => setCurrentView('disclaimer')}
+                className="text-slate-400 hover:text-indigo-400 transition-colors underline"
               >
-                Privacy Policy
+                Disclaimer
               </button>
             </div>
           </div>
