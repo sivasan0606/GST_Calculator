@@ -211,6 +211,64 @@ Drafting invoices in Word or Excel is an accident waiting to happen. Missing a s
     category: 'Tutorials',
     publishedAt: 'Jun 28, 2026',
     readTime: '5 min read'
+  },
+  {
+    id: 'post-4',
+    title: 'Why Your Local Business Needs Its Own Website (Before It’s Too Late)',
+    slug: 'why-local-business-needs-website',
+    excerpt: 'Relying entirely on social media apps or third-party listings to run your business is like building on rented land. Here is why your local business needs its own digital home.',
+    content: `Welcome to SimplyTools.in, your go-to destination for fast, no-nonsense financial and operational tools designed for modern business owners. Whether you're calculating pricing margins, tracking cash runway, or managing working capital, we help you make smarter business decisions without the spreadsheet headache.
+
+Let’s be honest: running a local business is exhausting. Your plate is already overflowing.
+
+The last thing you probably want to think about is building a website. Most local business owners figure, "Hey, I have an Instagram page, a WhatsApp broadcast list, and my shop shows up on Google Maps. Isn't that enough?"
+
+It feels like enough—until something goes wrong. Relying entirely on social media apps or third-party listings to run your business is a bit like building your house on rented land. If the algorithm changes, your account gets flagged, or a platform glitches, your connection to your customers vanishes overnight.
+
+Here is why your local business needs a digital home of its own, and the one free listing you need to update right now.
+
+## 1. You Don’t Actually Own Your Social Media Followers
+Think about it. If Instagram or Facebook decides to tweak its algorithm tomorrow and suddenly hides your posts from your own followers, what can you do? Absolutely nothing.
+
+Your website, on the other hand, is 100% yours. It’s your permanent digital address. No matter what happens out there on social media, your customers will always know where to find your correct timings, menus, service lists, or contact info.
+
+👉 Vyapar Affiliate Link
+
+## 2. A Website Builds Trust in 5 Seconds Flat
+Imagine someone is looking for a new dentist for a toothache or trying to pick a nice restaurant for a family dinner tonight. What’s the first thing they do? They pull out their phone and search.
+
+If they land on a messy, outdated social media page with a blurry photo of a menu from two years ago, it creates a tiny seed of doubt.
+
+But if they land on a clean, professional website where they can clearly see your treatments, read about your team, or book an appointment in two clicks? Trust is established instantly.
+
+A good website tells people: "We are professional, we take pride in our work, and we are here to stay."
+
+👉 Zoho Affiliate Link
+
+## 3. Capturing People Who Are Ready to Buy Right Now
+When someone needs a service urgently, they don't scroll reels—they search Google. They type things like "best skin clinic near me" or "family restaurant open late."
+
+While Google Maps helps, search engines love sending people to actual websites that give detailed answers. Having a website allows you to show up for the exact things people in your neighborhood are typing into their phones every single day.
+
+## The Non-Negotiable Step: Fix Your Google Business Profile
+While your website is your digital home, your Google Business Profile is your digital storefront sign on the main road.
+
+If you haven't looked at your Google listing in months, go check it right now.
+
+- **The Timings Trap**: Nothing drives a customer crazy faster than driving across town because Google said you were open, only to find your shutters down. Keep your hours, holiday timings, and phone numbers updated.
+- **Fresh Photos**: Post real pictures of your shop floor, your team, your new dishes, or your clinic. People want to see what they are walking into.
+- **The Handshake**: Your Google listing gets their attention, and your website seals the deal.
+
+👉 Giddh Affiliate Link
+
+## Take Control of Your Digital Identity
+Getting online doesn't mean you need a massive tech budget or a team of developers. It just means taking ownership of your business's presence on the internet.
+
+Take a look around, see where your digital gaps are, and start small. And remember, whenever you need quick utility tools to manage your business operations, pricing, or cash flow, SimplyTools.in is always here to help you calculate smarter and grow faster.`,
+    author: 'SimplyTools Business Desk',
+    category: 'Business Strategy',
+    publishedAt: 'Jul 26, 2026',
+    readTime: '4 min read'
   }
 ];
 
@@ -375,7 +433,8 @@ export default function App() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Force update any of the posts if they do not match our premium layouts or have old author names
+        // Force update any of the posts if they do not match our premium layouts or miss new posts
+        const hasMissingNewPost = !parsed.some((p: any) => p.id === 'post-4');
         const hasOldPost = parsed.some((p: any) => 
           (p.id === 'post-1' && p.author !== 'Tax Resource Desk') ||
           (p.id === 'post-2' && p.author !== 'Tax Resource Desk') ||
@@ -384,7 +443,7 @@ export default function App() {
           (p.id === 'post-2' && !p.content.includes('👉 Vyapar Affiliate Link')) ||
           (p.id === 'post-3' && !p.content.includes('👉 Vyapar Affiliate Link'))
         );
-        if (hasOldPost) {
+        if (hasOldPost || hasMissingNewPost) {
           localStorage.setItem('gst_site_blog_posts', JSON.stringify(DEFAULT_POSTS));
           return DEFAULT_POSTS;
         }
@@ -599,6 +658,80 @@ export default function App() {
   const handleSaveSettings = (newSettings: SiteSettings) => {
     setSettings(newSettings);
   };
+
+  // Dynamic SEO Page Title & Description Updates for Search Compliance & Crawlability
+  useEffect(() => {
+    let title = 'SimplyTools - Comprehensive Business & Tax Calculator Suite';
+    let description = 'Calculate CGST, SGST, IGST, Cost-Plus markup, Income Tax, TDS, HRA, Startup Cash Runway, and Working Capital Gap instantly.';
+
+    if (currentView === 'calculator') {
+      switch (calculatorType) {
+        case 'gst':
+          title = 'GST Calculator Online (CGST, SGST, IGST) - SimplyTools';
+          description = 'Free online GST calculator. Calculate CGST, SGST, and IGST tax splits for 0%, 5%, 12%, 18%, and 28% tax slabs with inclusive & exclusive rate toggles.';
+          break;
+        case 'costplus':
+          title = 'Cost-Plus Pricing & Markup Margin Calculator - SimplyTools';
+          description = 'Determine selling prices, target markup percentages, unit overhead costs, and profit margins easily for retail and manufacturing products.';
+          break;
+        case 'income-tax':
+          title = 'Income Tax Calculator FY 2024-25 & FY 2025-26 (New vs Old) - SimplyTools';
+          description = 'Compare tax obligations between New and Old Tax Regimes in India with the enhanced ₹75,000 standard deduction and updated slab rates.';
+          break;
+        case 'tds':
+          title = 'TDS Calculator Sec 194J, 194C, 194I, 194H - SimplyTools';
+          description = 'Calculate Tax Deducted at Source (TDS) on professional services, contractor payments, rent, and commission under CBDT Circular 23/2017 rules.';
+          break;
+        case 'hra':
+          title = 'HRA Exemption Calculator Sec 10(13A) - SimplyTools';
+          description = 'Calculate House Rent Allowance (HRA) tax exemption limits based on basic salary, metro vs non-metro city classification, and rent paid.';
+          break;
+        case 'runway':
+          title = 'Startup Cash Runway & Net Burn Rate Calculator - SimplyTools';
+          description = 'Calculate cash runway in months and net burn rate for startups and small businesses to plan operational runway and fundraising goals.';
+          break;
+        case 'working-capital':
+          title = 'Working Capital Gap & Cash Conversion Cycle Calculator - SimplyTools';
+          description = 'Calculate working capital requirements, accounts receivable, inventory holding days, and cash conversion cycles.';
+          break;
+        case 'razorpay-fee':
+          title = 'Razorpay Fee & Net Bank Payout Calculator - SimplyTools';
+          description = 'Calculate Razorpay payment gateway fees (2% + 18% GST) and net bank payout amounts for invoices and online transactions.';
+          break;
+        case 'gst-invoice':
+          title = 'Free GST Invoice Generator & Payment Link Creator - SimplyTools';
+          description = 'Generate GST tax compliant invoices with custom itemized rates, tax splits, and instant Razorpay payment link integration.';
+          break;
+      }
+    } else if (currentView === 'blog') {
+      title = 'Business & Tax Insights Resource Hub - SimplyTools';
+      description = 'Guides, statutory tax tutorials, GST compliance updates, and business strategy articles for Indian small business owners and startups.';
+    } else if (currentView === 'about') {
+      title = 'About SimplyTools - Financial Utilities & Tax Calculator Portal';
+      description = 'SimplyTools provides free, mathematically verified, statutory-aligned financial and tax calculation tools for businesses in India.';
+    } else if (currentView === 'contact') {
+      title = 'Contact Us - SimplyTools Support Desk';
+      description = 'Have questions or feedback? Get in touch with the SimplyTools team for tool assistance and statutory inquiries.';
+    } else if (currentView === 'privacy') {
+      title = 'Privacy Policy - SimplyTools';
+      description = 'Read our Privacy Policy to understand how SimplyTools protects user privacy with 100% client-side local calculations.';
+    } else if (currentView === 'terms') {
+      title = 'Terms of Service - SimplyTools';
+      description = 'Review the Terms of Service governing the use of SimplyTools financial calculators and accounting software comparisons.';
+    } else if (currentView === 'disclaimer') {
+      title = 'Disclaimer & Statutory Compliance Policy - SimplyTools';
+      description = 'Read our financial disclaimer. SimplyTools provides educational and computational estimation tools for business reference.';
+    } else if (currentView === 'editorial') {
+      title = 'Editorial & Fact-Checking Policy - SimplyTools';
+      description = 'Learn about our rigorous financial verification process, statutory review standards, and editorial corrections workflow.';
+    }
+
+    document.title = title;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', description);
+    }
+  }, [currentView, calculatorType]);
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-between font-sans selection:bg-indigo-100 selection:text-indigo-900">
@@ -845,7 +978,7 @@ export default function App() {
                 >
                   <Sparkles size={14} className="text-indigo-500" />
                   <span>Tax Lab</span>
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeCategoryTab === 'tax' ? 'bg-indigo-50 text-indigo-600 font-bold' : 'bg-slate-200 text-slate-600'}`}>5</span>
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeCategoryTab === 'tax' ? 'bg-indigo-50 text-indigo-600 font-bold' : 'bg-slate-200 text-slate-600'}`}>4</span>
                 </button>
                 <button
                   onClick={() => setActiveCategoryTab('business')}
@@ -978,29 +1111,6 @@ export default function App() {
                           <h5 className="font-bold text-sm">HRA Exemption</h5>
                           <p className={`text-[11px] mt-1 line-clamp-2 ${calculatorType === 'hra' ? 'text-indigo-100' : 'text-slate-500'}`}>
                             Determine house lease allowances tax-exemption limit under Sec 10(13A).
-                          </p>
-                        </div>
-                      </button>
-
-                      {/* GST Invoice Generator (Tax) */}
-                      <button
-                        onClick={() => setCalculatorType('gst-invoice')}
-                        className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
-                          calculatorType === 'gst-invoice'
-                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
-                            : 'bg-white border-slate-100 text-slate-800 hover:border-slate-300 hover:shadow-xs'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between w-full">
-                          <div className={`p-2 rounded-xl ${calculatorType === 'gst-invoice' ? 'bg-indigo-500 text-white' : 'bg-indigo-50 text-indigo-600'}`}>
-                            <FileSpreadsheet size={18} />
-                          </div>
-                          {calculatorType === 'gst-invoice' && <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-500 text-white px-2 py-0.5 rounded-md">Active</span>}
-                        </div>
-                        <div>
-                          <h5 className="font-bold text-sm">Invoice Generator</h5>
-                          <p className={`text-[11px] mt-1 line-clamp-2 ${calculatorType === 'gst-invoice' ? 'text-indigo-100' : 'text-slate-500'}`}>
-                            Generate tax-compliant invoices with custom Razorpay payment links.
                           </p>
                         </div>
                       </button>
