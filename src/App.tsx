@@ -417,12 +417,6 @@ export default function App() {
 
   // Admin Console View State
   const [showAdmin, setShowAdmin] = useState(false);
-
-  // Selected tagline option state
-  const [selectedTaglineIndex, setSelectedTaglineIndex] = useState<number>(() => {
-    const saved = localStorage.getItem('simplytools_tagline_index');
-    return saved ? parseInt(saved, 10) : 0;
-  });
   
   // Navigation & static pages state - Initialized from URL query parameters for search indexing accuracy
   const [currentView, setCurrentView] = useState<'calculator' | 'blog' | 'about' | 'contact' | 'privacy' | 'terms' | 'disclaimer' | 'editorial'>(() => {
@@ -882,7 +876,7 @@ export default function App() {
                 simply<span className="relative inline-block">tools<span className="absolute left-0 -bottom-0.5 w-full h-[2.5px] bg-[#A2EDD0] rounded-full"></span></span>
               </h1>
               <span className="text-[10px] sm:text-xs text-indigo-600 font-bold block mt-1 tracking-tight">
-                {TAGLINES[selectedTaglineIndex]}
+                {TAGLINES[0]}
               </span>
             </div>
           </div>
@@ -923,62 +917,6 @@ export default function App() {
           )}
         </div>
       </header>
-
-      {/* Interactive Tagline Selector Bar */}
-      <div id="interactive-tagline-selector" className="bg-slate-950 border-b border-slate-800 py-3 px-4 relative overflow-hidden">
-        {/* Decorative background grid pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
-        
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-4 relative z-10">
-          <div className="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
-            <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-display text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-xs shrink-0 select-none">
-              <Sparkles size={11} className="animate-pulse" />
-              Live Tagline Selector
-            </span>
-            <div>
-              <p className="text-xs font-semibold text-slate-100">
-                Pick your preferred tagline to display on SimplyTools:
-              </p>
-              <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5">
-                Click any option below to change the header subtitle dynamically.
-              </p>
-            </div>
-          </div>
-          
-          {/* Options Switcher */}
-          <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
-            {TAGLINES.map((tagline, idx) => {
-              const isSelected = selectedTaglineIndex === idx;
-              return (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    setSelectedTaglineIndex(idx);
-                    localStorage.setItem('simplytools_tagline_index', idx.toString());
-                  }}
-                  className={`relative px-3.5 py-2 rounded-xl text-left text-xs font-medium transition-all duration-200 flex items-center gap-2.5 cursor-pointer border ${
-                    isSelected
-                      ? 'bg-indigo-600 border-indigo-500 text-white shadow-sm shadow-indigo-950/50 scale-[1.01]'
-                      : 'bg-slate-900/60 hover:bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 border ${
-                    isSelected ? 'bg-emerald-500 border-emerald-400' : 'bg-slate-800 border-slate-700'
-                  }`}>
-                    {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
-                  </span>
-                  <div className="flex flex-col items-start leading-none gap-1">
-                    <span className={`text-[8px] uppercase font-bold tracking-wider ${isSelected ? 'text-indigo-200' : 'text-slate-500'}`}>
-                      Tagline Option {idx + 1}
-                    </span>
-                    <span className="font-semibold text-[11px] leading-tight tracking-tight">{tagline}</span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
 
       {/* Main Content Stage */}
       <main className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
