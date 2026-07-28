@@ -133,7 +133,24 @@ interface BlogPageProps {
 }
 
 export default function BlogPage({ posts, settings, onNavigateToCalculator }: BlogPageProps) {
-  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('slug') || null;
+    }
+    return null;
+  });
+
+  const handleSelectPost = (idOrSlug: string | null) => {
+    setSelectedPostId(idOrSlug);
+    if (typeof window !== 'undefined') {
+      const post = posts.find(p => p.id === idOrSlug || p.slug === idOrSlug);
+      const newSearch = post ? `?page=blog&slug=${post.slug}` : `?page=blog`;
+      if (window.location.search !== newSearch) {
+        window.history.pushState({ page: 'blog', slug: post ? post.slug : null }, '', window.location.pathname + newSearch);
+      }
+    }
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [emailInput, setEmailInput] = useState('');
@@ -188,7 +205,7 @@ export default function BlogPage({ posts, settings, onNavigateToCalculator }: Bl
       <div className="max-w-4xl mx-auto py-6 font-sans">
         {/* Back navigation */}
         <button
-          onClick={() => setSelectedPostId(null)}
+          onClick={() => handleSelectPost(null)}
           className="group inline-flex items-center gap-2 text-slate-500 hover:text-indigo-600 transition-colors text-xs font-semibold mb-6"
         >
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
@@ -400,7 +417,7 @@ export default function BlogPage({ posts, settings, onNavigateToCalculator }: Bl
           {/* Back reference */}
           <div className="mt-12 pt-8 border-t border-slate-100 flex justify-between items-center">
             <button
-              onClick={() => setSelectedPostId(null)}
+              onClick={() => handleSelectPost(null)}
               className="text-indigo-600 hover:text-indigo-700 text-xs font-bold inline-flex items-center gap-1.5"
             >
               <ArrowLeft size={14} /> Back to Directory
@@ -511,7 +528,7 @@ export default function BlogPage({ posts, settings, onNavigateToCalculator }: Bl
             <motion.article
               key={post.id}
               whileHover={{ y: -4 }}
-              onClick={() => setSelectedPostId(post.slug || post.id)}
+              onClick={() => handleSelectPost(post.slug || post.id)}
               className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs hover:shadow-md hover:border-slate-300 transition-all cursor-pointer flex flex-col justify-between"
             >
               <div className="p-5">

@@ -424,9 +424,28 @@ export default function App() {
     return saved ? parseInt(saved, 10) : 0;
   });
   
-  // Navigation & static pages state
-  const [currentView, setCurrentView] = useState<'calculator' | 'blog' | 'about' | 'contact' | 'privacy' | 'terms' | 'disclaimer' | 'editorial'>('calculator');
-  const [calculatorType, setCalculatorType] = useState<'gst' | 'costplus' | 'income-tax' | 'tds' | 'hra' | 'runway' | 'working-capital' | 'razorpay-fee' | 'gst-invoice'>('gst');
+  // Navigation & static pages state - Initialized from URL query parameters for search indexing accuracy
+  const [currentView, setCurrentView] = useState<'calculator' | 'blog' | 'about' | 'contact' | 'privacy' | 'terms' | 'disclaimer' | 'editorial'>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const pageParam = params.get('page');
+      if (pageParam && ['blog', 'about', 'contact', 'privacy', 'terms', 'disclaimer', 'editorial'].includes(pageParam)) {
+        return pageParam as any;
+      }
+    }
+    return 'calculator';
+  });
+
+  const [calculatorType, setCalculatorType] = useState<'gst' | 'costplus' | 'income-tax' | 'tds' | 'hra' | 'runway' | 'working-capital' | 'razorpay-fee' | 'gst-invoice'>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const calcParam = params.get('calc');
+      if (calcParam && ['gst', 'costplus', 'income-tax', 'tds', 'hra', 'runway', 'working-capital', 'razorpay-fee', 'gst-invoice'].includes(calcParam)) {
+        return calcParam as any;
+      }
+    }
+    return 'gst';
+  });
   const [activeCategoryTab, setActiveCategoryTab] = useState<'all' | 'tax' | 'business' | 'roadmap'>('all');
   const [posts, setPosts] = useState<BlogPost[]>(() => {
     const saved = localStorage.getItem('gst_site_blog_posts');
@@ -467,6 +486,58 @@ export default function App() {
   const [isOwnerModeEnabled, setIsOwnerModeEnabled] = useState<boolean>(() => {
     return localStorage.getItem('gst_owner_mode_enabled') === 'true' || localStorage.getItem('gst_owner_authorized') === 'true';
   });
+
+  // Sync browser back/forward buttons with current view and calculator type
+  useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const pageParam = params.get('page');
+      const calcParam = params.get('calc');
+
+      if (pageParam && ['blog', 'about', 'contact', 'privacy', 'terms', 'disclaimer', 'editorial'].includes(pageParam)) {
+        setCurrentView(pageParam as any);
+      } else if (calcParam && ['gst', 'costplus', 'income-tax', 'tds', 'hra', 'runway', 'working-capital', 'razorpay-fee', 'gst-invoice'].includes(calcParam)) {
+        setCurrentView('calculator');
+        setCalculatorType(calcParam as any);
+      } else {
+        setCurrentView('calculator');
+        setCalculatorType('gst');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const handleNavigateView = (view: typeof currentView) => {
+    setCurrentView(view);
+    if (typeof window !== 'undefined') {
+      let search = '';
+      if (view === 'calculator') {
+        if (calculatorType !== 'gst') {
+          search = `?calc=${calculatorType}`;
+        }
+      } else {
+        search = `?page=${view}`;
+      }
+      const targetPath = window.location.pathname + search;
+      if (window.location.search !== search) {
+        window.history.pushState({ view, calc: calculatorType }, '', targetPath);
+      }
+    }
+  };
+
+  const handleNavigateCalculator = (calc: typeof calculatorType) => {
+    setCurrentView('calculator');
+    setCalculatorType(calc);
+    if (typeof window !== 'undefined') {
+      const search = calc === 'gst' ? '' : `?calc=${calc}`;
+      const targetPath = window.location.pathname + search;
+      if (window.location.search !== search) {
+        window.history.pushState({ view: 'calculator', calc }, '', targetPath);
+      }
+    }
+  };
 
   // Check URL query parameters for special activation keys
   useEffect(() => {
@@ -659,79 +730,129 @@ export default function App() {
     setSettings(newSettings);
   };
 
-  // Dynamic SEO Page Title & Description Updates for Search Compliance & Crawlability
+  // Dynamic SEO Page Title, Description & Self-Referencing Canonical Tag Updates for Search Compliance & Crawlability
   useEffect(() => {
     let title = 'SimplyTools - Comprehensive Business & Tax Calculator Suite';
     let description = 'Calculate CGST, SGST, IGST, Cost-Plus markup, Income Tax, TDS, HRA, Startup Cash Runway, and Working Capital Gap instantly.';
+    let canonicalUrl = 'https://simplytools.in/';
 
     if (currentView === 'calculator') {
       switch (calculatorType) {
         case 'gst':
           title = 'GST Calculator Online (CGST, SGST, IGST) - SimplyTools';
           description = 'Free online GST calculator. Calculate CGST, SGST, and IGST tax splits for 0%, 5%, 12%, 18%, and 28% tax slabs with inclusive & exclusive rate toggles.';
+          canonicalUrl = 'https://simplytools.in/?calc=gst';
           break;
         case 'costplus':
           title = 'Cost-Plus Pricing & Markup Margin Calculator - SimplyTools';
           description = 'Determine selling prices, target markup percentages, unit overhead costs, and profit margins easily for retail and manufacturing products.';
+          canonicalUrl = 'https://simplytools.in/?calc=costplus';
           break;
         case 'income-tax':
           title = 'Income Tax Calculator FY 2024-25 & FY 2025-26 (New vs Old) - SimplyTools';
           description = 'Compare tax obligations between New and Old Tax Regimes in India with the enhanced ₹75,000 standard deduction and updated slab rates.';
+          canonicalUrl = 'https://simplytools.in/?calc=income-tax';
           break;
         case 'tds':
           title = 'TDS Calculator Sec 194J, 194C, 194I, 194H - SimplyTools';
           description = 'Calculate Tax Deducted at Source (TDS) on professional services, contractor payments, rent, and commission under CBDT Circular 23/2017 rules.';
+          canonicalUrl = 'https://simplytools.in/?calc=tds';
           break;
         case 'hra':
           title = 'HRA Exemption Calculator Sec 10(13A) - SimplyTools';
           description = 'Calculate House Rent Allowance (HRA) tax exemption limits based on basic salary, metro vs non-metro city classification, and rent paid.';
+          canonicalUrl = 'https://simplytools.in/?calc=hra';
           break;
         case 'runway':
           title = 'Startup Cash Runway & Net Burn Rate Calculator - SimplyTools';
           description = 'Calculate cash runway in months and net burn rate for startups and small businesses to plan operational runway and fundraising goals.';
+          canonicalUrl = 'https://simplytools.in/?calc=runway';
           break;
         case 'working-capital':
           title = 'Working Capital Gap & Cash Conversion Cycle Calculator - SimplyTools';
           description = 'Calculate working capital requirements, accounts receivable, inventory holding days, and cash conversion cycles.';
+          canonicalUrl = 'https://simplytools.in/?calc=working-capital';
           break;
         case 'razorpay-fee':
           title = 'Razorpay Fee & Net Bank Payout Calculator - SimplyTools';
           description = 'Calculate Razorpay payment gateway fees (2% + 18% GST) and net bank payout amounts for invoices and online transactions.';
+          canonicalUrl = 'https://simplytools.in/?calc=razorpay-fee';
           break;
         case 'gst-invoice':
           title = 'Free GST Invoice Generator & Payment Link Creator - SimplyTools';
           description = 'Generate GST tax compliant invoices with custom itemized rates, tax splits, and instant Razorpay payment link integration.';
+          canonicalUrl = 'https://simplytools.in/?calc=gst-invoice';
           break;
       }
     } else if (currentView === 'blog') {
-      title = 'Business & Tax Insights Resource Hub - SimplyTools';
-      description = 'Guides, statutory tax tutorials, GST compliance updates, and business strategy articles for Indian small business owners and startups.';
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get('slug');
+      if (slug) {
+        const activePost = posts.find(p => p.slug === slug || p.id === slug);
+        if (activePost) {
+          title = `${activePost.title} - SimplyTools Blog`;
+          description = activePost.excerpt;
+        } else {
+          title = 'Business & Tax Insights Resource Hub - SimplyTools';
+          description = 'Guides, statutory tax tutorials, GST compliance updates, and business strategy articles for Indian small business owners and startups.';
+        }
+        canonicalUrl = `https://simplytools.in/?page=blog&slug=${slug}`;
+      } else {
+        title = 'Business & Tax Insights Resource Hub - SimplyTools';
+        description = 'Guides, statutory tax tutorials, GST compliance updates, and business strategy articles for Indian small business owners and startups.';
+        canonicalUrl = 'https://simplytools.in/?page=blog';
+      }
     } else if (currentView === 'about') {
       title = 'About SimplyTools - Financial Utilities & Tax Calculator Portal';
       description = 'SimplyTools provides free, mathematically verified, statutory-aligned financial and tax calculation tools for businesses in India.';
+      canonicalUrl = 'https://simplytools.in/?page=about';
     } else if (currentView === 'contact') {
       title = 'Contact Us - SimplyTools Support Desk';
       description = 'Have questions or feedback? Get in touch with the SimplyTools team for tool assistance and statutory inquiries.';
+      canonicalUrl = 'https://simplytools.in/?page=contact';
     } else if (currentView === 'privacy') {
       title = 'Privacy Policy - SimplyTools';
       description = 'Read our Privacy Policy to understand how SimplyTools protects user privacy with 100% client-side local calculations.';
+      canonicalUrl = 'https://simplytools.in/?page=privacy';
     } else if (currentView === 'terms') {
       title = 'Terms of Service - SimplyTools';
       description = 'Review the Terms of Service governing the use of SimplyTools financial calculators and accounting software comparisons.';
+      canonicalUrl = 'https://simplytools.in/?page=terms';
     } else if (currentView === 'disclaimer') {
       title = 'Disclaimer & Statutory Compliance Policy - SimplyTools';
       description = 'Read our financial disclaimer. SimplyTools provides educational and computational estimation tools for business reference.';
+      canonicalUrl = 'https://simplytools.in/?page=disclaimer';
     } else if (currentView === 'editorial') {
       title = 'Editorial & Fact-Checking Policy - SimplyTools';
       description = 'Learn about our rigorous financial verification process, statutory review standards, and editorial corrections workflow.';
+      canonicalUrl = 'https://simplytools.in/?page=editorial';
     }
 
     document.title = title;
+    
+    // Meta Description
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute('content', description);
     }
-  }, [currentView, calculatorType]);
+
+    // Canonical Tag Update (Fixes Search Console "Alternate page with proper canonical tag" error)
+    let canonicalTag = document.querySelector('link[rel="canonical"]');
+    if (canonicalTag) {
+      canonicalTag.setAttribute('href', canonicalUrl);
+    } else {
+      canonicalTag = document.createElement('link');
+      canonicalTag.setAttribute('rel', 'canonical');
+      canonicalTag.setAttribute('href', canonicalUrl);
+      document.head.appendChild(canonicalTag);
+    }
+
+    // OpenGraph URL Update
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl) {
+      ogUrl.setAttribute('content', canonicalUrl);
+    }
+  }, [currentView, calculatorType, posts]);
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-between font-sans selection:bg-indigo-100 selection:text-indigo-900">
@@ -892,7 +1013,7 @@ export default function App() {
           <div className="flex justify-center border-b border-slate-200 mb-8 font-sans">
             <div className="flex flex-wrap justify-center gap-4 sm:gap-8">
               <button
-                onClick={() => setCurrentView('calculator')}
+                onClick={() => handleNavigateView('calculator')}
                 className={`pb-4 px-2 text-xs sm:text-sm font-semibold border-b-2 transition-all flex items-center gap-2 ${
                   currentView === 'calculator'
                     ? 'border-indigo-600 text-indigo-600'
@@ -903,7 +1024,7 @@ export default function App() {
                 <span>{settings.calculatorsTabName || 'Smart Calculators'}</span>
               </button>
               <button
-                onClick={() => setCurrentView('blog')}
+                onClick={() => handleNavigateView('blog')}
                 className={`pb-4 px-2 text-xs sm:text-sm font-semibold border-b-2 transition-all flex items-center gap-2 ${
                   currentView === 'blog'
                     ? 'border-indigo-600 text-indigo-600'
@@ -917,7 +1038,7 @@ export default function App() {
                 </span>
               </button>
               <button
-                onClick={() => setCurrentView('about')}
+                onClick={() => handleNavigateView('about')}
                 className={`pb-4 px-2 text-xs sm:text-sm font-semibold border-b-2 transition-all flex items-center gap-2 ${
                   currentView === 'about'
                     ? 'border-indigo-600 text-indigo-600'
@@ -927,7 +1048,7 @@ export default function App() {
                 <span>About Us</span>
               </button>
               <button
-                onClick={() => setCurrentView('contact')}
+                onClick={() => handleNavigateView('contact')}
                 className={`pb-4 px-2 text-xs sm:text-sm font-semibold border-b-2 transition-all flex items-center gap-2 ${
                   currentView === 'contact'
                     ? 'border-indigo-600 text-indigo-600'
@@ -941,17 +1062,17 @@ export default function App() {
         )}
 
         {currentView === 'about' ? (
-          <AboutPage onNavigateHome={() => setCurrentView('calculator')} onNavigateToView={(view) => setCurrentView(view as any)} />
+          <AboutPage onNavigateHome={() => handleNavigateView('calculator')} onNavigateToView={(view) => handleNavigateView(view as any)} />
         ) : currentView === 'contact' ? (
-          <ContactPage onNavigateHome={() => setCurrentView('calculator')} onNavigateToView={(view) => setCurrentView(view as any)} />
+          <ContactPage onNavigateHome={() => handleNavigateView('calculator')} onNavigateToView={(view) => handleNavigateView(view as any)} />
         ) : currentView === 'privacy' ? (
-          <PrivacyPolicyPage onNavigateHome={() => setCurrentView('calculator')} onNavigateToView={(view) => setCurrentView(view as any)} />
+          <PrivacyPolicyPage onNavigateHome={() => handleNavigateView('calculator')} onNavigateToView={(view) => handleNavigateView(view as any)} />
         ) : currentView === 'terms' ? (
-          <TermsPage onNavigateHome={() => setCurrentView('calculator')} onNavigateToView={(view) => setCurrentView(view as any)} />
+          <TermsPage onNavigateHome={() => handleNavigateView('calculator')} onNavigateToView={(view) => handleNavigateView(view as any)} />
         ) : currentView === 'disclaimer' ? (
-          <DisclaimerPage onNavigateHome={() => setCurrentView('calculator')} onNavigateToView={(view) => setCurrentView(view as any)} />
+          <DisclaimerPage onNavigateHome={() => handleNavigateView('calculator')} onNavigateToView={(view) => handleNavigateView(view as any)} />
         ) : currentView === 'editorial' ? (
-          <EditorialPolicyPage onNavigateHome={() => setCurrentView('calculator')} onNavigateToView={(view) => setCurrentView(view as any)} />
+          <EditorialPolicyPage onNavigateHome={() => handleNavigateView('calculator')} onNavigateToView={(view) => handleNavigateView(view as any)} />
         ) : currentView === 'calculator' ? (
           <>
             {/* Category Segmented Pill Bar */}
@@ -1025,7 +1146,7 @@ export default function App() {
                     <>
                       {/* GST */}
                       <button
-                        onClick={() => setCalculatorType('gst')}
+                        onClick={() => handleNavigateCalculator('gst')}
                         className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
                           calculatorType === 'gst'
                             ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
@@ -1048,7 +1169,7 @@ export default function App() {
 
                       {/* Income Tax */}
                       <button
-                        onClick={() => setCalculatorType('income-tax')}
+                        onClick={() => handleNavigateCalculator('income-tax')}
                         className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
                           calculatorType === 'income-tax'
                             ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
@@ -1071,7 +1192,7 @@ export default function App() {
 
                       {/* TDS (194J) */}
                       <button
-                        onClick={() => setCalculatorType('tds')}
+                        onClick={() => handleNavigateCalculator('tds')}
                         className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
                           calculatorType === 'tds'
                             ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
@@ -1094,7 +1215,7 @@ export default function App() {
 
                       {/* HRA */}
                       <button
-                        onClick={() => setCalculatorType('hra')}
+                        onClick={() => handleNavigateCalculator('hra')}
                         className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
                           calculatorType === 'hra'
                             ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
@@ -1122,7 +1243,7 @@ export default function App() {
                     <>
                       {/* Cost Plus */}
                       <button
-                        onClick={() => setCalculatorType('costplus')}
+                        onClick={() => handleNavigateCalculator('costplus')}
                         className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
                           calculatorType === 'costplus'
                             ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
@@ -1145,7 +1266,7 @@ export default function App() {
 
                       {/* Cash Runway */}
                       <button
-                        onClick={() => setCalculatorType('runway')}
+                        onClick={() => handleNavigateCalculator('runway')}
                         className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
                           calculatorType === 'runway'
                             ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
@@ -1168,7 +1289,7 @@ export default function App() {
 
                       {/* Working Capital */}
                       <button
-                        onClick={() => setCalculatorType('working-capital')}
+                        onClick={() => handleNavigateCalculator('working-capital')}
                         className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
                           calculatorType === 'working-capital'
                             ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
@@ -1191,7 +1312,7 @@ export default function App() {
 
                       {/* Razorpay Fee & Payout */}
                       <button
-                        onClick={() => setCalculatorType('razorpay-fee')}
+                        onClick={() => handleNavigateCalculator('razorpay-fee')}
                         className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
                           calculatorType === 'razorpay-fee'
                             ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
@@ -1214,7 +1335,7 @@ export default function App() {
 
                       {/* GST Invoice Generator (Business) */}
                       <button
-                        onClick={() => setCalculatorType('gst-invoice')}
+                        onClick={() => handleNavigateCalculator('gst-invoice')}
                         className={`text-left p-5 rounded-2xl border transition-all flex flex-col justify-between h-[140px] group ${
                           calculatorType === 'gst-invoice'
                             ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
@@ -1676,37 +1797,37 @@ export default function App() {
               </h4>
               <ul className="space-y-2 text-[11px]">
                 <li>
-                  <button onClick={() => { setCurrentView('calculator'); setCalculatorType('gst'); }} className="hover:text-white transition-colors text-slate-300">
+                  <button onClick={() => handleNavigateCalculator('gst')} className="hover:text-white transition-colors text-slate-300">
                     GST Rate Splitter (CGST/SGST/IGST)
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => { setCurrentView('calculator'); setCalculatorType('costplus'); }} className="hover:text-white transition-colors text-slate-300">
+                  <button onClick={() => handleNavigateCalculator('costplus')} className="hover:text-white transition-colors text-slate-300">
                     Cost-Plus Pricing & Profit Margins
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => { setCurrentView('calculator'); setCalculatorType('income-tax'); }} className="hover:text-white transition-colors text-slate-300">
+                  <button onClick={() => handleNavigateCalculator('income-tax')} className="hover:text-white transition-colors text-slate-300">
                     Income Tax Slabs (New vs. Old Regime)
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => { setCurrentView('calculator'); setCalculatorType('tds'); }} className="hover:text-white transition-colors text-slate-300">
+                  <button onClick={() => handleNavigateCalculator('tds')} className="hover:text-white transition-colors text-slate-300">
                     TDS Rates & CBDT Sec 194J/194C Rules
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => { setCurrentView('calculator'); setCalculatorType('hra'); }} className="hover:text-white transition-colors text-slate-300">
+                  <button onClick={() => handleNavigateCalculator('hra')} className="hover:text-white transition-colors text-slate-300">
                     HRA Rent Exemption Calculator
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => { setCurrentView('calculator'); setCalculatorType('runway'); }} className="hover:text-white transition-colors text-slate-300">
+                  <button onClick={() => handleNavigateCalculator('runway')} className="hover:text-white transition-colors text-slate-300">
                     Startup Cash Runway & Net Burn
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => { setCurrentView('calculator'); setCalculatorType('working-capital'); }} className="hover:text-white transition-colors text-slate-300">
+                  <button onClick={() => handleNavigateCalculator('working-capital')} className="hover:text-white transition-colors text-slate-300">
                     Working Capital Gap Estimator
                   </button>
                 </li>
@@ -1720,22 +1841,22 @@ export default function App() {
               </h4>
               <ul className="space-y-2 text-[11px]">
                 <li>
-                  <button onClick={() => setCurrentView('blog')} className="hover:text-white transition-colors text-slate-300 text-left">
+                  <button onClick={() => handleNavigateView('blog')} className="hover:text-white transition-colors text-slate-300 text-left">
                     Zoho Books vs. Vyapar Comparison
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setCurrentView('blog')} className="hover:text-white transition-colors text-slate-300 text-left">
+                  <button onClick={() => handleNavigateView('blog')} className="hover:text-white transition-colors text-slate-300 text-left">
                     SGST, CGST & IGST Place of Supply Rules
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setCurrentView('blog')} className="hover:text-white transition-colors text-slate-300 text-left">
+                  <button onClick={() => handleNavigateView('blog')} className="hover:text-white transition-colors text-slate-300 text-left">
                     GST Invoice Rules & Mandatory Formats 2026
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setCurrentView('blog')} className="hover:text-white transition-colors text-slate-300 text-left">
+                  <button onClick={() => handleNavigateView('blog')} className="hover:text-white transition-colors text-slate-300 text-left">
                     Software Troubleshooting Guides (Zoho/Vyapar/Giddh)
                   </button>
                 </li>
@@ -1749,32 +1870,32 @@ export default function App() {
               </h4>
               <ul className="space-y-2 text-[11px]">
                 <li>
-                  <button onClick={() => setCurrentView('about')} className="hover:text-white transition-colors text-slate-300">
+                  <button onClick={() => handleNavigateView('about')} className="hover:text-white transition-colors text-slate-300">
                     About Us & Mission
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setCurrentView('contact')} className="hover:text-white transition-colors text-slate-300">
+                  <button onClick={() => handleNavigateView('contact')} className="hover:text-white transition-colors text-slate-300">
                     Contact Us & Support Desk
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setCurrentView('editorial')} className="hover:text-white transition-colors text-slate-300">
+                  <button onClick={() => handleNavigateView('editorial')} className="hover:text-white transition-colors text-slate-300">
                     Editorial & E-E-A-T Standards
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setCurrentView('privacy')} className="hover:text-white transition-colors text-slate-300">
+                  <button onClick={() => handleNavigateView('privacy')} className="hover:text-white transition-colors text-slate-300">
                     Privacy Policy & Cookie Disclosures
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setCurrentView('terms')} className="hover:text-white transition-colors text-slate-300">
+                  <button onClick={() => handleNavigateView('terms')} className="hover:text-white transition-colors text-slate-300">
                     Terms of Service
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setCurrentView('disclaimer')} className="hover:text-white transition-colors text-slate-300">
+                  <button onClick={() => handleNavigateView('disclaimer')} className="hover:text-white transition-colors text-slate-300">
                     Statutory & Financial Disclaimer
                   </button>
                 </li>
@@ -1789,35 +1910,35 @@ export default function App() {
             </span>
             <div className="flex flex-wrap gap-3 text-[11px] font-medium items-center justify-center">
               <button 
-                onClick={() => setCurrentView('about')}
+                onClick={() => handleNavigateView('about')}
                 className="text-slate-400 hover:text-indigo-400 transition-colors underline"
               >
                 About Us
               </button>
               <span className="text-slate-700">•</span>
               <button 
-                onClick={() => setCurrentView('contact')}
+                onClick={() => handleNavigateView('contact')}
                 className="text-slate-400 hover:text-indigo-400 transition-colors underline"
               >
                 Contact
               </button>
               <span className="text-slate-700">•</span>
               <button 
-                onClick={() => setCurrentView('privacy')}
+                onClick={() => handleNavigateView('privacy')}
                 className="text-slate-400 hover:text-indigo-400 transition-colors underline"
               >
                 Privacy Policy
               </button>
               <span className="text-slate-700">•</span>
               <button 
-                onClick={() => setCurrentView('terms')}
+                onClick={() => handleNavigateView('terms')}
                 className="text-slate-400 hover:text-indigo-400 transition-colors underline"
               >
                 Terms of Service
               </button>
               <span className="text-slate-700">•</span>
               <button 
-                onClick={() => setCurrentView('disclaimer')}
+                onClick={() => handleNavigateView('disclaimer')}
                 className="text-slate-400 hover:text-indigo-400 transition-colors underline"
               >
                 Disclaimer
